@@ -1,0 +1,104 @@
+{
+    "emotes": [
+        {
+            "name": "Smile :)",
+            "path": "smile.png"
+        },
+        {
+            "name": "Wink ;)",
+            "path": "wink.gif"
+        },
+        {
+            "name": "Cheese :D",
+            "path": "cheese.gif"
+        },
+        {
+            "name": "Anger >:O",
+            "path": "anger.png"
+        },
+        {
+            "name": "Meh :\\",
+            "path": "meh.png"
+        },
+        {
+            "name": "Neutral :|",
+            "path": "neutral.png"
+        },
+        {
+            "name": "Confused :S",
+            "path": "confused.png"
+        },
+        {
+            "name": "Love <3",
+            "path": "love.gif"
+        },
+        {
+            "name": "Evil Laugh >:D",
+            "path": "evillaughter.gif"
+        },
+        {
+            "name": "Shush :)c=",
+            "path": "shush.png"
+        },
+        {
+            "name": "Licky c(:",
+            "path": "licky.png"
+        },
+        {
+            "name": "Censor []|",
+            "path": "censor.png"
+        },
+        {
+            "name": "Anguish <:d",
+            "path": "anguish.png"
+        },
+        {
+            "name": "Uooh <:o",
+            "path": "uooh.gif"
+        },
+        {
+            "name": "Ehh...",
+            "path": "eh.gif"
+        },
+        {
+            "name": "HUH 8|",
+            "path": "huh.gif"
+        },
+        {
+            "name": "Melting...",
+            "path": "melt.gif"
+        },
+        {
+            "name": "smilee",
+            "path": "smiley1.png"
+        },
+        {
+            "name": "Kiki My Beloved",
+            "path": "kiki.png"
+        },
+        {
+            "name": "ROTHSCHILDS",
+            "path": "rothschilds.gif"
+        },
+        {
+            "name": "LOL",
+            "path": "lol.gif"
+        },
+        {
+            "name": "What?",
+            "path": "what.gif"
+        },
+        {
+            "name": "IT'S HERE",
+            "path": "itshere.gif"
+        },
+        {
+            "name": "Nader \\/",
+            "path": "nader.gif"
+        },
+        {
+            "name": "meatballs",
+            "path": "meatballs.png"
+        }
+    ]
+}

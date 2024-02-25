@@ -1,0 +1,383 @@
+.control-app {
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: 15% 65% 100%;
+}
+
+.control-status {
+    margin: 15px;
+
+    border-color: #fff8ff #000 #000 #fff8ff;
+    border-style: outset;
+    border-width: 2px;
+    outline: 2px solid #000;
+    background-color: #d3d3d3;
+}
+
+.control-light-div {
+    background-color: darkslategray;
+    margin: 6px;
+    border: outset 3px;
+    outline: solid 1px black;
+
+    cursor: pointer;
+}
+
+.control-light-div:hover {
+    filter: brightness(1.1);
+}
+
+.control-light-div:active {
+    border: inset 3px;
+}
+
+.control-desc-part {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.popup-desc {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border: inset 3px;
+    background-color: black;
+    padding: 6px;
+}
+
+.control-desc-part button, .popup-desc button {
+    font-family: blurpix;
+    background-color: #d3d3d3;
+    border-color: #fff8ff #000 #000 #fff8ff;
+    border-style: outset;
+    border-width: 2px;
+    height: 25px;
+    image-rendering: pixelated;
+    outline: 1px solid #000;
+    padding: 0 6px;
+    cursor: pointer;
+}
+
+.popup-desc button {
+    width: 70px;
+    height: 50px;
+    font-size: 12px;
+}
+
+.control-desc-part input, .control-desc-part textarea {
+    border: inset 3px;
+    outline: solid black 1px;
+    background-color: darkslategray;
+    height: 36px;
+    font-size: 16px;
+    color: white;
+}
+
+.control-desc {
+    display: flex;
+}
+
+
+
+.control-account {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sync-notifier {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    border: inset 4px;
+    outline: solid 1px black;
+    outline-offset: -1px;
+}
+
+.led-light {
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+
+    border-color: #212121 #000 #000 #212121;
+    border-style: outset;
+    border-width: 3px;
+
+    outline: 2px solid #000;
+    outline-offset: -4px;
+}
+
+.group-led-light {
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+}
+
+.group-grid-default .group-led-light {
+    height: 16px;
+    width: 16px;
+}
+
+.control-camera {
+    margin: 15px;
+    padding: 3px;
+    background-color: #d3d3d3;
+    border-color: #fff8ff #000 #000 #fff8ff;
+    border-style: outset;
+    border-width: 3px;
+    outline: 2px solid #000;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stream-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 103%;
+}
+
+.control-stream-box {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 15% 70% 15%;
+    justify-items: center;
+
+    margin: -1px 10px;
+}
+
+.stream-box-container {
+    padding: 3px;
+
+    background: url('/public/images/bgs/green_steel_container.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    height: 190px;
+    width: 190px;
+}
+
+.control-stream-box:hover {
+    filter: brightness(1.1);
+}
+
+.stream-box-container:hover .stream-title, .group-stream-box:hover .stream-title {
+    width: max-content;
+    min-width: 100%;
+    animation: titlehover 8s linear infinite forwards;
+    overflow: visible;
+    text-overflow: inherit;
+} 
+
+@keyframes titlehover {
+    0% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+    50% {
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    } 50.01% {
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}
+
+.stream-title {
+    width: 100%; 
+    margin: 0;
+    text-align: center; 
+    font-family: ms ui gothic;
+    font-weight: bold;
+    font-variant-caps: small-caps;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: white;
+    text-shadow: 1.4px 1.4px 0px black;
+}
+
+.cc-control-stream-box {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+
+    margin: 10px;
+    padding: 4px;
+    border: inset 3px;
+    background-color: darkgray;
+
+    width: 295px;
+}
+
+.group-container {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(2, 50%);
+    justify-items: center;
+    align-items: center;
+
+    overflow: scroll;
+    height: 100%;
+}
+
+.group-container-outer {
+    border: solid white 2px;
+    height: 100%;
+}
+
+.group-stream-box {
+    padding: 3px;
+    width: 100%;
+    height: 100%;
+    scale: 0.9;
+
+    background: url('/public/images/bgs/green_steel_container.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.group-control-stream-box {
+    cursor: pointer; 
+    align-items: stretch; 
+    height: fit-content; 
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 15% 70% 15%;
+    justify-items: center;
+}
+
+.group-cam-title {
+    font-size: 11px;
+}
+
+.group-grid {
+    height: 190px;
+    width: 190px;
+}
+
+.type-image {
+    width: 8px;
+    height: 8px;
+}
+
+.group-grid-default {
+    width: 380px;
+    height: 380px;
+}
+
+.group-grid-default .group-cam-title {
+    font-size: unset;
+}
+
+.group-grid-default .group-control-stream-box {
+    margin: 0 10px;
+}
+
+.group-grid-default .group-stream-box {
+    height: auto;
+}
+
+.group-grid-default .type-image {
+    width: 16px;
+    height: 16px;
+}
+
+.control-app h1, .control-app h2, .control-app h3, .control-app h4, .control-app p, .control-app textarea, .control-app input, .control-app button, .control-app select, .control-app option {
+    font-family: blurpix;
+}
+
+.analog-button {
+    padding: 2px; 
+    border: outset 3px; 
+    outline: black solid 1px; 
+    outline-offset: -1px;
+}
+
+.analog-button:hover {
+    filter: brightness(1.1);
+}
+
+.analog-button:active {
+    filter: brightness(0.9);
+    border: inset 3px;
+}
+
+.analog-input {
+    background-color: black;
+    color: lime;
+    border: inset 3px;
+    outline: black solid 1px;
+    outline-offset: -1px;
+}
+
+.invert-text {
+    background-color: black;
+    color: white;
+    padding: 0 4px;
+}
+
+.square-button {
+    width: 20px;
+    height: 20px;
+}
+
+
+.status-indicators-control {
+    border: inset 3px;
+    background: black;
+    margin: 3px 6px;
+}
+
+
+.map-controls {
+    grid-column: span 3;
+    width: 100%;
+    height: 500px;
+}
+
+.buttons-flex {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+@media screen and (max-width: 750px) {
+    .buttons-flex {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .control-desc {
+        flex-direction: column;
+    }
+    .control-app {
+        height: 200vh;
+    }
+    .control-account {
+        grid-column: span 3;
+        grid-row: 1;
+    }
+    .logo-container, .top-header-cc {
+        display: none;
+    }
+}

@@ -1,0 +1,87 @@
+.status-indicators {
+    display: flex;
+    border: inset 3px;
+    background-color: black;
+}
+
+.status-indicators img {
+    border-color: #fff8ff #12225f #000 lightgray;
+    border-style: outset;
+    border-width: 3px;
+
+    outline: solid black 1px;
+
+    max-width: 100px;
+}
+
+.status-indicators .updated {
+    animation: updatedimg 2.5s forwards 1 linear;
+}
+
+@keyframes updatedimg {
+    0% {
+        filter: brightness(2.5);
+    } 100% {
+        filter: brightness(1);
+    }
+}
+
+.status-indicators .off {
+    animation: offimg 2.5s forwards 1 linear;
+}
+
+@keyframes offimg {
+    0% {
+        filter: brightness(0.5);
+    } 100% {
+        filter: brightness(1);
+    }
+}
+
+.status-indicators-control {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+
+.status-light-div p {
+    color: white;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: anywhere;
+}
+
+
+.scrolling-text-div.updated {
+    animation: scrollerupdate 2.5s forwards 1 linear;
+}
+
+@keyframes scrollerupdate {
+    0% {
+        background: gray;
+    } 100% {
+        background: #04061a;
+        background-image: url(/public/images/bgs/BlackThatch.png);
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .status-indicators {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(6, 16%);
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .status-indicators {
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+    }
+}
+
+@media screen and (min-width: 1750px) {
+    .status-indicators img {
+        max-width: 200px;
+    }
+}

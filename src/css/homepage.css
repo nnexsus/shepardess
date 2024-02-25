@@ -1,0 +1,418 @@
+.App {
+    height: calc(100vh - 20px);
+    width: 100%;
+}
+
+.main-container {
+    height: calc(100% - 12px);
+    width: calc(100% - 9px);
+
+    display: grid;
+    grid-template-columns: 18% 64% 18%;
+    grid-template-rows: 10% 40% 20% 30%;
+    align-items: center;
+    gap: 3px;
+}
+
+.logo-container {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    background: #04061a;
+    background-image: url(/public/images/bgs/BlackThatch.png);
+    border-bottom: solid 3px darkgray;
+    height: 100%;
+    background-color: black;
+    overflow: hidden;
+}
+
+.scrolling-text-div {
+    background: #04061a;
+    background-image: url(/public/images/bgs/BlackThatch.png);
+    border-top: solid 3px #dadbe8;
+    border-left: solid 3px lightgray;
+    border-right: solid 3px gray;
+    border-bottom: solid 3px darkgray;
+    outline: solid 2px black;
+    outline-offset: -1px;
+
+    overflow: hidden;
+}
+
+.scroller {
+    display: flex;
+    
+    width: max-content;
+    
+    animation: scrollingtext 20s forwards linear infinite;
+}
+
+.scrolling-text {
+    color: red;
+    text-shadow: 0 0 3px red;
+
+    padding: 0px 3px;
+    margin: 0px 12px;
+
+    font-family: 'dotty';
+    font-weight: 10;
+    font-size: 46px;
+    line-height: 25px;
+    margin-top: 5px;
+    margin-bottom: -2px;
+    
+    white-space: nowrap;
+    text-align: center;
+}
+
+.feeds-container {
+    background: #04061a;
+    background-image: url('/public/images/bgs/Sandstone.png');
+    background-size: 150px;
+    border-top: solid 3px #dadbe8;
+    border-left: solid 3px lightgray;
+    border-right: solid 3px gray;
+    border-bottom: solid 3px darkgray;
+    outline: solid 2px black;
+    outline-offset: -1px;
+    height: 100%;
+    margin-top: 5px;
+
+    display: grid; 
+    grid-template-rows: 67% 33%; 
+    height: calc(100% - 6px);
+    transition: 0.3s ease;
+}
+
+.sliding-expanded {
+    grid-template-rows: 33% 67%; 
+}
+
+.description-section {
+    background: #04061a;
+    background-image: url(/public/images/bgs/snowbackground.gif);
+    border-top: solid 4px #dadbe8;
+    border-left: solid 3px lightgray;
+    border-right: solid 3px gray;
+    border-bottom: solid 3px darkgray;
+    outline: solid 2px black;
+    outline-offset: -1px;
+
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 30% 20% 50%;
+    justify-items: center;
+    align-items: center;
+    height: 100%;
+}
+
+@keyframes scrollingtext {
+    0% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    } 50% {
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    } 50.01% {
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}
+
+.static-text {
+    color: red;
+
+    margin: 0px;
+    font-size: 12px;
+    white-space: nowrap;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.description-qrd h4 {
+    color: white;
+    margin: 3px;
+}
+
+.description-full {
+    color: white;
+}
+
+.description-banner {
+    width: calc(100% - 9px);
+    height: 18px;
+    margin: 2px;
+    padding: 2px;
+    
+    color: white;
+    background: linear-gradient(90deg, rgba(0,0,255,1) 0%, rgba(0,193,255,1) 100%);
+
+    border-bottom: solid 2px white;
+    outline: solid 2px black;
+
+    display: flex;
+    align-items: center;
+}
+
+
+.chat-section {
+    display: flex;
+    flex-direction: column; 
+    height: calc(100% - 6px);
+
+    background: black; 
+
+    outline: black 2px solid;
+    outline-offset: -1px;
+
+    border-color: #000 #fff8ff #fff8ff #000;
+    border-style: outset;
+    border-width: 3px;
+}
+
+
+
+
+::-webkit-scrollbar {
+    height: 5px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: darkgray;
+    outline: solid black 1px;
+    outline-offset: -1px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: lightgray; 
+    transition: 0.2s ease;
+    border: outset 2px;
+    background-color: lightgray;
+    border-right-color: black;
+    border-bottom-color: black;
+    border-top-color: #FFF8FF;
+    border-left-color: #FFF8FF;
+    outline: 1px black solid;
+    outline-offset: -1px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: darkgray;
+}
+
+::-webkit-scrollbar-corner {
+    background-image: url('/public/images/bgs/arrowdown.png');
+    background-color: darkgray;
+    outline: solid black 1px;
+}
+
+
+
+
+
+.stream-container::-webkit-scrollbar {
+    width: 16px;
+}
+
+.stream-container::-webkit-scrollbar-track, .stream-container::-webkit-scrollbar-button:single-button {
+    background:-webkit-repeating-linear-gradient(0deg, #000000 0%, #50508b 1%);
+    background:-o-repeating-linear-gradient(0deg, #000000 0%, #50508b 1%);
+    background:-moz-repeating-linear-gradient(0deg, #000000 0%, #50508b 1%);
+    background:repeating-linear-gradient(0deg, #000000 0%, #50508b 1%);
+    border-radius: 2px;
+    display: block;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+    outline: solid black 1px;
+    outline-offset: -1px;
+}
+
+.stream-container::-webkit-scrollbar-button:single-button:vertical:increment, .stream-container::-webkit-scrollbar-button:single-button:vertical:decrement, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
+    outline: 1px lightblue solid;
+    outline-offset: -1px;
+    border: solid 2px transparent;
+}
+
+.stream-container::-webkit-scrollbar-button:single-button:vertical:increment:hover, .stream-container::-webkit-scrollbar-button:single-button:vertical:decrement:hover, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:hover, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    outline: 1px cyan solid;
+}
+
+.stream-container::-webkit-scrollbar-button:single-button:vertical:increment:active, .stream-container::-webkit-scrollbar-button:single-button:vertical:decrement:active, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:active, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:active {
+    outline: 2px lightblue solid;
+    outline-offset: -2px;
+}
+
+.stream-container::-webkit-scrollbar-thumb, .message-container-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.1);
+    -webkit-transition: 0.2s ease;
+    transition: 0.2s ease;
+    outline: solid 1px lightblue;
+    outline-offset: -2px;
+    border-radius: 3px;
+    border: none;
+}
+
+.stream-container::-webkit-scrollbar-thumb:hover, .message-container-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.stream-container::-webkit-scrollbar-thumb:active, .message-container-wrapper::-webkit-scrollbar-thumb:active {
+    outline-width: 2px;
+    outline-offset: -3px;
+}
+
+.message-container-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-container-wrapper::-webkit-scrollbar-track, .message-container-wrapper::-webkit-scrollbar-button:single-button {
+    background:-webkit-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
+    background:-o-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
+    background:-moz-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
+    background:repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
+    border-radius: 2px;
+    display: block;
+    height: 8px;
+    width: 8px;
+    cursor: pointer;
+    outline: solid black 1px;
+    outline-offset: -1px;
+}
+
+.message-container-wrapper::-webkit-scrollbar-thumb {
+    outline: solid 1px lime;
+}
+
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
+    outline: 1px lime solid;
+    outline-offset: -1px;
+    border: solid 2px transparent;
+}
+
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:hover, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    outline: 2px green solid;
+}
+
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:active, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:active {
+    outline: 2px lime solid;
+}
+
+.chat-full-container {
+    height: 65%;
+}
+
+.left-button-icon {
+    width: 22px;
+}
+
+.stream-status-light {
+    height: 16px;
+    width: 16px;
+}
+
+@media screen and (max-width: 1050px) {
+    .main-container {
+        grid-template-rows: 16% 24% 30% 30%;
+    }
+
+    .group-stream-box {
+        scale: 0.75;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .group-stream-box {
+        scale: 0.65;
+    }
+}
+
+
+@media screen and (max-width: 700px) {
+    .main-container {
+        height: 200vh;
+        width: 100%;
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feeds-container {
+        display: grid; 
+        grid-template-rows: 50% 50%; 
+        height: calc(200% - 6px);
+        transition: 0.3s ease;
+        width: 100%;
+    }
+
+    .top-header {
+        width: 100%;
+    }
+
+    .description-section {
+        width: 100%;
+
+        display: flex;
+        flex-direction: row;
+    }
+
+    .logo-container {
+        display: none;
+    }
+
+    .qrd-section {
+        width: 100%;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1750px) {
+    .main-container {
+        grid-template-columns: 15% 70% 15%;
+        grid-template-rows: 15% 40% 20% 25%;
+    }
+
+    .scrolling-text {
+        margin: 10px 12px -2px;
+        font-size: 76px;
+        line-height: 44px;
+    }
+
+    .stream-box-container {
+        width: 250px;
+        height: 250px;
+    }
+
+    .group-grid {
+        width: 250px;
+        height: 250px;
+    }
+
+    .group-grid-default {
+        width: 500px;
+        height: 500px;
+    }
+
+    .left-button-icon {
+        width: 42px;
+    }
+
+    .chat-full-container {
+        height: 79%;
+    }
+
+    .stream-status-light {
+        height: 26px;
+        width: 26px;
+    }
+}

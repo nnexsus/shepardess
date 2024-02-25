@@ -1,0 +1,98 @@
+.message-container-wrapper {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    background-image: url(/public/images/bgs/BlackThatch.png);
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid white;
+    margin: 5px 2px;
+}
+
+.old-message {
+    background-color: #3f043f;
+}
+
+@keyframes messageappears {
+    0% {
+        opacity: 0;
+    } 100% {
+        opacity: 1;
+    }
+}
+
+.new-message {
+    background-color: navy; 
+    animation: messageappears 3s linear forwards;
+}
+
+@keyframes messageappears {
+    0% {
+        background-color: rgb(124, 39, 0);
+    } 100% {
+        background-color: navy;
+    }
+}
+
+.message-container p {
+    font-family: ms ui gothic;
+    margin: 0;
+    text-shadow: 1px 1px 1px black;
+}
+
+.image-render {
+    image-rendering: auto;
+}
+
+.emote-select {
+    cursor: pointer;
+    margin: 2px;
+}
+
+.emote-select:hover {
+    background-color: green;
+}
+
+.emote-select:active {
+    background-color: lime;
+}
+
+.message-write {
+    height: 25%;
+    background: gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.format-dropdown {
+    background-color: black;
+}
+
+@media screen and (max-width: 700px) {
+    .chat-section {
+        height: 25%;
+    }
+
+    .message-write {
+        display: grid;
+        grid-template-columns: 15% 85%;
+    }
+
+    .message-input {
+        grid-column: span 2;
+    }
+
+    .emote-panel-select {
+        grid-row: 2;
+    }
+
+    .emote-panel-active {
+        grid-row: 2;
+        grid-column: 2;
+    }
+}
