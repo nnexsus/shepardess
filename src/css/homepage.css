@@ -317,6 +317,10 @@
     width: 16px;
 }
 
+.tutorial-text {
+    font-size: 17px;
+}
+
 @media screen and (max-width: 1050px) {
     .main-container {
         grid-template-rows: 16% 24% 30% 30%;
@@ -414,5 +418,13 @@
     .stream-status-light {
         height: 26px;
         width: 26px;
+    }
+
+    .tutorial-text {
+        font-size: 30px;
+    }
+
+    .hazel {
+        scale: 1.4;
     }
 }

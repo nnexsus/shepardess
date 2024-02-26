@@ -26,7 +26,7 @@ const texts = [
 const gridhazel = [[[9, 11], [9, 11]], [[4, 11], [12, 11]], [[4, 11], [12, 11]], [[15, 15], [7, 11]], [[6, 6], [6, 6]], [[1, 1], [8, 8]]]
 const gridbubble = [[[12, 16], [7, 11]], [[7, 13], [7, 12]], [[7, 13], [7, 12]], [[17, 21], [3, 7]], [[9, 13], [3, 8]], [[1, 5], [3, 8]]]
 const gridbutton = [[[8, 12], [13]], [[8, 11], [13]], [[8, 11], [13]], [[17, 21], [14]], [[5, 10], [10]], [[1, 4], [12]]]
-const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-panelh', 'status-highlight', 'main-sliding-container', 'main-sliding-container', 'main-sliding-container']
+const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-panelh', 'status-highlight', 'status-highlight', 'status-highlight', 'main-sliding-container']
 
 const App = () => {
 
@@ -337,11 +337,11 @@ const App = () => {
       {tutorial.active ?
         <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
           <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>
-            <img style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
+            <img className='hazel' style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
             <div style={{gridRowStart: `${tutorial.gridbubble[1][0]}`, gridRowEnd: `${tutorial.gridbubble[1][1]}`, gridColumnStart: `${tutorial.gridbubble[0][0]}`, gridColumnEnd: `${tutorial.gridbubble[0][1]}`, padding: '39px 18px 0px 20px', fontFamily: 'ms ui gothic', backgroundImage: 'url(/images/bubble.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
-              <p style={{margin: 0}}>{tutorial.text}</p>
+              <p className='tutorial-text' style={{margin: 0}}>{tutorial.text}</p>
             </div>
-            <button style={{gridColumnStart: `${tutorial.gridbutton[0][0]}`, gridColumnEnd: `${tutorial.gridbutton[0][1]}`, gridRow: `${tutorial.gridbutton[1][0]}`, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialAdvance()}>Show Me!</button>
+            <button style={{gridColumnStart: `${tutorial.gridbutton[0][0]}`, gridColumnEnd: `${tutorial.gridbutton[0][1]}`, gridRow: `${tutorial.gridbutton[1][0]}`, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialAdvance()}>Continue!</button>
             <button style={{gridColumnStart: 12, gridColumnEnd: 14, gridRow: 13, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialSkip()}>Skip</button>
           </div>
         </div>
@@ -452,8 +452,8 @@ const App = () => {
             <div style={{padding: '4px'}}>
                     <div className='description-qrd'>
                         <h4 style={{fontFamily: 'ms ui gothic'}}>
-                            {desc?.qrd?.split('|')[0]}
                             <img src={`${desc?.qrd?.split('|')[1]}`} style={{maxWidth: '32px', maxHeight: '32px'}} alt='qrd decor'/>
+                            {desc?.qrd?.split('|')[0]}
                         </h4>
                     </div>
                 <hr style={{height: '1px', borderBottom: 'solid 1px white'}} />
