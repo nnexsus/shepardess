@@ -305,6 +305,7 @@ const App = () => {
   }, [socket])
 
   const openStream = (el) => {
+    console.log(el)
     setActiveStream(el)
     document.querySelector('#feed-panel').style.display = 'none'
     document.querySelector('#single-stream').style.display = 'block'
@@ -479,7 +480,7 @@ const App = () => {
               if (el.internalname === desc.featured) {
                 return (
                   <div key={`streambox-${el.id}`} className="group-stream-box" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
-                      <div id={`stream-${el.id}`} className='group-control-stream-box' onClick={() => openStream(el.id, el.title, el.link)}>
+                      <div id={`stream-${el.id}`} className='group-control-stream-box' onClick={() => openStream(el)}>
                           <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
                               <img src='/images/bgs/status-light.png' width={'16px'} height={'16px'} alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
                               <div style={{overflow: 'hidden', margin: '0 16px', width: '100%'}}>
