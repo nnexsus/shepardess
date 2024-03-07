@@ -3,7 +3,7 @@
 const Contact = () => {
 
     return (
-        <div className="contact-full" style={{display: 'grid', gridTemplateColumns: '25% 75%', background: 'url(/images/bgs/Circles.png', color: 'white', fontFamily: 'ms ui gothic'}}>
+        <div className="contact-full" style={{background: 'url(/images/bgs/Circles.png', color: 'white', fontFamily: 'ms ui gothic'}}>
             <div>
                 <h4>Contact</h4>
                 <p>Email: <a href="mailto:nnexsus.service@gmail.com" style={{color: 'lightblue', lineBreak: 'anywhere'}}>nnexsus.service @ gmail</a></p>
@@ -19,31 +19,31 @@ const Contact = () => {
 
                 <div className="faq-box">
                     <h4>New Streams and Updates:</h4>
-                    <p>Initially, Shepardess will begin in 3-4 active streams, but gain new views over time. Besides car cameras, Static Cams, Screensharing, and directed/multi-view streams
-                    are planned for the future!</p>
+                    <p>Currently, my personal rig is only running a single camera on the dashbaord. I have more coming in for car views, and am currently working on systems to get in-field
+                    deployable static cameras up as well.</p>
                 </div>
 
                 <div className="faq-box">
                     <h4>User Streams:</h4>
                     <p>After some testing time, Shepardess will open itself to allow for user streams to be embedded. Whether it's a phone pointing out a window, or another chasers embedded
-                    livestream, the more endpoints the better.</p>
+                    livestream, the more endpoints the better. All streams before this point are added and vetted by purely me.</p>
                 </div>
 
                 <div className="faq-box">
                     <h4>Further User Interaction:</h4>
-                    <p>There will also be new user interaction features after the testing period is over. User accounts are a likely future, as well as public polls, achivements and age 
-                    recognition, support, and potentially some fun effects to play in/on stream depending on the view.</p>
+                    <p>User accounts, polls, stream and site effects, and potentially even achievements lie in the short future for improved user interaction.</p>
                 </div>
 
                 <div className="faq-box">
                     <h4>Site Design:</h4>
-                    <p>The Shepardess site - as you can see, has a fairly unique and expiremental design. I highly suggest creating custom-css front-ends if that feels better suited. 
-                    There will likely be multiple site themes in the future to help with navigation, including complete tonal shifts to material-esc design, and light modes.</p>
+                    <p>Shepardess has a very curated design, inspiried by earlier web assets, which I feel invokes a feeling of cleaner and faster components. While this style isn't going to change
+                    , there may be more options to choose from in the future, such as a light mode or a different theming all together.</p>
                 </div>
 
                 <div className="faq-box">
                     <h4>Stream Outage/Downtime:</h4>
-                    <p></p>
+                    <p>Streams should automatically update about once an hour. If a streamers or one of my streams go down, the embedded link may change, and not work on Shepardess
+                    until the next update. I'll be working to keep these as much as possible on chase days.</p>
                 </div>
 
                 <div className="faq-box">

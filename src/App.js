@@ -389,10 +389,10 @@ const App = () => {
                     }
                   })
                   return (
-                    <div key={el.id} id={`group-default-${el.id}`} className="group-grid" title='Click title to expand.'>
+                    <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid" title='Click title to expand.'>
                       <Group ids={info} group={el.title}/>
-                      <p style={{textAlign: 'center', color: 'lime', marginTop: '-20px', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title} - <i>Expand</i></p>
-                    </div>
+                      <legend style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
+                    </fieldset>
                   )
                 }) : null}
                 {streams.length > 0 ? streams.map((el) => {
@@ -409,7 +409,13 @@ const App = () => {
                                 <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
                             </div>
                             <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                            <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
+                            </div>
+                            <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
+                              <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
+                              <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                              <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                            </div>
                         </div>
                       </div>
                     )
@@ -461,6 +467,7 @@ const App = () => {
                 <div className='description-full'>
                     <p style={{fontFamily: 'ms ui gothic'}}>
                       {desc?.full?.split('|')[0]}
+                      <br/>
                       <img src={`${desc?.full?.split('|')[1]}`} alt='description decor'/>
                     </p>
                 </div>

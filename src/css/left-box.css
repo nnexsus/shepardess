@@ -267,6 +267,10 @@
   filter: invert(100%) hue-rotate(180deg) contrast(1.1);
 }
 
+.left-viewer .leaflet-pane {
+    transform: translateY(-100px);
+}
+
 .no-invert {
     filter: invert(0%) hue-rotate(0deg) contrast(1.5);
 }
@@ -310,7 +314,10 @@
     font-size: 17px;
 }
 
-
+.contact-full {
+    display: grid; 
+    grid-template-columns: 25% 75%;
+}
 
 .contact-full a:visited, .settings-full a:visited {
     color: rgb(180, 141, 215);
@@ -379,6 +386,14 @@
 
     .expand-button {
         display: none;
+    }
+
+    .leaflet-pane {
+        transform: translateY(0px);
+    }
+
+    .contact-full {
+        grid-template-columns: 100%;
     }
 }
 

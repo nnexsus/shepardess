@@ -39,12 +39,34 @@
     overflow: hidden;
 }
 
+.scrolling-text-div:hover {
+    overflow: visible;
+}
+
 .scroller {
     display: flex;
     
     width: max-content;
     
     animation: scrollingtext 20s forwards linear infinite;
+    transition: 3s ease;
+}
+
+@keyframes scrollingtext {
+    0% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    } 50% {
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    } 50.01% {
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
 }
 
 .scrolling-text {
@@ -104,23 +126,6 @@
     justify-items: center;
     align-items: center;
     height: 100%;
-}
-
-@keyframes scrollingtext {
-    0% {
-        -webkit-transform: translateX(0%);
-        transform: translateX(0%);
-    } 50% {
-        -webkit-transform: translateX(-100%);
-        transform: translateX(-100%);
-    } 50.01% {
-        -webkit-transform: translateX(100%);
-        transform: translateX(100%);
-    }
-    100% {
-        -webkit-transform: translateX(0%);
-        transform: translateX(0%);
-    }
 }
 
 .static-text {
@@ -211,9 +216,6 @@
     background-color: darkgray;
     outline: solid black 1px;
 }
-
-
-
 
 
 .stream-container::-webkit-scrollbar {
@@ -426,5 +428,15 @@
 
     .hazel {
         scale: 1.4;
+    }
+}
+
+@media screen and (max-height: 550px) and (min-width: 700px) {
+    .App {
+        height: calc(200vh - 20px);
+    }
+
+    .mobile-hide {
+        display: none;
     }
 }

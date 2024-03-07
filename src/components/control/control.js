@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 
 import '../../css/control.css'
 import ControlMap from './control-map';
+import axios from 'axios';
 
 const socket = io.connect('https://arina.lol');
 
@@ -56,12 +57,16 @@ const Control = () => {
         "icon": "/images/16icons/group.png"
     })
 
+    const [watchers, setWatchers] = useState([])
+    const [newWatcher, setNewWatcher] = useState("")
+
     useEffect(() => {
         socket.emit('sync_status')
         socket.emit('sync_description')
         socket.emit('sync_stream')
         socket.emit('sync_group')
         socket.emit('sync_poly')
+        socket.emit('sync_watchers')
     }, [])
 
     //update functions
@@ -157,7 +162,7 @@ const Control = () => {
             "title": newGroup.title,
             "icon": newGroup.icon
         }
-        socket.emit('send_add_group', {'internalname': data.internalname, 'title': data.title, 'icon': data.icon, 'key': data.key})
+        socket.emit('send_add_group', {'internalname': `${Date.now()}`, 'title': data.title, 'icon': data.icon, 'key': data.key})
     }
 
     const deleteGroup = (id) => {
@@ -179,6 +184,17 @@ const Control = () => {
         socket.emit('send_update_desc', {'id': data.id, 'newtext': data.newtext, 'key': data.key})
     }
 
+    const sendNewWatcher = () => {
+        var data = {
+            "key": key.key,
+            "user": key.username,
+            "forHandle": newWatcher,
+        }
+        axios.post('https://arina.lol/api/shepardess/yt-test3', data).then((res) => {
+            console.log(res.data)
+        })
+    }
+
     //socket.io listeners and state set
 
     useEffect(() => {
@@ -190,7 +206,8 @@ const Control = () => {
             "chasing": data[3].status,
             "searchandrescue": data[4].status,
             "emergency": data[5].status,
-            "ending": data[6].status
+            "ending": data[6].status,
+            "onhold": data[7].status
           })
         })
     
@@ -207,6 +224,7 @@ const Control = () => {
                 "searchandrescue": stat.searchandrescue,
                 "emergency": stat.emergency,
                 "ending": stat.ending,
+                "onhold": stat.onhold,
                 [data.title]: data.newstatus
             }
             setStat(newdata)
@@ -229,7 +247,6 @@ const Control = () => {
 
     useEffect(() => {
         socket.on('update_desc', (data) => {
-            console.log(data)
             if (data.title === 4) {
                 setDesc({
                     "threat": data.newtext
@@ -344,6 +361,12 @@ const Control = () => {
           return () => socket.off('remove_group')
     }, [socket, groups, setGroups])
 
+    useEffect(() => {
+        socket.on('set_watchers', (data) => {
+            setWatchers(data)
+        })
+    }, [socket, watchers, setWatchers])
+
     //map based events
 
     return (
@@ -360,7 +383,7 @@ const Control = () => {
                 </div>
             </div>
 
-            <div style={{gridColumn: 'span 3', gridRow: 2, display: 'grid', gridTemplateRows: '80% 20%'}} className='control-status'>
+            <div style={{gridColumn: 'span 3', gridRow: 2, display: 'grid', gridTemplateRows: '50% 50%'}} className='control-status'>
                 <div className='buttons-flex'>
                     <div className="status-indicators-control">
                         <div onClick={() => changeStatus("chaseday")} className="status-light-div control-light-div" title='Click to toggle.'>
@@ -423,21 +446,28 @@ const Control = () => {
                         <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
                         <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "flooding"})}>Flooding Warning</button>
                         <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency"})}>Emergency Alert</button>
+                        <button onClick={() => axios.get('https://arina.lol/api/shepardess/yt-test2')}>UPDATE LIVESTREAMS</button>
                     </div>
                 </div>
 
-                <div className='control-desc' style={{gridRow: 2}}>
-                    <div className='control-desc-part'>
-                        <textarea type='text' placeholder='Scrolling Text, seperate colors with commas.' defaultValue={desc.scrolling} onChange={(e) => setNewscroll(e.currentTarget.value)} />
-                        <button onClick={() => changeDescs(0)}>Update</button>
+                <div style={{width: '100%', display: 'grid', gridTemplateColumns: '50% 50%', gridRow: 2}}>
+                    <div className='control-desc'>
+                        <div className='control-desc-part'>
+                            <textarea type='text' placeholder='Scrolling Text, seperate colors with commas.' defaultValue={desc.scrolling} onChange={(e) => setNewscroll(e.currentTarget.value)} />
+                            <button onClick={() => changeDescs(0)}>Update</button>
+                        </div>
+                        <div className='control-desc-part'>
+                            <textarea type='text' style={{height: '80px'}} placeholder='QRD - Quick run down/title for desc' defaultValue={desc.qrd} onChange={(e) => setNewQRD(e.currentTarget.value)} />
+                            <button onClick={() => changeQRD(1)}>Update</button>
+                        </div>
+                        <div className='control-desc-part'>
+                            <textarea type='text' style={{height: '200px'}} placeholder='Full description text' defaultValue={desc.desc} onChange={(e) => setNewdesc(e.currentTarget.value)} />
+                            <button onClick={() => changeDescription(2)}>Update</button>
+                        </div>
                     </div>
-                    <div className='control-desc-part'>
-                        <textarea type='text' placeholder='QRD - Quick run down/title for desc' defaultValue={desc.qrd} onChange={(e) => setNewQRD(e.currentTarget.value)} />
-                        <button onClick={() => changeQRD(1)}>Update</button>
-                    </div>
-                    <div className='control-desc-part'>
-                        <textarea type='text' placeholder='Full description text' defaultValue={desc.desc} onChange={(e) => setNewdesc(e.currentTarget.value)} />
-                        <button onClick={() => changeDescription(2)}>Update</button>
+
+                    <div>
+                        <h1>Chat section</h1>
                     </div>
                 </div>
             </div>
@@ -477,10 +507,21 @@ const Control = () => {
                         })}/>
                         </div>
                         <div style={{gridRow: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <input className='analog-input' style={{width: '100%'}} type='text' placeholder='stream author or watcher youtube handle' onChange={(e) => setNewCamera({
+                            "internalname": `${e.currentTarget.value}`,
+                            "groupname": newCamera.groupname,
+                            "title": newCamera.title,
+                            "link": newCamera.link,
+                            "thumblink": newCamera.thumblink,
+                            "type": newCamera.type
+                        })}/>
+                        </div>
+                        <div style={{gridRow: 5, display: 'grid', gridTemplateColumns: '60% 40%', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <p style={{margin: 0, gridColumn: 'span 2'}}><i>If you are making an automatically updating stream, please create the watcher FIRST before the stream.</i></p>
                             <div>
                                 <p>Add to group:</p>
                                 <div style={{border: 'solid white 2px', padding: '3px', margin: '3px'}}>
-                                    <select className='analog-input' defaultValue={"null"} name='Groups' onChange={(e) => setNewCamera({
+                                    <select style={{width: '100%'}} className='analog-input' defaultValue={"null"} name='Groups' onChange={(e) => setNewCamera({
                                         "internalname": `${newCamera.internalname}`,
                                         "groupname": e.currentTarget.value,
                                         "title": `${newCamera.title}`,
@@ -518,13 +559,6 @@ const Control = () => {
                     </div>
                     <div className='cc-control-stream-box' style={{height: 'min-content', gridColumn: 'span 3'}}>
                         <h3 className='invert-text' style={{margin: 0}}>Add Group:</h3>
-                        <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                            <input className='analog-input' style={{width: '100%'}} type='text' placeholder='group internal name' onChange={(e) => setNewGroup({
-                            "internalname": `${e.currentTarget.value}`,
-                            "title": newGroup.groupname,
-                            "icon": newGroup.icon
-                        })}/>
-                        </div>
                         <div style={{gridRow: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <input className='analog-input' style={{width: '100%'}} type='text' placeholder='group title' onChange={(e) => setNewGroup({
                             "internalname": newGroup.internalname,
@@ -540,6 +574,35 @@ const Control = () => {
                         </div>
                         </div>
                         <button className='analog-button' onClick={() => sendNewGroup()}>Submit</button>
+                        <div style={{border: 'inset 3px', maxHeight: '210px', overflowY: 'scroll'}}>
+                            {groups?.map((el) => {
+                                return (
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <img height={'32px'} width={'32px'} style={{border: 'solid  2px'}} src={el.icon} />
+                                        <p style={{overflow: 'hidden', textOverflow: 'ellipsis', marginLeft: '5px', marginRight: '5px'}}>{el.title}</p>
+                                        <button>Remove</button>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                    <div className='cc-control-stream-box' style={{height: 'min-content', gridColumn: 'span 3'}}>
+                        <h3 className='invert-text' style={{margin: 0}}>Add Watcher:</h3>
+                        <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <input className='analog-input' style={{width: '100%'}} type='text' placeholder='channel @ handle' onChange={(e) => setNewWatcher(e.currentTarget.value)}/>
+                        </div>
+                        <button className='analog-button' onClick={() => sendNewWatcher()}>Submit</button>
+                        <div style={{border: 'inset 3px', maxHeight: '210px', overflowY: 'scroll'}}>
+                            {watchers?.map((el) => {
+                                return (
+                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <img height={'40px'} width={'40px'} style={{borderRadius: '50%', border: 'solid lime 2px'}} src={el.pfp} />
+                                        <p style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>@{el.handle}</p>
+                                        <button>Remove</button>
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
                     {streams.length > 0 ? streams.map((el, ind) => {
                         return (

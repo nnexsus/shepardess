@@ -3,7 +3,7 @@
 
     display: grid;
     grid-template-columns: 20% 60% 20%;
-    grid-template-rows: 15% 65% 100%;
+    grid-template-rows: 15% 100% 100%;
 }
 
 .control-status {
@@ -39,6 +39,10 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.control-desc-part textarea {
+    width: 100%;
 }
 
 .popup-desc {
@@ -80,6 +84,7 @@
 
 .control-desc {
     display: flex;
+    flex-direction: column;
 }
 
 
@@ -180,7 +185,19 @@
     animation: titlehover 8s linear infinite forwards;
     overflow: visible;
     text-overflow: inherit;
-} 
+}
+
+.stream-box-container:hover .stream-title-container, .group-control-stream-box:hover .stream-title-container {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.handle {
+    display: none;
+}
+
+.stream-box-container:hover .handle, .group-grid-default .group-control-stream-box:hover .handle {
+    display: flex;
+}
 
 @keyframes titlehover {
     0% {
@@ -239,8 +256,8 @@
 }
 
 .group-container-outer {
-    border: solid white 2px;
     height: 100%;
+    min-height: 190px;
 }
 
 .group-stream-box {
@@ -273,6 +290,27 @@
 .group-grid {
     height: 190px;
     width: 190px;
+    overflow-y: hidden;
+}
+
+.group-grid-default .group-container {
+    overflow-y: scroll;
+}
+
+.group-container::-webkit-scrollbar {
+    width: 4px;
+    height: 100%;
+}
+
+.group-container::-webkit-scrollbar-thumb {
+    background-color: lime;
+    transition: 0.2s ease;
+    border-radius: 15px;
+    border: none;
+}
+
+.group-container::-webkit-scrollbar-track {
+    background-color: black;
 }
 
 .type-image {

@@ -102,7 +102,7 @@ const Map = ({ socket }) => {
               return () => socket.off('update_location')
         }, [socket, locdata, setLocdata])
 
-        var locationIcon = L.icon({iconUrl: '/images/16icons/location-marker.gif', iconSize: [64, 64], iconAnchor: [33, 20], popupAnchor: [0, 0]})
+        var locationIcon = L.icon({iconUrl: '/images/16icons/location-marker.gif', iconSize: [64, 64], iconAnchor: [32, 32], popupAnchor: [0, 0]})
 
         return (
             <div>

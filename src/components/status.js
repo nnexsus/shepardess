@@ -10,7 +10,8 @@ const Status = ({ socket }) => {
         "chasing": false,
         "searchandrescue": false,
         "emergency": false,
-        "ending": false
+        "ending": false,
+        "onhold": false
     })
 
     const [desc, setDesc] = useState({
@@ -26,7 +27,8 @@ const Status = ({ socket }) => {
             "chasing": data[3].status,
             "searchandrescue": data[4].status,
             "emergency": data[5].status,
-            "ending": data[6].status
+            "ending": data[6].status,
+            "onhold": data[7].status
           })
         })
     
@@ -43,6 +45,7 @@ const Status = ({ socket }) => {
             "searchandrescue": stat.searchandrescue,
             "emergency": stat.emergency,
             "ending": stat.ending,
+            "onhold": stat.onhold,
             [data.title]: data.newstatus
           }
           setStat(newdata)

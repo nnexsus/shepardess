@@ -6,7 +6,7 @@ const ChatPanel = ({ socket, streams }) => {
     const [active, setActive] = useState("join")
 
     const Join = () => {
-        const [username, setUsername] = useState(sessionStorage?.getItem('username') || "")
+        const [username, setUsername] = useState(sessionStorage?.getItem('username'))
 
         return (
             <div id="chat-panelh" style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -25,7 +25,7 @@ const ChatPanel = ({ socket, streams }) => {
 
     const JoinRoom = () => {
         const username = sessionStorage.getItem('username')
-        if (username !== "" || !username.includes("shepardess")) {
+        if (username !== "" && username !== null && !username?.includes("shepardess")) {
             socket.emit('join_room', { 'username': `${username}` })
             setActive("chat")
         } else {
