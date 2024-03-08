@@ -195,7 +195,7 @@
     display: none;
 }
 
-.stream-box-container:hover .handle, .group-grid-default .group-control-stream-box:hover .handle {
+.stream-box-container:hover .handle, .group-grid-default .group-control-stream-box:hover .handle, .featured-hover:hover .handle {
     display: flex;
 }
 

@@ -1,3 +1,4 @@
+import ChatPanel from "../chat/chatpanel";
 import Settings from "./settings";
 import Contact from "./contact";
 import Past from "./past";
@@ -11,7 +12,8 @@ const panels = {
     "social": Poll,
     "warn": Warn,
     "contact": Contact,
-    "settings": Settings
+    "settings": Settings,
+    "chat": ChatPanel
 }
 
 export default panels;

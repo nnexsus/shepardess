@@ -471,19 +471,22 @@ const App = () => {
                 <button onClick={() => changePanel("past")} >Past <img alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
                 <button onClick={() => changePanel("social")} >Social <img alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
                 <button onClick={() => changePanel("contact")} >About+ <img alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-                <button onClick={() => changePanel("settings")} >Account <img alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+                <button className='account-leftpanel-button' onClick={() => changePanel("settings")} >Account <img alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+                <button className='chat-leftpanel-button' onClick={() => changePanel("chat")} >Chat <img alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
               </div>
               <div style={{gridRow: 3}} className="left-viewer">
                 <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
                   <p className="static-text">{panel.toUpperCase()}</p>
                 </div>
-                <LeftPanel panel={panel} socket={socket}/>
+                <LeftPanel panel={panel} socket={socket} streams={streams}/>
               </div>
             </div>
           </div>
         </div>
 
-        <ChatPanel socket={socket} streams={streams}/>
+        <div className="mobile-hide" style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5, height: '100%'}}>
+          <ChatPanel socket={socket} streams={streams}/>
+        </div>
 
         <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 3, gridRowEnd: 5, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
             <div className='description-banner'>
@@ -519,7 +522,7 @@ const App = () => {
               const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
               if (el.internalname === desc.featured) {
                 return (
-                  <div key={`streambox-${el.id}`} className="group-stream-box" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
+                  <div key={`streambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
                       <div id={`stream-${el.id}`} className='group-control-stream-box' onClick={() => openStream(el)}>
                           <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
                               <img src='/images/bgs/status-light.png' width={'16px'} height={'16px'} alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
@@ -530,6 +533,11 @@ const App = () => {
                           </div>
                           <div style={{gridRow: 'span 2', width: 'calc(100% - 43px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#999387 #ffeab6 #ffeab6 #999387 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
                           <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                          <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
+                            <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-gold.png'/>
+                            <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-gold.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: 'rgb(79 81 15)'}}>{el.internalname}</p>
+                            <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-gold.png'/>
+                          </div>
                       </div>
                   </div>
                 )

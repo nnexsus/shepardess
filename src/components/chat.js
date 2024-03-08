@@ -240,7 +240,7 @@ const Chat = ({ socket, username, streams }) => {
     }
 
     return (
-        <div className='chat-section' style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5}}>
+        <div className='chat-section'>
             <Online socket={socket}/>
             <div className="chat-full-container">
                 <Messages socket={socket}/>
