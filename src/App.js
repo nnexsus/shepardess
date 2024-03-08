@@ -5,7 +5,6 @@ import LeftPanel from './components/left-box/leftpanel';
 import ChatPanel from './components/chat/chatpanel';
 import Stream from './components/stream';
 import Status from './components/status';
-import Group from './components/group';
 
 import './css/homepage.css';
 import './css/left-box.css';
@@ -333,6 +332,40 @@ const App = () => {
     "shelfcloud": "Shelf cloud confirmed!"
   }
 
+  //group component (it needs to reach the activestream parameter somehow, esp for chat references)
+  const Group = (ids) => {
+    return (
+        <div className="group-container-outer">
+            <div className='group-container'>
+                {ids.ids.length > 0 ? ids.ids.map((el) => {
+                    const camtype = ['camera', 'carstream', 'audiostream', 'other']
+                    const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+                    return (
+                    <div key={`${el.id}`} className="group-stream-box" id={`stream-${el.id}`}>
+                        <div className='group-control-stream-box' onClick={() => openStream(el)}>
+                            <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                                <img alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
+                                <div style={{overflow: 'hidden', margin: '0px 8px', width: '100%'}}>
+                                    <p className="group-cam-title stream-title" title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                                </div>
+                                <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image" />
+                            </div>
+                            <div style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                            <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                            <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '10px'}}>
+                                <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
+                                <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                                <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                            </div>
+                        </div>
+                    </div>
+                    )
+                }): null}
+            </div>
+        </div>
+    )
+}
+
   return (
     <div className="App">
       {tutorial.active ?
@@ -389,9 +422,9 @@ const App = () => {
                     }
                   })
                   return (
-                    <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid" title='Click title to expand.'>
+                    <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid">
                       <Group ids={info} group={el.title}/>
-                      <legend style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
+                      <legend title='Click to expand.' style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
                     </fieldset>
                   )
                 }) : null}
@@ -404,7 +437,7 @@ const App = () => {
                             <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
                                 <img src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
                                 <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
-                                  <p className='stream-title' title={`${el.title}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                                  <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
                                 </div>
                                 <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
                             </div>
