@@ -100,47 +100,47 @@ const Status = ({ socket }) => {
 
     return (
         <div className="status-indicators" style={{justifyContent: 'space-between'}}>
-            <img className={`${stat?.chaseday ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.chaseday ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${stat?.chaseday ? "/images/lights/derecho-notitle.gif" :  "/images/lights/chaseday-off.gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} width="100%" alt="status light for it being a chase day" />
 
-            <img className={`${desc?.recentChange === 4 ? "updated" :  ""}`} 
+            <img loading='lazy' className={`${desc?.recentChange === 4 ? "updated" :  ""}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + "-notitle.gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + ".gif"}`} 
             src={`${"/images/lights/" + desc.threat + ".gif"}`} width="100%" alt={`todays threat type: ${desc.threat} threat.`} />
 
-            <img className={`${stat?.traveling ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.traveling ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} width="100%" alt="status light for traveling" />
 
-            <img className={`${stat?.forecasting ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.forecasting ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/forecasting" + (stat?.forecasting ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/forecasting" + (stat?.forecasting ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/forecasting" + (stat?.forecasting ? "" : "-off") + ".gif"}`} width="100%" alt="status light for forecasting" />
 
-            <img className={`${stat?.chasing ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.chasing ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} width="100%" alt="status light for chasing" />
 
-            <img className={`${stat?.searchandrescue ? "updated" :  "off"}`}
+            <img loading='lazy' className={`${stat?.searchandrescue ? "updated" :  "off"}`}
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/searchandrescue" + (stat?.searchandrescue ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/searchandrescue" + (stat?.searchandrescue ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/searchandrescue" + (stat?.searchandrescue ? "" : "-off") + ".gif"}`} width="100%" alt="status light for search & rescue" />
 
-            <img className={`${stat?.onhold ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.onhold ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} width="100%" alt="status light for being on hold" />
 
-            <img className={`${stat?.ending ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.ending ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "-notitle" : "-off") + ".gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} width="100%" alt="status light for ending the chase" />
 
-            <img className={`${stat?.emergency ? "updated" :  "off"}`} 
+            <img loading='lazy' className={`${stat?.emergency ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${stat?.emergency ? "/images/lights/emergency-notitle.gif" :  "/images/lights/emergency-off.gif"}`} 
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} width="100%" alt="status light for emergency" />

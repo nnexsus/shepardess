@@ -32,9 +32,11 @@ const Map = ({ socket }) => {
         "velocity": 0,
         "miles": 0
     })
+    
     useEffect(() => {
         updateWarnings()
         socket.emit('sync_location')
+        socket.emit('sync_poly')
     }, [])
 
     const updateWarnings = () => {
@@ -120,15 +122,15 @@ const Map = ({ socket }) => {
                 </svg>
                 <div className="map-details" style={{zIndex: 402}}>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: '12px'}}>
-                        <img title="Accuracy of the last GPS location. Ironically, the accuracy is not usually accurate, and should be much higher." alt="decor" height={'24px'} width={'24px'} src={`/images/accuracy/accuracy-${locdata.accuracyRounded}.png`} />
+                        <img loading='lazy' title="Accuracy of the last GPS location. Ironically, the accuracy is not usually accurate, and should be much higher." alt="decor" height={'24px'} width={'24px'} src={`/images/accuracy/accuracy-${locdata.accuracyRounded}.png`} />
                         <p>{locdata.accuracy}%</p>
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: '12px'}}>
-                        <img title="Current altitude." alt="decor" height={'24px'} width={'24px'} src={`/images/altitudes/altitude-${locdata.altitudeRounded}.png`} />
+                        <img loading='lazy' title="Current altitude." alt="decor" height={'24px'} width={'24px'} src={`/images/altitudes/altitude-${locdata.altitudeRounded}.png`} />
                         <p>{locdata.altitude}ft</p>
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: '12px'}}>
-                        <img title="Phone battery percentage." alt="phone battery percentage" height={'24px'} width={'24px'} src={`/images/phones/phone-${locdata.batteryRounded}.png`} />
+                        <img loading='lazy' title="Phone battery percentage." alt="phone battery percentage" height={'24px'} width={'24px'} src={`/images/phones/phone-${locdata.batteryRounded}.png`} />
                         <p>{locdata.battery}%</p>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3'}}>
@@ -139,9 +141,9 @@ const Map = ({ socket }) => {
                 </div>
 
                 <div className="car-details" style={{zIndex: 402, display: 'flex', justifyContent: 'flex-start'}}>
-                    <img src="/images/16icons/miles-counter.png" width={'20'} height={'24'} alt="decor" />
+                    <img loading='lazy' src="/images/16icons/miles-counter.png" width={'20'} height={'24'} alt="decor" />
                     <p title={`~${locdata.miles.toFixed(1)} miles traveled this trip.`} style={{fontFamily: 'ms ui gothic', width: '46px', height: '24px', color: 'black', backgroundImage: 'url(/images/16icons/miles-counter-center.png)', backgroundSize: '46px 24px', lineHeight: '20px', textAlign: 'center'}}>{locdata.miles.toFixed(2)}mi</p>
-                    <img src="/images/16icons/miles-counter-end.png" width={'8'} height={'24'} alt="decor" />
+                    <img loading='lazy' src="/images/16icons/miles-counter-end.png" width={'8'} height={'24'} alt="decor" />
                 </div>
             </div>
         )
@@ -153,6 +155,7 @@ const Map = ({ socket }) => {
 
         useEffect(() => {
             socket.on('set_poly', (data) => {
+                console.log(data)
                 var newstate = []
                 data.polygons.forEach((el) => {
                     var correctedBox = []
@@ -248,20 +251,20 @@ const Map = ({ socket }) => {
 
     return (
         <div style={{zIndex: 1, background: 'gray'}}>
-                <MapContainer style={{height: '100%', zIndex: 2}} center={[41, -88]} zoom={4} scrollWheelZoom={true}>
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <TileLayer
-                        attribution='&copy; <a href="http://mesonet.agron.iastate.edu/ogc/">IEM</a>'
-                        url="https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"
-                        opacity={0.50}
-                        className="no-invert"
-                    />
-                    <MapComp/>
-                    <Polygons/>
-                </MapContainer>
+            <MapContainer style={{height: '100%', zIndex: 2}} center={[41, -88]} zoom={4} scrollWheelZoom={true}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <TileLayer
+                    attribution='&copy; <a href="http://mesonet.agron.iastate.edu/ogc/">IEM</a>'
+                    url="https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"
+                    opacity={0.50}
+                    className="no-invert"
+                />
+                <MapComp/>
+                <Polygons/>
+            </MapContainer>
         </div>
     )
 }

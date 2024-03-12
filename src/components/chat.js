@@ -31,7 +31,7 @@ const Chat = ({ socket, username, streams }) => {
                 <div style={{display: 'flex', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', flexWrap: 'wrap', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px', imageRendering: 'auto'}}>
                     {emotes.emotes.map((el, ind) => {
                         return (
-                            <img key={`emoji-${ind}`} className="emote-select" alt="emote" src={`/images/emotes/${el.path}`} width={'16px'} height={'16px'} onClick={() => addEmote(`${el.path}`)} title={`${el.name}`}/>
+                            <img loading='lazy' key={`emoji-${ind}`} className="emote-select" alt="emote" src={`/images/emotes/${el.path}`} width={'16px'} height={'16px'} onClick={() => addEmote(`${el.path}`)} title={`${el.name}`}/>
                         )
                     })}
                 </div>
@@ -97,8 +97,8 @@ const Chat = ({ socket, username, streams }) => {
                     <button style={{width: '42px', height: '42px', cursor: 'pointer', backgroundImage: 'url(/images/16icons/arrow.gif)', backgroundSize: 'cover', border: 'inset 3px', borderLeft: 'none', fontFamily: 'ms ui gothic'}} onClick={() => sendMessage()}><b style={{textShadow: '0px 0px 2px white'}}>Send</b></button>
                 </div>
                 <div className="emote-panel-select" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
-                    <img alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/emote.gif" width={'16px'} height={'16px'} onClick={() => setActivePanel('emote')} />
-                    <img alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/emotes/nader.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
+                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/emote.gif" width={'16px'} height={'16px'} onClick={() => setActivePanel('emote')} />
+                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/emotes/nader.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
                 </div>
                 <div className="emote-panel-active" style={{display: 'flex', flexDirection: 'column', margin: '3px', height: '40%'}}>
                     <Panel/>
@@ -193,7 +193,7 @@ const Chat = ({ socket, username, streams }) => {
                     return (
                         <div className={`message-container ${el.new === true ? "new-message" : "old-message"}`} key={`message-${ind}`}>
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'url(/images/bgs/bordertest.png)', backgroundSize: '100% 100%'}}>
-                                <img alt="decor" style={{margin: '0 5px'}} src={`/images/16icons/${el.author === 'ShepardessBot' ? "hazel.png" : "avatar.png"}`} width={'24px'} height={'24px'} />
+                                <img loading='lazy' alt="decor" style={{margin: '0 5px'}} src={`/images/16icons/${el.author === 'ShepardessBot' ? "hazel.png" : "avatar.png"}`} width={'24px'} height={'24px'} />
                                 <p title={`${el.author}`} className="message-author" style={{color: `${el.author === 'ShepardessBot' ? "yellow" : "red"}`, margin: '0 4px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', fontWeight: 700, padding: '0 2px', overflow: 'hidden', textOverflow: 'ellipsis', outline: `${el.author === 'ShepardessBot' ? "yellow" : "red"} solid 1px`}}>{el.author}</p>
                                 <p className="message-author" style={{margin: '0 4px'}}><i title={`${titledate}`} style={{fontSize: '8px', color: 'aliceblue', margin: '0 8px 0 0', textDecoration: 'underline'}}>{date}</i></p>
                             </div>
@@ -201,7 +201,7 @@ const Chat = ({ socket, username, streams }) => {
                                 {texts.map((el, ind) => {
                                     var img = (imgs.length >= ind + 1)
                                     return (
-                                        <span key={`emote-${ind}`}>{el}{img ? <img className="image-render" alt="emote" style={{margin: '0 3px', width: '16px', height: '16px'}} src={`${imgs[ind]}`} /> : null}</span>
+                                        <span key={`emote-${ind}`}>{el}{img ? <img loading='lazy' className="image-render" alt="emote" style={{margin: '0 3px', width: '16px', height: '16px'}} src={`${imgs[ind]}`} /> : null}</span>
                                     )
                                 })}
                             </p>

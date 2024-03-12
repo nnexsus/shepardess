@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 import LeftPanel from './components/left-box/leftpanel';
@@ -29,7 +29,6 @@ const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-pan
 
 const App = () => {
 
-  const [panel, setPanel] = useState("map")
   const [desc, setDesc] = useState({
     "scrolling": ["SYNCING TO SERVER...", "PLEASE WAIT..."],
     "qrd": "Syncing to server...",
@@ -46,8 +45,6 @@ const App = () => {
     "popup": "tornado",
     "active": false
   })
-
-  const [activestream, setActiveStream] = useState()
 
   const [tutorial, setTutorial] = useState({
     "active": false,
@@ -97,17 +94,11 @@ const App = () => {
     localStorage.setItem('tutorial', 'false')
   }
 
-  const changePanel = (name) => {
-    setPanel(name)
-  }
-
   useEffect(() => {
     socket.emit('sync_status')
     socket.emit('sync_description')
     socket.emit('sync_stream')
     socket.emit('sync_group')
-    socket.emit('sync_poly')
-    document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
     if(localStorage.getItem('tutorial') !== 'false') {
       setTutorial({
         "active": true,
@@ -303,19 +294,6 @@ const App = () => {
     return () => socket.off('receive_popup')
   }, [socket])
 
-  const openStream = (el) => {
-    console.log(el)
-    setActiveStream(el)
-    document.querySelector('#feed-panel').style.display = 'none'
-    document.querySelector('#single-stream').style.display = 'block'
-  }
-
-  const closeStream = () => {
-    setActiveStream(null)
-    document.querySelector('#feed-panel').style.display = 'block'
-    document.querySelector('#single-stream').style.display = 'none'
-  }
-
   const toggleGroup = (id) => {
     document.getElementById(`${id}`).classList.toggle('group-grid-default')
     document.getElementById(`${id}`).classList.toggle('group-grid')
@@ -332,46 +310,229 @@ const App = () => {
     "shelfcloud": "Shelf cloud confirmed!"
   }
 
-  //group component (it needs to reach the activestream parameter somehow, esp for chat references)
-  const Group = (ids) => {
+  const Fallback = () => {
     return (
-        <div className="group-container-outer">
-            <div className='group-container'>
-                {ids.ids.length > 0 ? ids.ids.map((el) => {
-                    const camtype = ['camera', 'carstream', 'audiostream', 'other']
-                    const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
-                    return (
-                    <div key={`${el.id}`} className="group-stream-box" id={`stream-${el.id}`}>
-                        <div className='group-control-stream-box' onClick={() => openStream(el)}>
-                            <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                                <img alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
-                                <div style={{overflow: 'hidden', margin: '0px 8px', width: '100%'}}>
-                                    <p className="group-cam-title stream-title" title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
-                                </div>
-                                <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image" />
-                            </div>
-                            <div style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                            <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
-                            <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '10px'}}>
-                                <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
-                                <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
-                                <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
-                            </div>
-                        </div>
+      <div>
+        <img src='/images/bgs/skull-logo-mini.png' />
+      </div>
+    )
+  }
+
+  const CenterPanel = () => {
+    
+    const [activestream, setActiveStream] = useState()
+    const [panel, setPanel] = useState("map")
+
+    const openStream = (el) => {
+      setActiveStream(el)
+      document.querySelector('#feed-panel').style.display = 'none'
+      document.querySelector('#single-stream').style.display = 'block'
+    }
+  
+    const closeStream = () => {
+      setActiveStream(null)
+      document.querySelector('#feed-panel').style.display = 'block'
+      document.querySelector('#single-stream').style.display = 'none'
+    }
+
+    useEffect(() => {
+      console.log("Center rerender")
+    }, [])
+    
+    const Group = (ids) => {
+      return (
+          <div className="group-container-outer">
+              <div className='group-container'>
+                  {ids.ids.length > 0 ? ids.ids.map((el) => {
+                      const camtype = ['camera', 'carstream', 'audiostream', 'other']
+                      const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+                      return (
+                      <div key={`${el.id}`} className="group-stream-box" id={`stream-${el.id}`}>
+                          <div className='group-control-stream-box' onClick={() => openStream(el)}>
+                              <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                                  <img loading='lazy' alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
+                                  <div style={{overflow: 'hidden', margin: '0px 8px', width: '100%'}}>
+                                      <p className="group-cam-title stream-title" title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                                  </div>
+                                  <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image" />
+                              </div>
+                              <div style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                              <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '10px'}}>
+                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
+                                  <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                              </div>
+                          </div>
+                      </div>
+                      )
+                  }): null}
+              </div>
+          </div>
+      )
+  }
+
+  useEffect(() => {
+    document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
+  }, [])
+
+    return (
+      <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
+        <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
+          <div className='stream-container'>
+              {groups.length > 0 ? groups.map((el) => {
+                var info = []
+                streamgroup.forEach((il) => {
+                  if (il.groupname === el.internalname) {
+                    info.push({
+                      "id": il.id,
+                      "internalname": il.internalname,
+                      "title": il.title,
+                      "link": il.link,
+                      "active": il.active,
+                      "type": il.type,
+                      "author": il.author,
+                      "groupname": il.groupname,
+                      "thumblink": il.thumblink
+                    })
+                  }
+                })
+                return (
+                  <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid">
+                    <Group ids={info} group={el.title}/>
+                    <legend title='Click to expand.' style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
+                  </fieldset>
+                )
+              }) : null}
+              {streams.length > 0 ? streams.map((el) => {
+                  const camtype = ['camera', 'carstream', 'audiostream', 'other']
+                  const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+                  return (
+                    <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
+                      <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
+                          <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                              <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                              <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
+                                <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                              </div>
+                              <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
+                          </div>
+                          <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                            <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
+                          </div>
+                          <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
+                            <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
+                            <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                            <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                          </div>
+                      </div>
                     </div>
-                    )
-                }): null}
+                  )
+              }) : null}
+          </div>
+        </div>
+        <div id='single-stream' style={{height: 'calc(100% - 20px)', display: 'none'}}>
+          <img loading='lazy' src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
+          {activestream !== null ?
+            <Stream stream={activestream} />
+           : null}
+        </div>
+
+        <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
+          <div className="left-box">
+            <div className="left-buttons">
+              <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
+              <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
+              <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
+              <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
+              <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
+              <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
+              <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+              <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
+            </div>
+            <div style={{gridRow: 3}} className="left-viewer">
+              <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
+                <p className="static-text">{panel.toUpperCase()}</p>
+              </div>
+              <LeftPanel panel={panel} socket={socket} streams={all}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const Featured = () => {
+    return (
+      <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 3, height: '97%'}} className="description-section">
+      <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%'}}>
+        <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, fontFamily: 'blurpix', textShadow: '3px 1px 3px black', fontSize: '27px', fontStyle: 'italic', fontWeight: 400, width: '100%', height: '100%', textAlign: 'center', background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', lineHeight: '96px'}}>SHEPARDESS</h1>
+      </div>
+      <div style={{width: '100%', backgroundImage: 'url(/images/bgs/darkbluesteel_widecontainer.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
+        <p style={{textAlign: 'center', fontFamily: 'ms ui gothic', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Stream:</p>
+      </div>
+      {all.length > 0 ? all.map((el) => {
+          const camtype = ['camera', 'carstream', 'audiostream', 'camera']
+          const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+          if (el.internalname === desc.featured) {
+            return (
+              <div key={`fstreambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
+                  <div id={`featuredstream`} className='group-control-stream-box' style={{margin: '0 6px'}} onClick={() => document.getElementById(`stream-${el.id}`).click()}>
+                      <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                          <img loading='lazy' src='/images/bgs/status-light.png' width={'16px'} height={'16px'} alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                          <div style={{overflow: 'hidden', margin: '0 11px', width: '100%'}}>
+                            <p className="group-cam-title stream-title" title={`${el.title}`} type='text'>{el.title}</p>
+                          </div>
+                          <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' style={{height: '16px', width: '16px'}} className="type-image" />
+                      </div>
+                      <div style={{gridRow: 'span 2', width: 'calc(100% - 22px)', height: 'calc(100% - 4px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#999387 #ffeab6 #ffeab6 #999387 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                      <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                      <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-gold.png'/>
+                        <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-gold.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: 'rgb(79 81 15)'}}>{el.internalname}</p>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-gold.png'/>
+                      </div>
+                  </div>
+              </div>
+            )
+          }
+      }) : <div style={{height: '452px', width: '180px'}}></div>}
+    </div>
+    )
+  }
+
+  const QRD = () => {
+    return (
+      <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 3, gridRowEnd: 5, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
+        <div className='description-banner'>
+            <img loading='lazy' src='/images/bgs/opendir.gif' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p style={{fontFamily: 'ms ui gothic'}}>INFO</p>
+        </div>
+        <div style={{padding: '4px'}}>
+                <div className='description-qrd'>
+                    <h4 style={{fontFamily: 'ms ui gothic'}}>
+                        <img loading='lazy' src={`${desc?.qrd?.split('|')[1]}`} style={{maxWidth: '32px', maxHeight: '32px'}} alt='qrd decor'/>
+                        {desc?.qrd?.split('|')[0]}
+                    </h4>
+                </div>
+            <hr style={{height: '1px', borderBottom: 'solid 1px white'}} />
+            <div className='description-full'>
+                <p style={{fontFamily: 'ms ui gothic'}}>
+                  {desc?.full?.split('|')[0]}
+                  <br/>
+                  <img loading='lazy' src={`${desc?.full?.split('|')[1]}`} alt='description decor'/>
+                </p>
             </div>
         </div>
+    </div>
     )
-}
+  }
 
   return (
     <div className="App">
       {tutorial.active ?
         <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
           <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>
-            <img className='hazel' style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
+            <img loading='lazy' className='hazel' style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
             <div style={{gridRowStart: `${tutorial.gridbubble[1][0]}`, gridRowEnd: `${tutorial.gridbubble[1][1]}`, gridColumnStart: `${tutorial.gridbubble[0][0]}`, gridColumnEnd: `${tutorial.gridbubble[0][1]}`, padding: '39px 18px 0px 20px', fontFamily: 'ms ui gothic', backgroundImage: 'url(/images/bubble.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
               <p className='tutorial-text' style={{margin: 0}}>{tutorial.text}</p>
             </div>
@@ -381,8 +542,8 @@ const App = () => {
         </div>
       : null}
       <div style={{position: 'fixed', width: '100%', top: '15vh', left: '30vw', display: `${popup.active ? "block" : "none"}`, zIndex: '519'}}>
-        <img src={`/images/popups/popup-${popup.popup}.gif`} style={{zIndex: '20', aspectRatio: '1/1', width: '30vw', position: 'absolute'}} alt={`${popupWarnings[popup.popup]}`} title={`${popupWarnings[popup.popup]}`} />
-        <img src={`/images/popups/popup-container.png`} style={{zIndex: '20', aspectRatio: '1/1', width: 'calc(30vw + 74px)', marginLeft: '-35px', marginTop: '-35px', position: 'absolute'}} alt={'decor'} />
+        <img loading='lazy' src={`/images/popups/popup-${popup.popup}.gif`} style={{zIndex: '20', aspectRatio: '1/1', width: '30vw', position: 'absolute'}} alt={`${popupWarnings[popup.popup]}`} title={`${popupWarnings[popup.popup]}`} />
+        <img loading='lazy' src={`/images/popups/popup-container.png`} style={{zIndex: '20', aspectRatio: '1/1', width: 'calc(30vw + 74px)', marginLeft: '-35px', marginTop: '-35px', position: 'absolute'}} alt={'decor'} />
       </div>
       <div className="main-container">
         <div style={{gridColumn: 'span 2', gridRow: 1}} className="top-header" id='status-highlight'>
@@ -397,153 +558,25 @@ const App = () => {
                 )
               })}
             </div>
+            <Suspense>
               <Status socket={socket}/>
+            </Suspense>
           </div>
         </div>
-
-        <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
-          <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
-            <div className='stream-container'>
-                {groups.length > 0 ? groups.map((el) => {
-                  var info = []
-                  streamgroup.forEach((il) => {
-                    if (il.groupname === el.internalname) {
-                      info.push({
-                        "id": il.id,
-                        "internalname": il.internalname,
-                        "title": il.title,
-                        "link": il.link,
-                        "active": il.active,
-                        "type": il.type,
-                        "author": il.author,
-                        "groupname": il.groupname,
-                        "thumblink": il.thumblink
-                      })
-                    }
-                  })
-                  return (
-                    <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid">
-                      <Group ids={info} group={el.title}/>
-                      <legend title='Click to expand.' style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
-                    </fieldset>
-                  )
-                }) : null}
-                {streams.length > 0 ? streams.map((el) => {
-                    const camtype = ['camera', 'carstream', 'audiostream', 'other']
-                    const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
-                    return (
-                      <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
-                        <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
-                            <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                                <img src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
-                                <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
-                                  <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
-                                </div>
-                                <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
-                            </div>
-                            <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
-                            </div>
-                            <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
-                              <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
-                              <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
-                              <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
-                            </div>
-                        </div>
-                      </div>
-                    )
-                }) : null}
-            </div>
-          </div>
-          <div id='single-stream' style={{height: 'calc(100% - 20px)', display: 'none'}}>
-            <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
-            {activestream !== null ?
-              <Stream stream={activestream} />
-             : null}
-          </div>
-
-          <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
-            <div className="left-box">
-              <div className="left-buttons">
-                <img className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
-                <button onClick={() => changePanel("map")} >Map <img alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
-                <button onClick={() => changePanel("warn")} >Warn <img alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
-                <button onClick={() => changePanel("past")} >Past <img alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
-                <button onClick={() => changePanel("social")} >Social <img alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
-                <button onClick={() => changePanel("contact")} >About+ <img alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-                <button className='account-leftpanel-button' onClick={() => changePanel("settings")} >Account <img alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
-                <button className='chat-leftpanel-button' onClick={() => changePanel("chat")} >Chat <img alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
-              </div>
-              <div style={{gridRow: 3}} className="left-viewer">
-                <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
-                  <p className="static-text">{panel.toUpperCase()}</p>
-                </div>
-                <LeftPanel panel={panel} socket={socket} streams={streams}/>
-              </div>
-            </div>
-          </div>
-        </div>
+        
+        <CenterPanel/>
 
         <div className="mobile-hide" style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5, height: '100%'}}>
-          <ChatPanel socket={socket} streams={streams}/>
+          <ChatPanel socket={socket} streams={all}/>
         </div>
 
-        <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 3, gridRowEnd: 5, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
-            <div className='description-banner'>
-                <img src='/images/bgs/opendir.gif' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p style={{fontFamily: 'ms ui gothic'}}>INFO</p>
-            </div>
-            <div style={{padding: '4px'}}>
-                    <div className='description-qrd'>
-                        <h4 style={{fontFamily: 'ms ui gothic'}}>
-                            <img src={`${desc?.qrd?.split('|')[1]}`} style={{maxWidth: '32px', maxHeight: '32px'}} alt='qrd decor'/>
-                            {desc?.qrd?.split('|')[0]}
-                        </h4>
-                    </div>
-                <hr style={{height: '1px', borderBottom: 'solid 1px white'}} />
-                <div className='description-full'>
-                    <p style={{fontFamily: 'ms ui gothic'}}>
-                      {desc?.full?.split('|')[0]}
-                      <br/>
-                      <img src={`${desc?.full?.split('|')[1]}`} alt='description decor'/>
-                    </p>
-                </div>
-            </div>
-        </div>
+        <Suspense fallback={Fallback}>
+            <QRD/>
+        </Suspense>
 
-        <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 3, height: '97%'}} className="description-section">
-          <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%'}}>
-            <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, fontFamily: 'blurpix', textShadow: '3px 1px 3px black', fontSize: '27px', fontStyle: 'italic', fontWeight: 400, width: '100%', height: '100%', textAlign: 'center', background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', lineHeight: '96px'}}>SHEPARDESS</h1>
-          </div>
-          <div style={{width: '100%', backgroundImage: 'url(/images/bgs/darkbluesteel_widecontainer.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
-            <p style={{textAlign: 'center', fontFamily: 'ms ui gothic', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Stream:</p>
-          </div>
-          {all.length > 0 ? all.map((el) => {
-              const camtype = ['camera', 'carstream', 'audiostream', 'camera']
-              const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
-              if (el.internalname === desc.featured) {
-                return (
-                  <div key={`streambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
-                      <div id={`stream-${el.id}`} className='group-control-stream-box' onClick={() => openStream(el)}>
-                          <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                              <img src='/images/bgs/status-light.png' width={'16px'} height={'16px'} alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
-                              <div style={{overflow: 'hidden', margin: '0 16px', width: '100%'}}>
-                                <p className="group-cam-title stream-title" title={`${el.title}`} type='text'>{el.title}</p>
-                              </div>
-                              <img title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' style={{height: '16px', width: '16px'}} className="type-image" />
-                          </div>
-                          <div style={{gridRow: 'span 2', width: 'calc(100% - 43px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#999387 #ffeab6 #ffeab6 #999387 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                          <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
-                          <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
-                            <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-gold.png'/>
-                            <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-gold.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: 'rgb(79 81 15)'}}>{el.internalname}</p>
-                            <img alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-gold.png'/>
-                          </div>
-                      </div>
-                  </div>
-                )
-              }
-          }) : <div style={{height: '452px', width: '180px'}}></div>}
-        </div>
+        <Suspense fallback={Fallback}>
+            <Featured/>
+        </Suspense>
 
         </div>
     </div>

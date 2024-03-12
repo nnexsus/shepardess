@@ -351,54 +351,54 @@ const ControlPanel = () => {
             <div style={{display: 'grid', gridTemplateColumns: '50% 50% 50%', width: '100%', margin: 0, height: '100%', outline: 'none'}} className='control-status'>
                 <div className="status-indicators-control si-control-panel" style={{gridTemplateColumns: '33% 33% 34%'}}>
                     <div onClick={() => changeStatus("chaseday")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_purple" + (stat?.chaseday ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for it being a chase day, its off" /> <p>Chase Day</p>
+                        <img loading='lazy' src={`${"/images/lights/light_purple" + (stat?.chaseday ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for it being a chase day, its off" /> <p>Chase Day</p>
                     </div>
                     <div onClick={() => changeStatus("traveling")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling, its off" /> <p>Traveling</p>
+                        <img loading='lazy' src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling, its off" /> <p>Traveling</p>
                     </div>
                     <div onClick={() => changeStatus("forecasting")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting, its off" /> <p>Forecasting</p>
+                        <img loading='lazy' src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting, its off" /> <p>Forecasting</p>
                     </div>
                     <div onClick={() => changeStatus("chasing")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing, its off" /> <p>Chasing</p>
+                        <img loading='lazy' src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing, its off" /> <p>Chasing</p>
                     </div>
                     <div onClick={() => changeStatus("searchandrescue")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue, its off" /> <p>Search & Rescue</p>
+                        <img loading='lazy' src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue, its off" /> <p>Search & Rescue</p>
                     </div>
                     <div onClick={() => changeStatus("ending")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending, its off" /> <p>Ending</p>
+                        <img loading='lazy' src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending, its off" /> <p>Ending</p>
                     </div>
                     <div onClick={() => changeStatus("emergency")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_red" + (stat?.emergency ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for emergency, its off" /> <p>Emergency</p>
+                        <img loading='lazy' src={`${"/images/lights/light_red" + (stat?.emergency ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for emergency, its off" /> <p>Emergency</p>
                     </div>
                     <div onClick={() => changeStatus("onhold")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_red" + (stat?.onhold ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for onhold, its off" /> <p>On Hold</p>
+                        <img loading='lazy' src={`${"/images/lights/light_red" + (stat?.onhold ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for onhold, its off" /> <p>On Hold</p>
                     </div>
                 </div>
                 <div className="status-indicators-control si-control-panel" style={{gridTemplateColumns: '33% 33% 34%'}}>
                     <div onClick={() => changeThreat("none")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "none" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for there being no threat, its off" /> <p>No Threat</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "none" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for there being no threat, its off" /> <p>No Threat</p>
                     </div>
                     <div onClick={() => changeThreat("tornado")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "tornado" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a tornado, its off" /> <p>Tornado</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "tornado" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a tornado, its off" /> <p>Tornado</p>
                     </div>
                     <div onClick={() => changeThreat("derecho")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "derecho" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a derecho, its off" /> <p>Derecho</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "derecho" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a derecho, its off" /> <p>Derecho</p>
                     </div>
                     <div onClick={() => changeThreat("bighail")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "bighail" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being big hail, its off" /> <p>Big Hail</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "bighail" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being big hail, its off" /> <p>Big Hail</p>
                     </div>
                     <div onClick={() => changeThreat("highwind")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "highwind" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being high winds, its off" /> <p>High Wind</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "highwind" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being high winds, its off" /> <p>High Wind</p>
                     </div>
                     <div onClick={() => changeThreat("flooding")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "flood" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood, its off" /> <p>Flooding</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "flood" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood, its off" /> <p>Flooding</p>
                     </div>
                     <div onClick={() => changeThreat("thunderstorm")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
                     </div>
                     <div onClick={() => changeThreat("duststorm")} className="status-light-div control-light-div" title='Click to toggle.'>
-                        <img src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
+                        <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
                     </div>
                 </div>
                 <div className='map-controls' style={{background: 'lightgray', border: 'outset 3px', outline: '2px black solid', gridRow: 1, gridColumn: 3}}>

@@ -279,7 +279,7 @@ const ControlMap = ({ socket, apikey }) => {
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'black', border: 'inset 3px', outline: 'black solid 1px', margin: '5px'}}>
                         <button className="analog-button" onClick={() => socket.emit('send_toggle_miles', {'key': apikey})}>Toggle Milage Counter</button>
-                        <p style={{color: 'white'}}><img src="/images/bgs/status-light.png" width={'16px'} height={'16px'} style={{background: `${miles ? 'lime' : 'darkgreen'}`, borderRadius: '50%'}} />Currently: {miles ? "ON" : "OFF"}</p>
+                        <p style={{color: 'white'}}><img loading='lazy' src="/images/bgs/status-light.png" width={'16px'} height={'16px'} style={{background: `${miles ? 'lime' : 'darkgreen'}`, borderRadius: '50%'}} />Currently: {miles ? "ON" : "OFF"}</p>
                     </div>
                 </div>
             <MapComp/>

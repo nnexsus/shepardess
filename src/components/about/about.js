@@ -5,7 +5,7 @@ const About = () => {
         <div>
             <div>
                 <div className='description-banner'>
-                    <img src='/images/bgs/opendir.png' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p>DESCRIPTION</p>
+                    <img loading='lazy' src='/images/bgs/opendir.png' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p>DESCRIPTION</p>
                 </div>
                 <div style={{padding: '4px'}}>
                         <div className='description-qrd'>

@@ -372,7 +372,7 @@ const Control = () => {
     return (
         <div className="control-app">
             <div className='logo-container' style={{alignItems: 'center', justifyContent: 'center', background: 'black', margin: '25px', gridColumn: 1, gridRow: 1}}>
-                <a href='/home' ><img height={'50px'} src="/images/bgs/skull-logo.png" alt="logo" /></a>
+                <a href='/home' ><img loading='lazy' height={'50px'} src="/images/bgs/skull-logo.png" alt="logo" /></a>
             </div>
 
             <div style={{gridColumn: 2, gridRow: 1, alignItems: 'center', justifyContent: 'center'}} className="top-header-cc">
@@ -387,54 +387,54 @@ const Control = () => {
                 <div className='buttons-flex'>
                     <div className="status-indicators-control">
                         <div onClick={() => changeStatus("chaseday")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_purple" + (stat?.chaseday ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for it being a chase day" /> <p>Chase Day</p>
+                            <img loading='lazy' src={`${"/images/lights/light_purple" + (stat?.chaseday ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for it being a chase day" /> <p>Chase Day</p>
                         </div>
                         <div onClick={() => changeStatus("traveling")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling" /> <p>Traveling</p>
+                            <img loading='lazy' src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling" /> <p>Traveling</p>
                         </div>
                         <div onClick={() => changeStatus("forecasting")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting" /> <p>Forecasting</p>
+                            <img loading='lazy' src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting" /> <p>Forecasting</p>
                         </div>
                         <div onClick={() => changeStatus("chasing")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing" /> <p>Chasing</p>
+                            <img loading='lazy' src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing" /> <p>Chasing</p>
                         </div>
                         <div onClick={() => changeStatus("searchandrescue")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue" /> <p>Search & Rescue</p>
+                            <img loading='lazy' src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue" /> <p>Search & Rescue</p>
                         </div>
                         <div onClick={() => changeStatus("ending")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending" /> <p>Ending</p>
+                            <img loading='lazy' src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending" /> <p>Ending</p>
                         </div>
                         <div onClick={() => changeStatus("emergency")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_red" + (stat?.emergency ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for emergency" /> <p>Emergency</p>
+                            <img loading='lazy' src={`${"/images/lights/light_red" + (stat?.emergency ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for emergency" /> <p>Emergency</p>
                         </div>
                         <div onClick={() => changeStatus("onhold")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_red" + (stat?.onhold ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for being on hold" /> <p>On Hold</p>
+                            <img loading='lazy' src={`${"/images/lights/light_red" + (stat?.onhold ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for being on hold" /> <p>On Hold</p>
                         </div>
                     </div>
                     <div className="status-indicators-control">
                         <div onClick={() => changeThreat("none")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "none" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for there being no threat" /> <p>No Threat</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "none" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for there being no threat" /> <p>No Threat</p>
                         </div>
                         <div onClick={() => changeThreat("tornado")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "tornado" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a tornado" /> <p>Tornado</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "tornado" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a tornado" /> <p>Tornado</p>
                         </div>
                         <div onClick={() => changeThreat("derecho")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "derecho" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a derecho" /> <p>Derecho</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "derecho" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a derecho" /> <p>Derecho</p>
                         </div>
                         <div onClick={() => changeThreat("bighail")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "bighail" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being big hail" /> <p>Big Hail</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "bighail" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being big hail" /> <p>Big Hail</p>
                         </div>
                         <div onClick={() => changeThreat("highwind")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "highwind" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being high winds" /> <p>High Wind</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "highwind" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being high winds" /> <p>High Wind</p>
                         </div>
                         <div onClick={() => changeThreat("flooding")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "flood" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood" /> <p>Flooding</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "flood" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood" /> <p>Flooding</p>
                         </div>
                         <div onClick={() => changeThreat("thunderstorm")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
                         </div>
                         <div onClick={() => changeThreat("duststorm")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
                         </div>
                     </div>
                     <div className='popup-desc'>
@@ -548,10 +548,10 @@ const Control = () => {
                                     "type": `${e.currentTarget.value}`
                                 })}/>
                                 <p>
-                                0 = <img style={{background: 'lime'}} alt='static camera' title='Static Camera' src='/images/16icons/camera.png' width={'16px'} height={'16px'}/><br/>
-                                1 = <img style={{background: 'lime'}} alt='car/moving camera' title='Car/Moving Camera' src='/images/16icons/carstream.png' width={'16px'} height={'16px'}/><br/>
-                                2 = <img style={{background: 'lime'}} alt='screenshare' title='Screenshare' src='/images/16icons/audiostream.png' width={'16px'} height={'16px'}/><br/>
-                                3 = <img style={{background: 'lime'}} alt='other' title='Other' src='/images/16icons/other.png' width={'16px'} height={'16px'}/>
+                                0 = <img loading='lazy' style={{background: 'lime'}} alt='static camera' title='Static Camera' src='/images/16icons/camera.png' width={'16px'} height={'16px'}/><br/>
+                                1 = <img loading='lazy' style={{background: 'lime'}} alt='car/moving camera' title='Car/Moving Camera' src='/images/16icons/carstream.png' width={'16px'} height={'16px'}/><br/>
+                                2 = <img loading='lazy' style={{background: 'lime'}} alt='screenshare' title='Screenshare' src='/images/16icons/audiostream.png' width={'16px'} height={'16px'}/><br/>
+                                3 = <img loading='lazy' style={{background: 'lime'}} alt='other' title='Other' src='/images/16icons/other.png' width={'16px'} height={'16px'}/>
                                 </p>
                             </div>
                         </div>
@@ -578,7 +578,7 @@ const Control = () => {
                             {groups?.map((el) => {
                                 return (
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                        <img height={'32px'} width={'32px'} style={{border: 'solid  2px'}} src={el.icon} />
+                                        <img loading='lazy' height={'32px'} width={'32px'} style={{border: 'solid  2px'}} src={el.icon} />
                                         <p style={{overflow: 'hidden', textOverflow: 'ellipsis', marginLeft: '5px', marginRight: '5px'}}>{el.title}</p>
                                         <button>Remove</button>
                                     </div>
@@ -596,7 +596,7 @@ const Control = () => {
                             {watchers?.map((el) => {
                                 return (
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <img height={'40px'} width={'40px'} style={{borderRadius: '50%', border: 'solid lime 2px'}} src={el.pfp} />
+                                        <img loading='lazy' height={'40px'} width={'40px'} style={{borderRadius: '50%', border: 'solid lime 2px'}} src={el.pfp} />
                                         <p style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>@{el.handle}</p>
                                         <button>Remove</button>
                                     </div>
@@ -641,7 +641,7 @@ const Control = () => {
                                     <p>Thumb:</p>
                                     <input className='analog-input' type='text' placeholder='thumbnail link' id={`store-new-thumblink-${el.id}`} defaultValue={el.thumblink}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('thumblink', el.id, document.getElementById(`store-new-thumblink-${el.id}`).value)}></button>
                                 </div>
-                                <img style={{border: 'inset 3px'}} src={`${el.thumblink}`} height={'100px'} alt='thumbnail' />
+                                <img loading='lazy' style={{border: 'inset 3px'}} src={`${el.thumblink}`} height={'100px'} alt='thumbnail' />
                                 <div style={{gridRow: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: 'solid gray 2px'}}>
                                     <p>Group:</p>
                                     <select className='analog-input' defaultValue={el.groupname} onChange={(e) => changeStream('groupname', el.id, e.currentTarget.value)} name='Groups'>

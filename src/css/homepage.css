@@ -89,8 +89,8 @@
 
 .feeds-container {
     background: #04061a;
-    background-image: url('/public/images/bgs/Sandstone.png');
-    background-size: 150px;
+    background-image: url('/public/images/bgs/logo-bg.png');
+    background-size: 50px;
     border-top: solid 3px #dadbe8;
     border-left: solid 3px lightgray;
     border-right: solid 3px gray;
@@ -324,11 +324,11 @@
 }
 
 .chat-leftpanel-button {
-    display: none;
+    display: none !important;
 }
 
 .account-leftpanel-button {
-    display: block;
+    display: flex !important;
 }
 
 @media screen and (max-width: 1050px) {
@@ -391,7 +391,7 @@
     }
 
     .chat-leftpanel-button {
-        display: block;
+        display: flex !important;
     }
 
     .account-leftpanel-button {

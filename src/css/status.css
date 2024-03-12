@@ -12,6 +12,7 @@
     outline: solid black 1px;
 
     max-width: 100px;
+    max-height: 40px;
 }
 
 .status-indicators .updated {
@@ -83,5 +84,6 @@
 @media screen and (min-width: 1750px) {
     .status-indicators img {
         max-width: 200px;
+        max-height: 85px;
     }
 }

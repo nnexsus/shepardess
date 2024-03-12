@@ -175,7 +175,7 @@
     width: 190px;
 }
 
-.control-stream-box:hover {
+.stream-box-container:hover {
     filter: brightness(1.1);
 }
 

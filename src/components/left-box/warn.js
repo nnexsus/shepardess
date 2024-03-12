@@ -53,10 +53,10 @@ const Warn = () => {
                         const bgcol = `${warn.properties.severity === "Moderate" ? '#F4D8CD' :  /*possible*/ warn.properties.severity === "Severe" ? '#EDB183' : /*likely*/ warn.properties.severity === "Extreme" ? '#F15152' : /*observed*/ '#79C7C5'}`
                         return (
                             <div style={{backgroundColor: `${bgcol}`, border: 'inset 3px', margin: '10px'}} key={warn.id}>
-                                <h2 style={{display: 'flex', alignItems: 'center'}}><img alt="decor" height={'32px'} width={'32px'} src={`/images/warns/${warn.properties.event.replace(" ", "-")}.png`} />{warn.properties.event}</h2>
+                                <h2 style={{display: 'flex', alignItems: 'center'}}><img loading='lazy' alt="decor" height={'32px'} width={'32px'} src={`/images/warns/${warn.properties.event.replace(" ", "-")}.png`} />{warn.properties.event}</h2>
                                 <p>{warn.properties.headline}</p>
                                 <p id={`expandwarn-p-${ind}`} className="past-desc" style={{WebkitLineClamp: 2}}>{warn.properties.instruction}</p>
-                                <button id={`expandwarn-${ind}`} className='past-expand' onClick={() => expand(ind)}>Expand <img style={{marginLeft: '3px'}} width={'24px'} height={'24px'} alt='decor' src='/images/bgs/Book.ico' /></button>
+                                <button id={`expandwarn-${ind}`} className='past-expand' onClick={() => expand(ind)}>Expand <img loading='lazy' style={{marginLeft: '3px'}} width={'24px'} height={'24px'} alt='decor' src='/images/bgs/Book.ico' /></button>
                             </div>
                         )
                     })}
