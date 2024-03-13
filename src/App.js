@@ -137,27 +137,58 @@ const App = () => {
   const CenterPanel = () => {
 
     const socket = io.connect('https://arina.lol')
-    
-    const [activestream, setActiveStream] = useState()
-
-    const openStream = (el) => {
-      setActiveStream(el)
-      document.querySelector('#feed-panel').style.display = 'none'
-      document.querySelector('#single-stream').style.display = 'block'
-    }
-  
-    const closeStream = () => {
-      setActiveStream(null)
-      document.querySelector('#feed-panel').style.display = 'block'
-      document.querySelector('#single-stream').style.display = 'none'
-    }
 
     useEffect(() => {
       console.log("Center rerender")
       socket.emit('sync_stream')
       socket.emit('sync_group')
     }, [])
-    
+
+  useEffect(() => {
+    document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
+  }, [])
+
+  const LeftBox = () => {
+
+    const [panel, setPanel] = useState("map")
+
+    return (
+      <div className="left-box">
+        <div className="left-buttons">
+          <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
+          <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
+          <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
+        </div>
+        <div style={{gridRow: 3}} className="left-viewer">
+          <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
+            <p className="static-text">{panel.toUpperCase()}</p>
+          </div>
+          <Suspense fallback={<Fallback/>}>
+            <LeftPanel panel={panel}/>
+          </Suspense>
+        </div>
+      </div>
+    )
+  }
+
+  const StreamContainer = () => {
+    const [activestream, setActiveStream] = useState(null)
+
+    const openStream = (el) => {
+      setActiveStream(el)
+    }
+  
+    const closeStream = () => {
+      setActiveStream(null)
+      socket.emit('sync_group')
+      socket.emit('sync_stream')
+    }
+
     const Group = (ids) => {
       return (
           <div className="group-container-outer">
@@ -191,227 +222,201 @@ const App = () => {
       )
   }
 
-  useEffect(() => {
-    document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
-  }, [])
-
-  const Streams = () => {
-    const [streams, setStreams] = useState([])
-    const [groups, setGroups] = useState([])
-    const [streamgroup, setStreamgroup] = useState([])
-
-    useEffect(() => {
-      socket.on('set_stream', (data) => {
-        var streamsarr = []
-        var groupsarr = []
-        data.forEach((el) => {
-          if (el.groupname !== null && el.groupname !== "NULL") {
-            groupsarr.push(el)
-          } else {
-            streamsarr.push(el)
-          }
-        })
-        setStreams(streamsarr)
-        setStreamgroup(groupsarr)
-      })
+    const Streams = () => {
+      const [streams, setStreams] = useState([])
+      const [groups, setGroups] = useState([])
+      const [streamgroup, setStreamgroup] = useState([])
   
-      return () => socket.off('set_stream')
-    }, [socket, streams, setStreams])
-  
-    useEffect(() => {
-      socket.on('update_stream', (data) => {
-          streams.forEach((el, ind) => {
-              if (el.id === data.id) {
-                  const si =  el
-                  const newdata = {
-                      "title": si.title,
-                      "id": si.id,
-                      "internalname": si.internalname,
-                      "groupname": si.groupname,
-                      "thumblink": si.thumblink,
-                      "link": si.link,
-                      "type": si.type,
-                      "author": si.author,
-                      [data.attribute]: data.newvalue
-                  }
-                  var newarr = streams
-                  newarr[ind] = newdata
-                  setStreams(newarr)
-              }
+      useEffect(() => {
+        socket.on('set_stream', (data) => {
+          var streamsarr = []
+          var groupsarr = []
+          data.forEach((el) => {
+            if (el.groupname !== null && el.groupname !== "NULL") {
+              groupsarr.push(el)
+            } else {
+              streamsarr.push(el)
+            }
           })
-        })    
-        return () => socket.off('update_stream')
-    }, [socket, streams, setStreams])
-  
-    useEffect(() => {
-      socket.on('add_stream', (data) => {
-          setStreams((state) => [
-              ...state,
-              {
-                  "title": data.title,
-                  "id": data.id,
-                  "internalname": data.internalname,
-                  "groupname": data.groupname,
-                  "thumblink": data.thumblink,
-                  "link": data.link,
-                  "type": data.type,
-                  "author": data.author,
-              }
-          ]);
+          setStreams(streamsarr)
+          setStreamgroup(groupsarr)
         })
-  
-        return () => socket.off('add_stream')
-    }, [socket, streams, setStreams])
-  
-    useEffect(() => {
-      socket.on('remove_stream', (data) => {
-          var newarr = []
-          streams.forEach((el) => {
-              if (el.id !== data.id) {
-                  newarr.push(el)
-              }
-          })
-          setStreams(newarr)
-          newarr = []
-          streamgroup.forEach((el) => {
-              if (el.id !== data.id) {
-                  newarr.push(el)
-              }
-          })
-          setStreamgroup(newarr)
-        })
-        return () => socket.off('remove_stream')
-    }, [socket, streams, setStreams, streamgroup, setStreamgroup])
-  
-    useEffect(() => {
-      socket.on('set_groups', (data) => {
-        setGroups(data)
-      })
-  
-      return () => socket.off('set_groups')
-    }, [socket, groups, setGroups])
-  
-    useEffect(() => {
-        socket.on('add_group', (data) => {
-            setGroups((state) => [
+    
+        return () => socket.off('set_stream')
+      }, [socket, streams, setStreams])
+    
+      useEffect(() => {
+        socket.on('update_stream', (data) => {
+            streams.forEach((el, ind) => {
+                if (el.id === data.id) {
+                    const si =  el
+                    const newdata = {
+                        "title": si.title,
+                        "id": si.id,
+                        "internalname": si.internalname,
+                        "groupname": si.groupname,
+                        "thumblink": si.thumblink,
+                        "link": si.link,
+                        "type": si.type,
+                        "author": si.author,
+                        [data.attribute]: data.newvalue
+                    }
+                    var newarr = streams
+                    newarr[ind] = newdata
+                    setStreams(newarr)
+                }
+            })
+          })    
+          return () => socket.off('update_stream')
+      }, [socket, streams, setStreams])
+    
+      useEffect(() => {
+        socket.on('add_stream', (data) => {
+            setStreams((state) => [
                 ...state,
                 {
-                    "internalname": data.internalname, 
-                    "title": data.title
+                    "title": data.title,
+                    "id": data.id,
+                    "internalname": data.internalname,
+                    "groupname": data.groupname,
+                    "thumblink": data.thumblink,
+                    "link": data.link,
+                    "type": data.type,
+                    "author": data.author,
                 }
             ]);
           })
-  
-          return () => socket.off('add_group')
-    }, [socket, groups, setGroups])
-  
-    useEffect(() => {
-        socket.on('remove_group', (data) => {
-            groups.forEach((el) => {
-                var newarr = []
+    
+          return () => socket.off('add_stream')
+      }, [socket, streams, setStreams])
+    
+      useEffect(() => {
+        socket.on('remove_stream', (data) => {
+            var newarr = []
+            streams.forEach((el) => {
                 if (el.id !== data.id) {
                     newarr.push(el)
                 }
-                setGroups(newarr)
             })
-          })    
-          return () => socket.off('remove_group')
-    }, [socket, groups, setGroups])
-
-    return (
-        <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
-          <div className='stream-container'>
-              {groups.length > 0 ? groups.map((el) => {
-                var info = []
-                streamgroup.forEach((il) => {
-                  if (il.groupname === el.internalname) {
-                    info.push({
-                      "id": il.id,
-                      "internalname": il.internalname,
-                      "title": il.title,
-                      "link": il.link,
-                      "active": il.active,
-                      "type": il.type,
-                      "author": il.author,
-                      "groupname": il.groupname,
-                      "thumblink": il.thumblink
-                    })
+            setStreams(newarr)
+            newarr = []
+            streamgroup.forEach((el) => {
+                if (el.id !== data.id) {
+                    newarr.push(el)
+                }
+            })
+            setStreamgroup(newarr)
+          })
+          return () => socket.off('remove_stream')
+      }, [socket, streams, setStreams, streamgroup, setStreamgroup])
+    
+      useEffect(() => {
+        socket.on('set_groups', (data) => {
+          setGroups(data)
+        })
+    
+        return () => socket.off('set_groups')
+      }, [socket, groups, setGroups])
+    
+      useEffect(() => {
+          socket.on('add_group', (data) => {
+              setGroups((state) => [
+                  ...state,
+                  {
+                      "internalname": data.internalname, 
+                      "title": data.title
                   }
-                })
-                return (
-                  <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid">
-                    <Group ids={info} group={el.title}/>
-                    <legend title='Click to expand.' style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
-                  </fieldset>
-                )
-              }) : null}
-              {streams.length > 0 ? streams.map((el) => {
-                  const camtype = ['camera', 'carstream', 'audiostream', 'other']
-                  const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+              ]);
+            })
+    
+            return () => socket.off('add_group')
+      }, [socket, groups, setGroups])
+    
+      useEffect(() => {
+          socket.on('remove_group', (data) => {
+              groups.forEach((el) => {
+                  var newarr = []
+                  if (el.id !== data.id) {
+                      newarr.push(el)
+                  }
+                  setGroups(newarr)
+              })
+            })    
+            return () => socket.off('remove_group')
+      }, [socket, groups, setGroups])
+  
+      return (
+          <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
+            <div className='stream-container'>
+                {groups.length > 0 ? groups.map((el) => {
+                  var info = []
+                  streamgroup.forEach((il) => {
+                    if (il.groupname === el.internalname) {
+                      info.push({
+                        "id": il.id,
+                        "internalname": il.internalname,
+                        "title": il.title,
+                        "link": il.link,
+                        "active": il.active,
+                        "type": il.type,
+                        "author": il.author,
+                        "groupname": il.groupname,
+                        "thumblink": il.thumblink
+                      })
+                    }
+                  })
                   return (
-                    <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
-                      <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
-                          <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                              <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
-                              <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
-                                <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
-                              </div>
-                              <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
-                          </div>
-                          <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                            <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
-                          </div>
-                          <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
-                            <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
-                            <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
-                            <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
-                          </div>
-                      </div>
-                    </div>
+                    <fieldset style={{minInlineSize: 'auto', paddingBlockStart: 0, paddingBlockEnd: 0, paddingInlineStart: 0, paddingInlineEnd: 0, margin: 0, border: 'solid white 2px'}} key={el.id} id={`group-default-${el.id}`} className="group-grid">
+                      <Group ids={info} group={el.title}/>
+                      <legend title='Click to expand.' style={{background: 'rgba(0,0,0,0.75)', maxWidth: '175px', textAlign: 'center', color: 'lime', fontFamily: 'ms ui gothic', cursor: 'pointer', textDecoration: 'underline', textShadow: '1px 1px 5px #000, -1px 1px 5px #000, -1px -1px 5px #000, 1px -1px 5px #000'}} onClick={() => toggleGroup(`group-default-${el.id}`)}><img style={{paddingRight: '5px'}} src={`${el.icon}`} alt="decor" width={'16px'} height={'16px'} />{el.title}</legend>
+                    </fieldset>
                   )
-              }) : null}
+                }) : null}
+                {streams.length > 0 ? streams.map((el) => {
+                    const camtype = ['camera', 'carstream', 'audiostream', 'other']
+                    const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+                    return (
+                      <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
+                        <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
+                            <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                                <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                                <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
+                                  <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                                </div>
+                                <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
+                            </div>
+                            <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
+                            </div>
+                            <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
+                              <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
+                              <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                              <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                            </div>
+                        </div>
+                      </div>
+                    )
+                }) : null}
+            </div>
           </div>
-        </div>
-    )
-  }
-
-  const LeftBox = () => {
-
-    const [panel, setPanel] = useState("map")
+      )
+    }
 
     return (
-      <div className="left-box">
-        <div className="left-buttons">
-          <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
-          <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-          <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
-          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
-        </div>
-        <div style={{gridRow: 3}} className="left-viewer">
-          <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
-            <p className="static-text">{panel.toUpperCase()}</p>
+      <>
+        {activestream !== null ?
+          <div id='single-stream' style={{height: 'calc(100% - 20px)'}}>
+            <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
+              <Stream stream={activestream} />
           </div>
-          <Suspense fallback={<Fallback/>}>
-            <LeftPanel panel={panel}/>
-          </Suspense>
-        </div>
-      </div>
+        : <Streams/>}
+      </>
     )
   }
 
     return (
       <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
-        <Streams/>
-        <div id='single-stream' style={{height: 'calc(100% - 20px)', display: 'none'}}>
-          <img loading='lazy' src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
-          {activestream !== null ?
-            <Stream stream={activestream} />
-           : null}
-        </div>
+        <StreamContainer/>
 
         <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
             <LeftBox/>
