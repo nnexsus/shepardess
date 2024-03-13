@@ -10,8 +10,6 @@ import './css/homepage.css';
 import './css/left-box.css';
 import './css/status.css';
 
-const socket = io.connect('https://arina.lol');
-
 const texts = [
   "Hi!! Welcome to Shepardess!! If you're new and would like a quick, tutorial... I could show you around!",
   "Yeah! I'll show you! This is the bottom section, and right now its on the map. This shows my current location, NWS warnings, radar, custom areas, and a lot more!! A lot happens here, it's a very important panel!",
@@ -29,18 +27,8 @@ const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-pan
 
 const App = () => {
 
-  const [desc, setDesc] = useState({
-    "scrolling": ["SYNCING TO SERVER...", "PLEASE WAIT..."],
-    "qrd": "Syncing to server...",
-    "full": "Syncing to server...",
-    "featured": "",
-    "threat": "none",
-    "recentChange": 0
-  })
-  const [streams, setStreams] = useState([])
-  const [groups, setGroups] = useState([])
-  const [streamgroup, setStreamgroup] = useState([])
-  const [all, setAll] = useState([])
+  var socket = io.connect('https://arina.lol');
+
   const [popup, setPopup] = useState({
     "popup": "tornado",
     "active": false
@@ -65,7 +53,6 @@ const App = () => {
       "gridbubble": gridbubble[newnum],
       "gridbutton": gridbutton[newnum]
     }
-    console.log(newnum)
     if ((newnum) >= 6) {
       newarr = {
         "active": false,
@@ -95,10 +82,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    socket.emit('sync_status')
-    socket.emit('sync_description')
-    socket.emit('sync_stream')
-    socket.emit('sync_group')
     if(localStorage.getItem('tutorial') !== 'false') {
       setTutorial({
         "active": true,
@@ -110,173 +93,6 @@ const App = () => {
       })
     }
   }, [])
-
-  useEffect(() => {
-    socket.on('set_stream', (data) => {
-      var streamsarr = []
-      var groupsarr = []
-      data.forEach((el) => {
-        if (el.groupname !== null && el.groupname !== "NULL") {
-          groupsarr.push(el)
-        } else {
-          streamsarr.push(el)
-        }
-      })
-      setStreams(streamsarr)
-      setStreamgroup(groupsarr)
-      setAll(data)
-    })
-
-    return () => socket.off('set_stream')
-  }, [socket, streams, setStreams])
-
-  useEffect(() => {
-    socket.on('update_stream', (data) => {
-        streams.map((el, ind) => {
-            if (el.id === data.id) {
-                const si =  el
-                const newdata = {
-                    "title": si.title,
-                    "id": si.id,
-                    "internalname": si.internalname,
-                    "groupname": si.groupname,
-                    "thumblink": si.thumblink,
-                    "link": si.link,
-                    "type": si.type,
-                    "author": si.author,
-                    [data.attribute]: data.newvalue
-                }
-                var newarr = streams
-                newarr[ind] = newdata
-                setStreams(newarr)
-            }
-        })
-      })    
-      return () => socket.off('update_stream')
-  }, [socket, streams, setStreams])
-
-  useEffect(() => {
-    socket.on('add_stream', (data) => {
-        setStreams((state) => [
-            ...state,
-            {
-                "title": data.title,
-                "id": data.id,
-                "internalname": data.internalname,
-                "groupname": data.groupname,
-                "thumblink": data.thumblink,
-                "link": data.link,
-                "type": data.type,
-                "author": data.author,
-            }
-        ]);
-      })
-
-      return () => socket.off('add_stream')
-  }, [socket, streams, setStreams])
-
-  useEffect(() => {
-    socket.on('remove_stream', (data) => {
-        var newarr = []
-        streams.map((el) => {
-            if (el.id !== data.id) {
-                newarr.push(el)
-            }
-        })
-        setStreams(newarr)
-        newarr = []
-        streamgroup.map((el) => {
-            if (el.id !== data.id) {
-                newarr.push(el)
-            }
-        })
-        setStreamgroup(newarr)
-      })
-      return () => socket.off('remove_stream')
-  }, [socket, streams, setStreams])
-
-  useEffect(() => {
-    socket.on('set_groups', (data) => {
-      setGroups(data)
-    })
-
-    return () => socket.off('set_groups')
-  }, [socket, groups, setGroups])
-
-  useEffect(() => {
-      socket.on('add_group', (data) => {
-          setGroups((state) => [
-              ...state,
-              {
-                  "internalname": data.internalname, 
-                  "title": data.title
-              }
-          ]);
-        })
-
-        return () => socket.off('add_group')
-  }, [socket, groups, setGroups])
-
-  useEffect(() => {
-      socket.on('remove_group', (data) => {
-          groups.map((el) => {
-              var newarr = []
-              if (el.id !== data.id) {
-                  newarr.push(el)
-              }
-              setGroups(newarr)
-          })
-        })    
-        return () => socket.off('remove_group')
-  }, [socket, groups, setGroups])
-
-  useEffect(() => {
-      socket.on('set_desc', (data) => {
-        var newscroll = data[0].text.split(",")
-        setDesc({
-          "scrolling": newscroll,
-          "qrd": data[1].text,
-          "full": data[2].text,
-          "featured": data[3].text,
-          "threat": data[4].text,
-          "recentChange": 0
-        })
-      })
-
-      return () => socket.off('set_desc')
-  }, [socket, desc, setDesc])
-
-  useEffect(() => {
-    socket.on('update_desc', (data) => {
-        const titles = ['scrolling', 'qrd', 'full', 'featured', 'threat']
-        var newvalue = data.newtext
-        if(data.title === 0) {
-          newvalue = newvalue.split(',')
-        }
-        const newdata = {
-          "scrolling": desc.scrolling,
-          "qrd": desc.qrd,
-          "full": desc.full,
-          "featured": desc.featured,
-          "threat": desc.threat,
-          "recentChange": data.title,
-          [titles[data.title]]: newvalue
-        }
-        setDesc(newdata, setTimeout(() => {
-          const newdata = {
-            "scrolling": desc.scrolling,
-            "qrd": desc.qrd,
-            "full": desc.full,
-            "featured": desc.featured,
-            "threat": desc.threat,
-            "recentChange": 10,
-            [titles[data.title]]: newvalue
-          }
-          setDesc(newdata)
-        }, [2500]))
-      })
-      return () => socket.off('update_desc')
-  }, [socket, desc, setDesc])
 
   useEffect(() => {
     socket.on('receive_popup', (data) => {
@@ -313,15 +129,16 @@ const App = () => {
   const Fallback = () => {
     return (
       <div>
-        <img src='/images/bgs/skull-logo-mini.png' />
+        <img alt='fallback loading logo' src='/images/bgs/skull-logo-mini.png' />
       </div>
     )
   }
 
   const CenterPanel = () => {
+
+    const socket = io.connect('https://arina.lol')
     
     const [activestream, setActiveStream] = useState()
-    const [panel, setPanel] = useState("map")
 
     const openStream = (el) => {
       setActiveStream(el)
@@ -337,6 +154,8 @@ const App = () => {
 
     useEffect(() => {
       console.log("Center rerender")
+      socket.emit('sync_stream')
+      socket.emit('sync_group')
     }, [])
     
     const Group = (ids) => {
@@ -376,8 +195,130 @@ const App = () => {
     document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
   }, [])
 
+  const Streams = () => {
+    const [streams, setStreams] = useState([])
+    const [groups, setGroups] = useState([])
+    const [streamgroup, setStreamgroup] = useState([])
+
+    useEffect(() => {
+      socket.on('set_stream', (data) => {
+        var streamsarr = []
+        var groupsarr = []
+        data.forEach((el) => {
+          if (el.groupname !== null && el.groupname !== "NULL") {
+            groupsarr.push(el)
+          } else {
+            streamsarr.push(el)
+          }
+        })
+        setStreams(streamsarr)
+        setStreamgroup(groupsarr)
+      })
+  
+      return () => socket.off('set_stream')
+    }, [socket, streams, setStreams])
+  
+    useEffect(() => {
+      socket.on('update_stream', (data) => {
+          streams.forEach((el, ind) => {
+              if (el.id === data.id) {
+                  const si =  el
+                  const newdata = {
+                      "title": si.title,
+                      "id": si.id,
+                      "internalname": si.internalname,
+                      "groupname": si.groupname,
+                      "thumblink": si.thumblink,
+                      "link": si.link,
+                      "type": si.type,
+                      "author": si.author,
+                      [data.attribute]: data.newvalue
+                  }
+                  var newarr = streams
+                  newarr[ind] = newdata
+                  setStreams(newarr)
+              }
+          })
+        })    
+        return () => socket.off('update_stream')
+    }, [socket, streams, setStreams])
+  
+    useEffect(() => {
+      socket.on('add_stream', (data) => {
+          setStreams((state) => [
+              ...state,
+              {
+                  "title": data.title,
+                  "id": data.id,
+                  "internalname": data.internalname,
+                  "groupname": data.groupname,
+                  "thumblink": data.thumblink,
+                  "link": data.link,
+                  "type": data.type,
+                  "author": data.author,
+              }
+          ]);
+        })
+  
+        return () => socket.off('add_stream')
+    }, [socket, streams, setStreams])
+  
+    useEffect(() => {
+      socket.on('remove_stream', (data) => {
+          var newarr = []
+          streams.forEach((el) => {
+              if (el.id !== data.id) {
+                  newarr.push(el)
+              }
+          })
+          setStreams(newarr)
+          newarr = []
+          streamgroup.forEach((el) => {
+              if (el.id !== data.id) {
+                  newarr.push(el)
+              }
+          })
+          setStreamgroup(newarr)
+        })
+        return () => socket.off('remove_stream')
+    }, [socket, streams, setStreams, streamgroup, setStreamgroup])
+  
+    useEffect(() => {
+      socket.on('set_groups', (data) => {
+        setGroups(data)
+      })
+  
+      return () => socket.off('set_groups')
+    }, [socket, groups, setGroups])
+  
+    useEffect(() => {
+        socket.on('add_group', (data) => {
+            setGroups((state) => [
+                ...state,
+                {
+                    "internalname": data.internalname, 
+                    "title": data.title
+                }
+            ]);
+          })
+  
+          return () => socket.off('add_group')
+    }, [socket, groups, setGroups])
+  
+    useEffect(() => {
+        socket.on('remove_group', (data) => {
+            groups.forEach((el) => {
+                var newarr = []
+                if (el.id !== data.id) {
+                    newarr.push(el)
+                }
+                setGroups(newarr)
+            })
+          })    
+          return () => socket.off('remove_group')
+    }, [socket, groups, setGroups])
+
     return (
-      <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
         <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
           <div className='stream-container'>
               {groups.length > 0 ? groups.map((el) => {
@@ -431,6 +372,40 @@ const App = () => {
               }) : null}
           </div>
         </div>
+    )
+  }
+
+  const LeftBox = () => {
+
+    const [panel, setPanel] = useState("map")
+
+    return (
+      <div className="left-box">
+        <div className="left-buttons">
+          <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
+          <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
+          <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
+          <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
+        </div>
+        <div style={{gridRow: 3}} className="left-viewer">
+          <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
+            <p className="static-text">{panel.toUpperCase()}</p>
+          </div>
+          <Suspense fallback={<Fallback/>}>
+            <LeftPanel panel={panel}/>
+          </Suspense>
+        </div>
+      </div>
+    )
+  }
+
+    return (
+      <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
+        <Streams/>
         <div id='single-stream' style={{height: 'calc(100% - 20px)', display: 'none'}}>
           <img loading='lazy' src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
           {activestream !== null ?
@@ -439,34 +414,43 @@ const App = () => {
         </div>
 
         <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
-          <div className="left-box">
-            <div className="left-buttons">
-              <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
-              <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
-              <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
-              <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
-              <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
-              <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-              <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
-              <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
-            </div>
-            <div style={{gridRow: 3}} className="left-viewer">
-              <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
-                <p className="static-text">{panel.toUpperCase()}</p>
-              </div>
-              <LeftPanel panel={panel} socket={socket} streams={all}/>
-            </div>
-          </div>
+            <LeftBox/>
         </div>
       </div>
     )
   }
 
   const Featured = () => {
+    const socket = io.connect("https://arina.lol")
+
+    const [featured, setFeatured] = useState("")
+    const [all, setAll] = useState([])
+
+    useEffect(() => {
+      socket.emit("sync_description")
+      socket.emit("sync_stream")
+    }, [])
+
+    useEffect(() => {
+      socket.on('set_desc', (data) => {
+        setFeatured(data[3].text)
+      })
+
+      return () => socket.off('set_desc')
+  }, [socket, featured, setFeatured])
+
+  useEffect(() => {
+    socket.on('set_stream', (data) => {
+      setAll(data)
+    })
+
+    return () => socket.off('set_stream')
+  }, [socket, all, setAll])
+
     return (
       <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 3, height: '97%'}} className="description-section">
       <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%'}}>
-        <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, fontFamily: 'blurpix', textShadow: '3px 1px 3px black', fontSize: '27px', fontStyle: 'italic', fontWeight: 400, width: '100%', height: '100%', textAlign: 'center', background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', lineHeight: '96px'}}>SHEPARDESS</h1>
+        <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '27px', fontStyle: 'italic', fontWeight: 400, width: '100%', height: '100%', textAlign: 'center', background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', lineHeight: '96px'}}>SHEPARDESS</h1>
       </div>
       <div style={{width: '100%', backgroundImage: 'url(/images/bgs/darkbluesteel_widecontainer.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
         <p style={{textAlign: 'center', fontFamily: 'ms ui gothic', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Stream:</p>
@@ -474,7 +458,7 @@ const App = () => {
       {all.length > 0 ? all.map((el) => {
           const camtype = ['camera', 'carstream', 'audiostream', 'camera']
           const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
-          if (el.internalname === desc.featured) {
+          if (el.internalname === featured) {
             return (
               <div key={`fstreambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}} id={`stream-${el.id}`}>
                   <div id={`featuredstream`} className='group-control-stream-box' style={{margin: '0 6px'}} onClick={() => document.getElementById(`stream-${el.id}`).click()}>
@@ -496,12 +480,75 @@ const App = () => {
               </div>
             )
           }
-      }) : <div style={{height: '452px', width: '180px'}}></div>}
+      }) : <div style={{width: '180px'}}></div>}
     </div>
     )
   }
 
   const QRD = () => {
+    const socket = io.connect("https://arina.lol")
+
+    const [desc, setDesc] = useState({
+      "scrolling": ["SYNCING TO SERVER...", "PLEASE WAIT..."],
+      "qrd": "Syncing to server...",
+      "full": "Syncing to server...",
+      "featured": "",
+      "threat": "none",
+      "recentChange": 0
+    })
+
+    useEffect(() => {
+      socket.emit("sync_description")
+    }, [])
+
+  useEffect(() => {
+      socket.on('set_desc', (data) => {
+        var newscroll = data[0].text.split(",")
+        setDesc({
+          "scrolling": newscroll,
+          "qrd": data[1].text,
+          "full": data[2].text,
+          "featured": data[3].text,
+          "threat": data[4].text,
+          "recentChange": 0
+        })
+      })
+
+      return () => socket.off('set_desc')
+  }, [socket, desc, setDesc])
+
+  useEffect(() => {
+    socket.on('update_desc', (data) => {
+        const titles = ['scrolling', 'qrd', 'full', 'featured', 'threat']
+        var newvalue = data.newtext
+        if(data.title === 0) {
+          newvalue = newvalue.split(',')
+        }
+        const newdata = {
+          "scrolling": desc.scrolling,
+          "qrd": desc.qrd,
+          "full": desc.full,
+          "featured": desc.featured,
+          "threat": desc.threat,
+          "recentChange": data.title,
+          [titles[data.title]]: newvalue
+        }
+        setDesc(newdata, setTimeout(() => {
+          const newdata = {
+            "scrolling": desc.scrolling,
+            "qrd": desc.qrd,
+            "full": desc.full,
+            "featured": desc.featured,
+            "threat": desc.threat,
+            "recentChange": 10,
+            [titles[data.title]]: newvalue
+          }
+          setDesc(newdata)
+        }, [2500]))
+      })
+      return () => socket.off('update_desc')
+  }, [socket, desc, setDesc])
+
     return (
       <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 3, gridRowEnd: 5, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
         <div className='description-banner'>
@@ -547,19 +594,9 @@ const App = () => {
       </div>
       <div className="main-container">
         <div style={{gridColumn: 'span 2', gridRow: 1}} className="top-header" id='status-highlight'>
-          <div className={`scrolling-text-div ${desc?.recentChange === 0 ? 'updated' : ''}`}>
-            <div className='scroller'>
-              {desc?.scrolling?.map((el, ind) => {
-                const colors = ['red', 'yellow', 'lime', '#00ddff', '#bb00ff', 'red']
-                return (
-                  <p key={el} style={{textAlign: 'left', color: `${colors[ind]}`, textShadow: `0 0 3px ${colors[ind]}`}} className="scrolling-text">
-                    <i>{el}</i>
-                  </p>
-                )
-              })}
-            </div>
+          <div className="scrolling-text-div">
             <Suspense>
-              <Status socket={socket}/>
+              <Status/>
             </Suspense>
           </div>
         </div>
@@ -567,14 +604,16 @@ const App = () => {
         <CenterPanel/>
 
         <div className="mobile-hide" style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5, height: '100%'}}>
-          <ChatPanel socket={socket} streams={all}/>
+          <Suspense fallback={<Fallback/>}>
+            <ChatPanel/>
+          </Suspense>
         </div>
 
-        <Suspense fallback={Fallback}>
+        <Suspense fallback={<Fallback/>}>
             <QRD/>
         </Suspense>
 
-        <Suspense fallback={Fallback}>
+        <Suspense fallback={<Fallback/>}>
             <Featured/>
         </Suspense>
 

@@ -1,9 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
+
 import Chat from "../chat"
 
-const ChatPanel = ({ socket, streams }) => {
+const socket = io.connect("https://arina.lol")
+
+const ChatPanel = () => {
 
     const [active, setActive] = useState("join")
+    const [streams, setStreams] = useState([])
 
     const Join = () => {
         const [username, setUsername] = useState(sessionStorage?.getItem('username'))
@@ -27,12 +32,22 @@ const ChatPanel = ({ socket, streams }) => {
         const username = sessionStorage.getItem('username')
         if (username !== "" && username !== null && !username?.includes("shepardess")) {
             socket.emit('join_room', { 'username': `${username}` })
+            socket.emit('sync_stream')
             setActive("chat")
         } else {
             socket.emit('join_room', { 'username': `anon-${Date.now()}` })
+            socket.emit('sync_stream')
             setActive("chat")
         }
     }
+
+    useEffect(() => {
+        socket.on('set_stream', (data) => {
+          setStreams(data)
+        })
+  
+        return () => socket.off('set_stream')
+    }, [socket, streams, setStreams])
 
     return (
         <Panel socket={socket} username={sessionStorage.getItem('username')} streams={streams}/>

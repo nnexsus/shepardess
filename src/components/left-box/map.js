@@ -1,7 +1,10 @@
+import { MapContainer, Marker, Polygon, Popup, TileLayer, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import axios from "axios";
 import L from 'leaflet';
-import { MapContainer, Marker, Pane, Polygon, Popup, TileLayer, Tooltip, useMap, useMapEvent } from "react-leaflet";
+
+const socket = io.connect('https://arina.lol');
 
 const polycolors = {
     "Special Weather Statement": "purple",
@@ -13,7 +16,7 @@ const polycolors = {
     "Lake Wind Advisory": "blue"
 }
 
-const Map = ({ socket }) => {
+const Map = () => {
 
     const [polystate, setPolystate] = useState([])
     const [warns, setWarns] = useState([])
@@ -33,16 +36,10 @@ const Map = ({ socket }) => {
         "miles": 0
     })
     
-    useEffect(() => {
-        updateWarnings()
-        socket.emit('sync_location')
-        socket.emit('sync_poly')
-    }, [])
-
     const updateWarnings = () => {
         var updateWarn = [] 
         axios.get('https://api.weather.gov/alerts/active?status=actual&message_type=alert&region_type=land&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate&certainty=Observed,Likely&limit=50').then((res) => {
-            res?.data?.features?.map((el) => {
+            res?.data?.features?.forEach((el) => {
                 var correctedBox = []
                 el?.geometry?.coordinates[0].forEach(li => {
                     correctedBox.push(li.reverse())
@@ -57,6 +54,58 @@ const Map = ({ socket }) => {
             updateWarnings()
         }, [600000])
     }
+
+    useEffect(() => {
+        socket.emit('sync_location')
+        socket.emit('sync_poly')
+        updateWarnings()
+    }, [])
+
+
+    useEffect(() => {
+        socket.on('set_poly', (data) => {
+            console.log(data)
+            var newstate = []
+            data.polygons.forEach((el) => {
+                var correctedBox = []
+                el.coordinates.forEach(li => {
+                    correctedBox.push(li.reverse())
+                });
+                newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color})
+            })
+            setPolystate(newstate)
+
+            var mark = []
+            data.markers.forEach((el) => {
+                mark.push({"coordinates": el.coordinates?.reverse(), "title": el.title, "type": el.type})
+            })
+            setMarkerstate(mark)
+          })
+          return () => socket.off('set_poly')
+    }, [polystate, setPolystate])
+
+    useEffect(() => {
+        socket.on('add_poly', (data) => {
+            setPolystate((state) => [...state, data])
+          })
+          return () => socket.off('add_poly')
+    }, [polystate, setPolystate])
+
+    useEffect(() => {
+        socket.on('remove_poly', (data) => {
+            var newarr = polystate
+            polystate.find((el, ind) => {
+                console.log(el.id + " == " + data.id + " at: " + ind)
+                if (el.id === data.id) {
+                    newarr.splice(ind, 1)
+                    return true;
+                }
+            });
+            console.log(newarr)
+            setPolystate(newarr)
+          })    
+          return () => socket.off('remove_poly')
+    }, [polystate, setPolystate])
 
     useEffect(() => {
         socket.on('set_location', (data) => {
@@ -74,7 +123,25 @@ const Map = ({ socket }) => {
             })
           })
           return () => socket.off('set_location')
-    }, [socket, locdata, setLocdata])
+    }, [locdata, setLocdata])
+
+    useEffect(() => {
+        socket.on('update_location', (data, miles) => {
+            setLocdata({
+                "accuracy": data.acc,
+                "accuracyRounded": (data.acc > 85 ? 100 : data.acc > 65 ? 75 : data.acc > 35 ? 50 : data.acc > 10 ? 25 : 0),
+                "altitude": data.alt,
+                "altitudeRounded": (data.alt > 4000 ? 6000 : data.alt > 1000 ? 1200 : data.alt > 300 ? 600 : data.alt > 100 ? 200 : 0),
+                "battery": data.batt,
+                "batteryRounded": (data.batt > 85 ? 90 : data.batt > 65 ? 70 : data.batt > 45 ? 50 : data.batt > 25 ? 30 : data.batt > 5 ? 10 : 0),
+                "lat": data.lat,
+                "lon": data.lon,
+                "velocity": data.vel,
+                "miles": miles
+            })
+          })
+          return () => socket.off('update_location')
+    }, [locdata, setLocdata])
 
     const MapComp = () => {
 
@@ -83,26 +150,6 @@ const Map = ({ socket }) => {
         const locate = () => {
             map.setView([locdata.lat, locdata.lon], map.getZoom())
         }
-
-        //map based events
-
-        useEffect(() => {
-            socket.on('update_location', (data, miles) => {
-                setLocdata({
-                    "accuracy": data.acc,
-                    "accuracyRounded": (data.acc > 85 ? 100 : data.acc > 65 ? 75 : data.acc > 35 ? 50 : data.acc > 10 ? 25 : 0),
-                    "altitude": data.alt,
-                    "altitudeRounded": (data.alt > 4000 ? 6000 : data.alt > 1000 ? 1200 : data.alt > 300 ? 600 : data.alt > 100 ? 200 : 0),
-                    "battery": data.batt,
-                    "batteryRounded": (data.batt > 85 ? 90 : data.batt > 65 ? 70 : data.batt > 45 ? 50 : data.batt > 25 ? 30 : data.batt > 5 ? 10 : 0),
-                    "lat": data.lat,
-                    "lon": data.lon,
-                    "velocity": data.vel,
-                    "miles": miles
-                })
-              })
-              return () => socket.off('update_location')
-        }, [socket, locdata, setLocdata])
 
         var locationIcon = L.icon({iconUrl: '/images/16icons/location-marker.gif', iconSize: [64, 64], iconAnchor: [32, 32], popupAnchor: [0, 0]})
 
@@ -154,51 +201,6 @@ const Map = ({ socket }) => {
         const map = useMap()
 
         useEffect(() => {
-            socket.on('set_poly', (data) => {
-                console.log(data)
-                var newstate = []
-                data.polygons.forEach((el) => {
-                    var correctedBox = []
-                    el.coordinates.forEach(li => {
-                        correctedBox.push(li.reverse())
-                    });
-                    newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color})
-                })
-                setPolystate(newstate)
-
-                var mark = []
-                data.markers.forEach((el) => {
-                    mark.push({"coordinates": el.coordinates?.reverse(), "title": el.title, "type": el.type})
-                })
-                setMarkerstate(mark)
-              })
-              return () => socket.off('set_poly')
-        }, [socket, polystate, setPolystate])
-    
-        useEffect(() => {
-            socket.on('add_poly', (data) => {
-                setPolystate((state) => [...state, data])
-              })
-              return () => socket.off('add_poly')
-        }, [socket, polystate, setPolystate])
-    
-        useEffect(() => {
-            socket.on('remove_poly', (data) => {
-                var newarr = polystate
-                polystate.find((el, ind) => {
-                    console.log(el.id + " == " + data.id + " at: " + ind)
-                    if (el.id === data.id) {
-                        newarr.splice(ind, 1)
-                        return true;
-                    }
-                });
-                console.log(newarr)
-                setPolystate(newarr)
-              })    
-              return () => socket.off('remove_poly')
-        }, [socket, polystate, setPolystate])
-
-        useEffect(() => {
             socket.on('highlight_poly', (data) => {
                 map.eachLayer((la) => {
                     if (la?.getPopup()?.options?.children === data.title) {
@@ -217,7 +219,7 @@ const Map = ({ socket }) => {
                 })
               })
               return () => socket.off('highlight_poly')
-        }, [socket])
+        }, [map])
 
         return (
             <div>
@@ -235,6 +237,10 @@ const Map = ({ socket }) => {
                             <Polygon key={`warning-${el.coordinates[0][0]}-${ind}`} className={`classname-${el.event.replace(/\s+/g, '')}`} fillColor="transparent" weight="1" positions={el.coordinates} color={`${el.color}`}>
                                 <Popup>{el.event}</Popup>
                             </Polygon>
+                        ) 
+                    } else {
+                        return (
+                            <></>
                         )
                     }
                 })}

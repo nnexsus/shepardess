@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
 
+const socket = io.connect('https://arina.lol');
 
-const Status = ({ socket }) => {
+const Status = () => {
 
     const [stat, setStat] = useState({
         "chaseday": false,
@@ -15,8 +17,14 @@ const Status = ({ socket }) => {
     })
 
     const [desc, setDesc] = useState({
+      "scrolling": ["Connecting", " to ", "server"],
       "threat": "none"
     })
+
+    useEffect(() => {
+      socket.emit('sync_status')
+      socket.emit('sync_description')
+    }, [socket])
 
     useEffect(() => {
         socket.on('set_stat', (data) => {
@@ -59,9 +67,6 @@ const Status = ({ socket }) => {
           var newscroll = data[0].text.split(",")
           setDesc({
             "scrolling": newscroll,
-            "qrd": data[1].text,
-            "full": data[2].text,
-            "featured": data[3].text,
             "threat": data[4].text,
             "recentChange": 0
           })
@@ -99,6 +104,17 @@ const Status = ({ socket }) => {
     }, [socket, desc, setDesc])
 
     return (
+      <>
+        <div className='scroller'>
+          {desc?.scrolling?.map((el, ind) => {
+            const colors = ['red', 'yellow', 'lime', '#00ddff', '#bb00ff', 'red']
+            return (
+              <p key={el} style={{textAlign: 'left', color: `${colors[ind]}`, textShadow: `0 0 3px ${colors[ind]}`}} className="scrolling-text">
+                <i>{el}</i>
+              </p>
+            )
+          })}
+        </div>
         <div className="status-indicators" style={{justifyContent: 'space-between'}}>
             <img loading='lazy' className={`${stat?.chaseday ? "updated" :  "off"}`} 
             onMouseEnter={(e) => e.currentTarget.src = `${stat?.chaseday ? "/images/lights/derecho-notitle.gif" :  "/images/lights/chaseday-off.gif"}`} 
@@ -145,6 +161,7 @@ const Status = ({ socket }) => {
             onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} 
             src={`${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} width="100%" alt="status light for emergency" />
         </div>
+      </>
     )
 }
 
