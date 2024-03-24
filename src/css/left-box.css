@@ -86,14 +86,31 @@
     overflow: scroll;
     overflow-x: hidden;
     margin-right: -1px;
-    display: grid;
-    grid-template-columns: 50% 50%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    font-family: ms ui gothic;
+}
+.past-container button {
+    font-family: ms ui gothic;
+    padding-left: 4px;
 }
 
 .p-grid {
     border-bottom: solid 2px #dadbe8;
     outline: solid 2px black;
     padding: 0 2px 2px;
+    max-width: fit-content;
+    max-width: 45%;
+}
+
+.p-project {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 20% 30%;
 }
 
 .past-titles {
@@ -131,7 +148,7 @@
     -webkit-box-orient: vertical;
 
     text-shadow: 0 0 4px black;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.4);
 }
 
 
@@ -269,6 +286,10 @@
 
 .left-viewer .leaflet-pane {
     transform: translateY(-100px);
+}
+
+.sliding-expanded .left-viewer .leaflet-pane {
+    transform: translateY(0px);
 }
 
 .no-invert {

@@ -226,7 +226,7 @@ const Map = () => {
                 {polystate?.map((el, ind) => {
                     var name = el.title.replace(/\s+/g, '')
                     return (
-                        <Polygon key={`warnss-${el.coordinates[0][0]}-${ind}`} className={`classname-${name}`} fillColor="transparent" weight="1" positions={el.coordinates} color={`${el.color}`}>
+                        <Polygon key={`warnss-${el.coordinates[0][0]}-${ind}`} className={`classname-${name}`} fillColor="transparent" weight="1.5" positions={el.coordinates} color={`${el.color}`}>
                             <Popup>{el.title}</Popup>
                         </Polygon>
                     )
@@ -234,7 +234,7 @@ const Map = () => {
                 {warns?.map((el, ind) => {
                     if(el?.coordinates?.length > 0) {
                         return (
-                            <Polygon key={`warning-${el.coordinates[0][0]}-${ind}`} className={`classname-${el.event.replace(/\s+/g, '')}`} fillColor="transparent" weight="1" positions={el.coordinates} color={`${el.color}`}>
+                            <Polygon key={`warning-${el.coordinates[0][0]}-${ind}`} className={`classname-${el.event.replace(/\s+/g, '')}`} fillColor="transparent" weight="1.5" positions={el.coordinates} color={`${el.color}`}>
                                 <Popup>{el.event}</Popup>
                             </Polygon>
                         ) 

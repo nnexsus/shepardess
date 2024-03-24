@@ -8,7 +8,6 @@ const socket = io.connect("https://arina.lol")
 const ChatPanel = () => {
 
     const [active, setActive] = useState("join")
-    const [streams, setStreams] = useState([])
 
     const Join = () => {
         const [username, setUsername] = useState(sessionStorage?.getItem('username'))
@@ -31,26 +30,22 @@ const ChatPanel = () => {
     const JoinRoom = () => {
         const username = sessionStorage.getItem('username')
         if (username !== "" && username !== null && !username?.includes("shepardess")) {
-            socket.emit('join_room', { 'username': `${username}` })
             socket.emit('sync_stream')
+            socket.emit('join_room', { 'username': `${username}` })
             setActive("chat")
         } else {
-            socket.emit('join_room', { 'username': `anon-${Date.now()}` })
             socket.emit('sync_stream')
+            socket.emit('join_room', { 'username': `anon-${Date.now()}` })
             setActive("chat")
         }
     }
 
     useEffect(() => {
-        socket.on('set_stream', (data) => {
-          setStreams(data)
-        })
-  
-        return () => socket.off('set_stream')
-    }, [socket, streams, setStreams])
+        console.log("Chat panel rerender")
+    }, [])
 
     return (
-        <Panel socket={socket} username={sessionStorage.getItem('username')} streams={streams}/>
+        <Panel socket={socket} username={sessionStorage.getItem('username')}/>
         )
 }
 

@@ -205,7 +205,7 @@ const ControlMap = ({ socket, apikey }) => {
             <div>
                 {polystate?.map((el, ind) => {
                     return (
-                        <Polygon key={`warnss-${el.coordinates[0][0]}-${ind}`} fillColor="transparent" weight="1" positions={el.coordinates} color={`${el.color}`}>
+                        <Polygon key={`warnss-${el.coordinates[0][0]}-${ind}`} fillColor="transparent" weight="1.5" positions={el.coordinates} color={`${el.color}`}>
                             <Tooltip><p>Click to open menu.</p></Tooltip>
                             <Popup>
                                 <div style={{display: 'flex'}}>

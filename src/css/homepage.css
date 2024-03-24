@@ -251,7 +251,7 @@
     outline-offset: -2px;
 }
 
-.stream-container::-webkit-scrollbar-thumb, .message-container-wrapper::-webkit-scrollbar-thumb {
+.stream-container::-webkit-scrollbar-thumb, .message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb {
     background-color: rgba(255,255,255,0.1);
     -webkit-transition: 0.2s ease;
     transition: 0.2s ease;
@@ -261,20 +261,20 @@
     border: none;
 }
 
-.stream-container::-webkit-scrollbar-thumb:hover, .message-container-wrapper::-webkit-scrollbar-thumb:hover {
+.stream-container::-webkit-scrollbar-thumb:hover, .message-container-wrapper::-webkit-scrollbar-thumb:hover, .stream-list::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255,255,255,0.2);
 }
 
-.stream-container::-webkit-scrollbar-thumb:active, .message-container-wrapper::-webkit-scrollbar-thumb:active {
+.stream-container::-webkit-scrollbar-thumb:active, .message-container-wrapper::-webkit-scrollbar-thumb:active, .stream-list::-webkit-scrollbar-thumb:active {
     outline-width: 2px;
     outline-offset: -3px;
 }
 
-.message-container-wrapper::-webkit-scrollbar {
+.message-container-wrapper::-webkit-scrollbar, .stream-list::-webkit-scrollbar {
     width: 8px;
 }
 
-.message-container-wrapper::-webkit-scrollbar-track, .message-container-wrapper::-webkit-scrollbar-button:single-button {
+.message-container-wrapper::-webkit-scrollbar-track, .message-container-wrapper::-webkit-scrollbar-button:single-button, .stream-list::-webkit-scrollbar-track, .stream-list::-webkit-scrollbar-button:single-button {
     background:-webkit-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
     background:-o-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
     background:-moz-repeating-linear-gradient(0deg, #000000 0%, #004212 1%);
@@ -288,21 +288,21 @@
     outline-offset: -1px;
 }
 
-.message-container-wrapper::-webkit-scrollbar-thumb {
+.message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb {
     outline: solid 1px lime;
 }
 
-.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement, .stream-list::-webkit-scrollbar-button:single-button:vertical:increment, .stream-list::-webkit-scrollbar-button:single-button:vertical:decrement {
     outline: 1px lime solid;
     outline-offset: -1px;
     border: solid 2px transparent;
 }
 
-.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:hover, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:hover, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:hover, .stream-list::-webkit-scrollbar-button:single-button:vertical:increment:hover, .stream-list::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
     outline: 2px green solid;
 }
 
-.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:active, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:active {
+.message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:increment:active, .message-container-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement:active, .stream-list::-webkit-scrollbar-button:single-button:vertical:increment:active, .stream-list::-webkit-scrollbar-button:single-button:vertical:decrement:active {
     outline: 2px lime solid;
 }
 

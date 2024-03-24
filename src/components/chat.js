@@ -40,8 +40,8 @@ const Chat = ({ socket, username, streams }) => {
     
         const Effects = () => {
             return (
-                <div style={{display: 'flex', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', flexWrap: 'wrap', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px'}}>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fontcolor">Font Color:</label>
+                <div style={{display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px'}}>
+                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fontcolor">Color:</label>
                     <select id="input-fontcolor" defaultValue={'lightgreen'} value={effects.color} onChange={(e) => setEffects({"color": e.currentTarget.value, "font": effects.font, "effect": effects.effect, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'springgreen'} style={{color: 'springgreen'}}>B-Green</option>
                         <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
@@ -52,7 +52,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
                         <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fonttype">Font Type:</label>
+                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fonttype">Font:</label>
                     <select id="input-fonttype" defaultValue={'ms ui gothic'} value={effects.font} onChange={(e) => setEffects({"color": effects.color, "font": e.currentTarget.value, "effect": effects.effect, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'ms ui gothic'} style={{color: 'white', fontFamily: 'ms ui gothic'}}>ms ui gothic</option>
                         <option className="format-dropdown" value={'blurpix'} style={{color: 'white', fontFamily: 'blurpix'}}>blurpix</option>
@@ -60,7 +60,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'monospace'} style={{color: 'white', fontFamily: 'monospace'}}>Monospace</option>
                         <option className="format-dropdown" value={'fantasy'} style={{color: 'white', fontFamily: 'fantasy'}}>Fantasy</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effect">Decor Type:</label>
+                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effect">Decor:</label>
                     <select id="input-effect" defaultValue={'none'} value={effects.effect} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": e.currentTarget.value, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'none'} style={{color: 'white'}}>None</option>
                         <option className="format-dropdown" value={'underline'} style={{color: 'white', textDecoration: 'underline'}}>Underline</option>
@@ -68,7 +68,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'underline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wavy-U</option>
                         <option className="format-dropdown" value={'overline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wave-O</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effectColor">Decor Color:</label>
+                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effectColor">Color:</label>
                     <select id="input-effectColor" defaultValue={'lightgreen'} value={effects.effectColor} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": effects.effect, "effectColor": e.currentTarget.value})}>
                         <option className="format-dropdown" value={'lightgreen'} style={{color: 'springgreen'}}>B-Green</option>
                         <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
@@ -98,7 +98,7 @@ const Chat = ({ socket, username, streams }) => {
                 </div>
                 <div className="emote-panel-select" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
                     <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/emote.gif" width={'16px'} height={'16px'} onClick={() => setActivePanel('emote')} />
-                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/emotes/nader.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
+                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/font.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
                 </div>
                 <div className="emote-panel-active" style={{display: 'flex', flexDirection: 'column', margin: '3px', height: '40%'}}>
                     <Panel/>
@@ -109,6 +109,7 @@ const Chat = ({ socket, username, streams }) => {
 
 
     const Messages = ({ socket }) => {
+        const [streams, setStreams] = useState([])
         const [messages, setMessages] = useState([])
         const messageContainer = useRef(null)
 
@@ -145,6 +146,13 @@ const Chat = ({ socket, username, streams }) => {
             return () => socket.off('last_100_messages')
         }, [socket])
 
+        useEffect(() => {
+            socket.on('set_stream', (data) => {
+              setStreams(data)
+            })
+      
+            return () => socket.off('set_stream')
+        }, [socket, streams, setStreams])
 
         return (
             <div className="message-container-wrapper" ref={messageContainer}>

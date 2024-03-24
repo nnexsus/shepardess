@@ -177,17 +177,34 @@ const App = () => {
   }
 
   const StreamContainer = () => {
-    const [activestream, setActiveStream] = useState(null)
+    const [activestream, setActiveStream] = useState([null, null, null, null])
+    const [multistream, setMultiStream] = useState(false)
 
     const openStream = (el) => {
-      setActiveStream(el)
+      setActiveStream([el, null, null, null])
     }
   
     const closeStream = () => {
-      setActiveStream(null)
+      setActiveStream([null, null, null, null])
       socket.emit('sync_group')
       socket.emit('sync_stream')
     }
+
+    const toggleMulti = () => {
+      setActiveStream([activestream[0], null, null, null])
+      setMultiStream(!multistream)
+    }
+
+    const openStreamMulti = (el, pos) => {
+      var newarr = [...activestream]
+      newarr[pos] = el
+      console.log(newarr)
+      setActiveStream(newarr)
+    }
+
+    useEffect(() => {
+      console.log(activestream)
+    }, [activestream, setActiveStream])
 
     const Group = (ids) => {
       return (
@@ -402,12 +419,65 @@ const App = () => {
       )
     }
 
+    const StreamList = (pos) => {
+      const [streams, setStreams] = useState([])
+
+      useEffect(() => {
+        socket.emit('sync_stream')
+      }, [])
+  
+      useEffect(() => {
+        socket.on('set_stream', (data) => {
+          setStreams(data)
+        })
+    
+        return () => socket.off('set_stream')
+      }, [socket, streams, setStreams])
+
+      return (
+        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '5px'}}>
+          {streams.length > 0 ? streams.map((el) => {
+              const camtype = ['camera', 'carstream', 'audiostream', 'other']
+              const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
+              return (
+                <div key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
+                  <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStreamMulti(el, pos.pos)}>
+                      <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', border: 'solid gray 1px', borderRadius: '3px'}}>
+                          <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                          <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
+                            <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
+                          </div>
+                          <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
+                      </div>
+                      <div style={{display: 'flex', alignItems: 'center', bottom: '12px'}}>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
+                        <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
+                      </div>
+                  </div>
+                </div>
+              )
+          }) : null}
+        </div>
+      )
+    }
+
     return (
       <>
-        {activestream !== null ?
+        {activestream[0] !== null ?
           <div id='single-stream' style={{height: 'calc(100% - 20px)'}}>
-            <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{position: 'absolute', cursor: 'pointer'}} />
-              <Stream stream={activestream} />
+            <div style={{position: 'absolute'}}>
+              <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{cursor: 'pointer'}} />
+              <img src='/images/16icons/multi-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => toggleMulti()} style={{cursor: 'pointer'}} />
+            </div>
+              {multistream ? 
+                <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: '50% 50%', height: '100%'}}>
+                  <Stream stream={activestream[0]} />
+                  {activestream[1] !== null ? <Stream stream={activestream[1]} /> : <StreamList pos={1}/>}
+                  {activestream[2] !== null ? <Stream stream={activestream[2]} /> : <StreamList pos={2}/>}
+                  {activestream[3] !== null ? <Stream stream={activestream[3]} /> : <StreamList pos={3}/>}
+                </div>
+              : <Stream stream={activestream[0]} />}
           </div>
         : <Streams/>}
       </>
