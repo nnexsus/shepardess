@@ -329,6 +329,27 @@
     display: flex !important;
 }
 
+.empty-stream-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-stream-container p {
+    color: white;
+    font-family: ms ui gothic;
+    opacity: 0.4;
+    background: rgba(0,0,0,0.4);
+    border-radius: 5px;
+    padding: 5px;
+    pointer-events: none;
+}
+
+.invert-img {
+    transform: rotateY(180deg) rotateX(180deg);
+}
+
+
 @media screen and (max-width: 1050px) {
     .main-container {
         grid-template-rows: 16% 24% 30% 30%;

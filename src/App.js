@@ -414,7 +414,7 @@ const App = () => {
       )
     }
 
-    const StreamList = (pos) => {
+    const StreamList = () => {
       const [streams, setStreams] = useState([])
 
       useEffect(() => {
@@ -429,14 +429,18 @@ const App = () => {
         return () => socket.off('set_stream')
       }, [socket, streams, setStreams])
 
+      const onDragStart = (e, el) => {
+        e.dataTransfer.setData("test", el)
+      }
+
       return (
-        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px'}}>
+        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px', background: 'url(/images/bgs/logo-bg.png)', pointerEvents: 'all'}}>
           {streams.length > 0 ? streams.map((el) => {
               const camtype = ['camera', 'carstream', 'audiostream', 'other']
               const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
               return (
-                <div key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
-                  <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStreamMulti(el, pos.pos)}>
+                <div draggable onDragStart={(e) => onDragStart(e, JSON.stringify(el))} key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
+                  <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'grab'}`, alignItems: 'stretch'}}>
                       <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', border: 'solid gray 1px', borderRadius: '3px', padding: '3px', background: 'rgba(125,125,125,0.4)'}}>
                           <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
                           <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
@@ -464,7 +468,7 @@ const App = () => {
     const dragHSliderOne = (e) => {
       e.preventDefault()
       if (e.pageX !== 0) {
-        document.getElementById('multi-stream-container').style.gridTemplateColumns = `calc(${((e.pageX / window.innerWidth) * 100).toFixed(1)}% - 4px) 3px calc(${(100 - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% - 4px)`
+        document.getElementById('multi-stream-container').style.gridTemplateColumns = `calc(${((e.pageX / window.innerWidth) * 100).toFixed(1)}% - 8px) 3px calc(${(100 - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% - 8px)`
       } 
     }
   
@@ -475,27 +479,88 @@ const App = () => {
       } 
     }
 
+    const onDragOver = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    const onDrop = (e, pos) => {
+      openStreamMulti(JSON.parse(e.dataTransfer.getData("test")), pos)
+    }
+
+    const toggleSidePanel = () => {
+      var ele = document.getElementById('stream-list-panel')
+      if (ele.classList.contains('stream-list-active')) {
+        ele.style.right = `${window.innerWidth - 250}px`
+      } else {
+        ele.style.right = `${window.innerWidth - 40}px`
+      }
+      ele.classList.toggle('stream-list-active')
+      document.getElementById('stream-list-toggle').classList.toggle('invert-img')
+    }
+
+    const closeMultiStream = (pos, close) => {
+      if (close) {
+        toggleSidePanel()
+      }
+      var newarr = [...activestream]
+      newarr[pos] = null
+      setActiveStream(newarr)
+    }
+
     return (
       <>
         {activestream[0] !== null ?
           <div id='single-stream' style={{height: 'calc(100% - 20px)'}}>
             <div style={{position: 'absolute'}}>
               <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{cursor: 'pointer'}} />
-              <img src='/images/16icons/multi-button.png' className='mobile-hide' width={'32px'} height={'32px'} alt='close stream' onClick={() => toggleMulti()} style={{cursor: 'pointer'}} />
+              <img src='/images/16icons/multi-button.png' className='mobile-hide' width={'32px'} height={'32px'} alt='open multi-stream' onClick={() => toggleMulti()} style={{cursor: 'pointer'}} />
             </div>
               {multistream ? 
-                <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: 'calc(50% - 4px) 3px calc(50% - 4px)', gridTemplateRows: 'calc(50% - 4px) 3px calc(50% - 4px)', height: '103%', gap: '5px'}}>
-                  <Stream stream={activestream[0]} />
-                  {activestream[1] !== null ? <Stream stream={activestream[1]} /> : <StreamList pos={1}/>}
-                  <div draggable className='grid-slider' style={{gridRowStart: 1, gridRowEnd: 4, gridColumn: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
-                  onDrag={(e) => dragHSliderOne(e)}
-                  ></div>
-                  {activestream[2] !== null ? <Stream stream={activestream[2]} /> : <StreamList pos={2}/>}
-                  {activestream[3] !== null ? <Stream stream={activestream[3]} /> : <StreamList pos={3}/>}
-                  <div draggable className='grid-slider' style={{gridColumnStart: 1, gridColumnEnd: 4, gridRow: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ns-resize'}}
-                  onDrag={(e) => dragVSliderOne(e)}
-                  ></div>
-                </div>
+                <>
+                  <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: 'calc(50% - 8px) 3px calc(50% - 8px)', gridTemplateRows: 'calc(50% - 4px) 3px calc(50% - 4px)', height: '103%', gap: '5px'}}>
+                    <div style={{position: 'absolute', overflow: 'hidden', top: 'auto', left: 'auto', height: '100%', width: '100%', zIndex: 500, pointerEvents: 'none'}}>
+                      <div id='stream-list-panel' style={{position: 'absolute', right: `${window.innerWidth - 250}px`, width: '250px', overflow: 'hidden', display: 'flex', alignItems: 'center', transition: '0.4s ease'}}>
+                        <StreamList/>
+                        <img id='stream-list-toggle' src='/images/16icons/stream-panel-button.png' onClick={() => toggleSidePanel()} className='mobile-hide' width={'32px'} height={'32px'} alt='close stream' style={{cursor: 'pointer', pointerEvents: 'all'}} />
+                      </div>
+                    </div>
+                    <Stream stream={activestream[0]} />
+                    
+                    {activestream[1] !== null ?                     <div>
+                      <div style={{position: 'absolute', background: 'rgba(0,0,0,0.5)', display: 'flex'}}>
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(1, true)} src='/images/16icons/singlestream-play.png' width={'24px'} height={'24px'} alt='Clear stream and open drag and drop menu' />
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(1, false)} src='/images/16icons/singlestream-x.png' width={'24px'} height={'24px'} alt='Clear stream' />
+                      </div>
+                      <Stream stream={activestream[1]} />
+                    </div> : <div className='empty-stream-container' onDragOver={(e) => onDragOver(e)} onDrop={(e) => onDrop(e, 1)}><p>Drag and drop a stream from the left panel</p></div>}
+                    
+                    <div draggable className='grid-slider' style={{gridRowStart: 1, gridRowEnd: 4, gridColumn: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
+                    onDrag={(e) => dragHSliderOne(e)}
+                    ></div>
+
+                    {activestream[2] !== null ? 
+                    <div>
+                      <div style={{position: 'absolute', background: 'rgba(0,0,0,0.5)', display: 'flex'}}>
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(2, true)} src='/images/16icons/singlestream-play.png' width={'24px'} height={'24px'} alt='Clear stream and open drag and drop menu' />
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(2, false)} src='/images/16icons/singlestream-x.png' width={'24px'} height={'24px'} alt='Clear stream' />
+                      </div>
+                      <Stream stream={activestream[2]} />
+                    </div> : <div className='empty-stream-container' onDragOver={(e) => onDragOver(e)} onDrop={(e) => onDrop(e, 2)}><p>Drag and drop a stream from the left panel</p></div>}
+                    
+                    {activestream[3] !== null ?                     <div>
+                      <div style={{position: 'absolute', background: 'rgba(0,0,0,0.5)', display: 'flex'}}>
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(3, true)} src='/images/16icons/singlestream-play.png' width={'24px'} height={'24px'} alt='Clear stream and open drag and drop menu' />
+                        <img style={{cursor: 'pointer'}} onClick={() => closeMultiStream(3, false)} src='/images/16icons/singlestream-x.png' width={'24px'} height={'24px'} alt='Clear stream' />
+                      </div>
+                      <Stream stream={activestream[3]} />
+                    </div> : <div className='empty-stream-container' onDragOver={(e) => onDragOver(e)} onDrop={(e) => onDrop(e, 3)}><p>Drag and drop a stream from the left panel</p></div>}
+                    
+                    <div draggable className='grid-slider' style={{gridColumnStart: 1, gridColumnEnd: 4, gridRow: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ns-resize'}}
+                    onDrag={(e) => dragVSliderOne(e)}
+                    ></div>
+                  </div>
+                </>
               : <Stream stream={activestream[0]} />}
           </div>
         : <Streams/>}

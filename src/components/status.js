@@ -78,6 +78,10 @@ const Status = () => {
     useEffect(() => {
       socket.on('update_desc', (data) => {
           const titles = ['scrolling', 'qrd', 'full', 'featured', 'threat']
+          var newvalue = data.newtext
+          if(data.title === 0) {
+            newvalue = newvalue.split(',')
+          }
           const newdata = {
             "scrolling": desc.scrolling,
             "qrd": desc.qrd,
@@ -85,7 +89,7 @@ const Status = () => {
             "featured": desc.featured,
             "threat": desc.threat,
             "recentChange": data.title,
-            [titles[data.title]]: data.newtext
+            [titles[data.title]]: newvalue
           }
           setDesc(newdata, setTimeout(() => {
             const newdata = {
@@ -95,7 +99,7 @@ const Status = () => {
               "featured": desc.featured,
               "threat": desc.threat,
               "recentChange": 10,
-              [titles[data.title]]: data.newtext
+              [titles[data.title]]: newvalue
             }
             setDesc(newdata)
           }, [2500]))

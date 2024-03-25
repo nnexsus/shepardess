@@ -21,6 +21,7 @@ const Map = () => {
     const [polystate, setPolystate] = useState([])
     const [warns, setWarns] = useState([])
     const [markerstate, setMarkerstate] = useState([])
+    const [outlooks, setOutlooks] = useState([])
 
     const [locdata, setLocdata] = useState({
         "accuracy": 100,
@@ -35,6 +36,34 @@ const Map = () => {
         "velocity": 0,
         "miles": 0
     })
+
+    const riskTypeColors = {
+        "TORNADO": {
+            "02": '#05b334',
+            "05": '#7d3514',
+            '10': '#e6c717',
+            '15': '#d18904',
+            '30': '#c7083b',
+            '45': '#ff03cd',
+            '60': '#ff99fc'
+        },
+        "HAIL": {
+            "05": '#4ecf59',
+            '15': '#ede137',
+            '30': '#edad37',
+            '45': '#d65036',
+            '60': '#db4899'
+        },
+        "WIND": {
+            '05': '#69a0b5',
+            '15': '#6191b8',
+            '30': '#508dbf',
+            '45': '#3f8fd1',
+            '60': '#0c8bf2'
+        }
+    }
+
+    const dayDesc = ["", "today", "tomorrow"]
     
     const updateWarnings = () => {
         var updateWarn = [] 
@@ -44,7 +73,6 @@ const Map = () => {
                 el?.geometry?.coordinates[0].forEach(li => {
                     correctedBox.push(li.reverse())
                 });
-        
                 updateWarn.push({"coordinates": correctedBox, "color": `${polycolors[`${el?.properties?.event}`]}`, "event": el?.properties?.event})
             })
         })
@@ -53,6 +81,42 @@ const Map = () => {
         setTimeout(() => {
             updateWarnings()
         }, [600000])
+    }
+
+    const addRisk = (type, day) => {
+        const fixOutlooks = (ol, type, day) => {
+            var outs = []
+            ol.forEach((li) => {
+                var riskcol = li.substring(0, 2)
+                var final = []
+                var olarr = li.split(" ")
+                olarr.forEach((el) => {
+                    if(el.length === 8) {
+                        final.push([parseFloat(`${el.substring(0, 2)}.${el.substring(2, 4)}`), parseFloat(`-${el.substring(4, 6)}.${el.substring(6, 8)}`)])
+                    }
+                })
+                outs.push({"coordinates": final, "color": riskTypeColors[`${type}`][`${riskcol}`], "desc": `${riskcol}% chance for ${type} given by the SPC for ${dayDesc[day]}`})
+            })
+            setOutlooks(outs)
+        }
+
+        axios.get(`https://api.weather.gov/products?wmoid=WUUS0${day}&type=PTS&limit=1`).then((res) => {
+            axios.get(res.data["@graph"][0]["@id"]).then((res) => {
+                var outs = []
+                res.data.productText?.match(/\n\.{3}\s(.*?)(?:\n+.*)+?\n*\&{2}/g)?.forEach((el) => {
+                    var risk = "none"
+                    el.split("0.").forEach((li) => {
+                        if (li.includes("...")) {
+                            risk = li.split("..")[1]
+                        } else if (risk.includes(type)) {
+                            outs.push(li)
+                        }
+                    })
+                })
+                fixOutlooks(outs, type, day)
+        
+            })
+        })
     }
 
     useEffect(() => {
@@ -182,6 +246,16 @@ const Map = () => {
                         <button className="map-menu-button" onClick={() => document.querySelectorAll('.no-invert').forEach((el) => el.classList.toggle('hidden'))}>Radar</button>
                         <button className="map-menu-button" onClick={() => document.querySelectorAll('.leaflet-marker-icon').forEach((el) => el.classList.toggle('hidden'))}>Icons</button>
                     </div>
+                    <div className="hanging-buttons" style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3'}}>
+                        <button className="map-menu-button" onClick={() => addRisk("TORNADO", 1)}>Tornado</button>
+                        <button className="map-menu-button" onClick={() => addRisk("HAIL", 1)}>Hail</button>
+                        <button className="map-menu-button" onClick={() => addRisk("WIND", 1)}>Wind</button>
+                    </div>
+                    <div className="hanging-buttons" style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3'}}>
+                        <button className="map-menu-button" onClick={() => addRisk("TORNADO", 2)}>2Tor</button>
+                        <button className="map-menu-button" onClick={() => addRisk("HAIL", 2)}>2Hail</button>
+                        <button className="map-menu-button" onClick={() => addRisk("WIND", 2)}>2Wind</button>
+                    </div>
                 </div>
 
                 <div className="car-details" style={{zIndex: 402, display: 'flex', justifyContent: 'flex-start'}}>
@@ -233,6 +307,19 @@ const Map = () => {
                         return (
                             <Polygon key={`warning-${el.coordinates[0][0]}-${ind}`} className={`classname-${el.event.replace(/\s+/g, '')}`} fillColor="transparent" weight="1.5" positions={el.coordinates} color={`${el.color}`}>
                                 <Popup>{el.event}</Popup>
+                            </Polygon>
+                        ) 
+                    } else {
+                        return (
+                            <></>
+                        )
+                    }
+                })}
+                {outlooks?.map((el, ind) => {
+                    if(el.coordinates?.length > 0) {
+                        return (
+                            <Polygon key={`warning-outlook-${ind}`} fillColor={el.color} opacity={0.6} weight="1.5" positions={el.coordinates} color={el.color}>
+                                <Popup>{el.desc}</Popup>
                             </Polygon>
                         ) 
                     } else {
