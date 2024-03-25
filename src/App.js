@@ -198,13 +198,8 @@ const App = () => {
     const openStreamMulti = (el, pos) => {
       var newarr = [...activestream]
       newarr[pos] = el
-      console.log(newarr)
       setActiveStream(newarr)
     }
-
-    useEffect(() => {
-      console.log(activestream)
-    }, [activestream, setActiveStream])
 
     const Group = (ids) => {
       return (
@@ -435,14 +430,14 @@ const App = () => {
       }, [socket, streams, setStreams])
 
       return (
-        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '5px'}}>
+        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px'}}>
           {streams.length > 0 ? streams.map((el) => {
               const camtype = ['camera', 'carstream', 'audiostream', 'other']
               const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
               return (
                 <div key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
                   <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStreamMulti(el, pos.pos)}>
-                      <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', border: 'solid gray 1px', borderRadius: '3px'}}>
+                      <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', border: 'solid gray 1px', borderRadius: '3px', padding: '3px', background: 'rgba(125,125,125,0.4)'}}>
                           <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
                           <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
                             <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
@@ -453,6 +448,10 @@ const App = () => {
                         <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
                         <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
                         <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
+
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
+                        <p title={`${el.groupname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', fontFamily: 'ms ui gothic', lineHeight: '22px', color: '#3a5212'}}>Tag: {el.groupname !== null ? el.groupname : "None"}</p>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
                       </div>
                   </div>
                 </div>
@@ -462,20 +461,40 @@ const App = () => {
       )
     }
 
+    const dragHSliderOne = (e) => {
+      e.preventDefault()
+      if (e.pageX !== 0) {
+        document.getElementById('multi-stream-container').style.gridTemplateColumns = `calc(${((e.pageX / window.innerWidth) * 100).toFixed(1)}% - 4px) 3px calc(${(100 - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% - 4px)`
+      } 
+    }
+  
+    const dragVSliderOne = (e) => {
+      e.preventDefault()
+      if (e.pageY !== 0) {
+        document.getElementById('multi-stream-container').style.gridTemplateRows = `calc(${((e.pageY / e.target.offsetParent.clientHeight) * 100).toFixed(1)}% - 4px) 3px calc(${(100 - ((e.pageY / e.target.offsetParent.clientHeight) * 100)).toFixed(1)}% - 4px)`
+      } 
+    }
+
     return (
       <>
         {activestream[0] !== null ?
           <div id='single-stream' style={{height: 'calc(100% - 20px)'}}>
             <div style={{position: 'absolute'}}>
               <img src='/images/16icons/x-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => closeStream()} style={{cursor: 'pointer'}} />
-              <img src='/images/16icons/multi-button.png' width={'32px'} height={'32px'} alt='close stream' onClick={() => toggleMulti()} style={{cursor: 'pointer'}} />
+              <img src='/images/16icons/multi-button.png' className='mobile-hide' width={'32px'} height={'32px'} alt='close stream' onClick={() => toggleMulti()} style={{cursor: 'pointer'}} />
             </div>
               {multistream ? 
-                <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: '50% 50%', height: '100%'}}>
+                <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: 'calc(50% - 4px) 3px calc(50% - 4px)', gridTemplateRows: 'calc(50% - 4px) 3px calc(50% - 4px)', height: '103%', gap: '5px'}}>
                   <Stream stream={activestream[0]} />
                   {activestream[1] !== null ? <Stream stream={activestream[1]} /> : <StreamList pos={1}/>}
+                  <div draggable className='grid-slider' style={{gridRowStart: 1, gridRowEnd: 4, gridColumn: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
+                  onDrag={(e) => dragHSliderOne(e)}
+                  ></div>
                   {activestream[2] !== null ? <Stream stream={activestream[2]} /> : <StreamList pos={2}/>}
                   {activestream[3] !== null ? <Stream stream={activestream[3]} /> : <StreamList pos={3}/>}
+                  <div draggable className='grid-slider' style={{gridColumnStart: 1, gridColumnEnd: 4, gridRow: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ns-resize'}}
+                  onDrag={(e) => dragVSliderOne(e)}
+                  ></div>
                 </div>
               : <Stream stream={activestream[0]} />}
           </div>
@@ -485,7 +504,7 @@ const App = () => {
   }
 
     return (
-      <div id='main-sliding-container' style={{gridColumn: 2, gridRowStart: 2, gridRowEnd: 5}} className="feeds-container sliding-expanded">
+      <div id='main-sliding-container' style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 7}} className="feeds-container sliding-expanded">
         <StreamContainer/>
 
         <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
@@ -523,7 +542,7 @@ const App = () => {
   }, [socket, all, setAll])
 
     return (
-      <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 3, height: '97%'}} className="description-section">
+      <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 4, height: '97%'}} className="description-section">
       <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%'}}>
         <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '27px', fontStyle: 'italic', fontWeight: 400, width: '100%', height: '100%', textAlign: 'center', background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', lineHeight: '96px'}}>SHEPARDESS</h1>
       </div>
@@ -625,7 +644,7 @@ const App = () => {
   }, [socket, desc, setDesc])
 
     return (
-      <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 3, gridRowEnd: 5, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
+      <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 4, gridRowEnd: 7, overflow: 'scroll', height: '97%', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
         <div className='description-banner'>
             <img loading='lazy' src='/images/bgs/opendir.gif' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p style={{fontFamily: 'ms ui gothic'}}>INFO</p>
         </div>
@@ -649,6 +668,32 @@ const App = () => {
     )
   }
 
+  const dragHSliderOne = (e) => {
+    e.preventDefault()
+    var curr = (document.getElementById('main-container').style.gridTemplateColumns).toString()
+    var matches = curr.matchAll(/(\d+(\.\d+)?)%/gm)
+    var currarr = []
+    for (const match of matches) {
+      currarr.push(match[1])
+    }
+    if (e.pageX !== 0 && ((e.pageX / window.innerWidth) * 100).toFixed(1) >= 13 && ((e.pageX / window.innerWidth) * 100).toFixed(1) <= 40) {
+      document.getElementById('main-container').style.gridTemplateColumns = `calc(${((e.pageX / window.innerWidth) * 100).toFixed(1)}% - 5px) 5px ${((100 - currarr[2]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% 5px calc(${currarr[2]}% - 5px)`
+    } 
+  }
+
+  const dragHSliderTwo = (e) => {
+    e.preventDefault()
+    var curr = (document.getElementById('main-container').style.gridTemplateColumns).toString()
+    var matches = curr.matchAll(/(\d+(\.\d+)?)%/gm)
+    var currarr = []
+    for (const match of matches) {
+      currarr.push(match[1])
+    }
+    if (e.pageX !== 0 && (Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)) >= 38 && (Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)) <= 70) {
+      document.getElementById('main-container').style.gridTemplateColumns = `calc(${currarr[0]}% - 5px) 5px ${Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% 5px calc(${Math.abs((100 - (e.pageX / window.innerWidth) * 100)).toFixed(1)}% - 5px)`
+    } 
+  }
+
   return (
     <div className="App">
       {tutorial.active ?
@@ -667,18 +712,27 @@ const App = () => {
         <img loading='lazy' src={`/images/popups/popup-${popup.popup}.gif`} style={{zIndex: '20', aspectRatio: '1/1', width: '30vw', position: 'absolute'}} alt={`${popupWarnings[popup.popup]}`} title={`${popupWarnings[popup.popup]}`} />
         <img loading='lazy' src={`/images/popups/popup-container.png`} style={{zIndex: '20', aspectRatio: '1/1', width: 'calc(30vw + 74px)', marginLeft: '-35px', marginTop: '-35px', position: 'absolute'}} alt={'decor'} />
       </div>
-      <div className="main-container">
-        <div style={{gridColumn: 'span 2', gridRow: 1}} className="top-header" id='status-highlight'>
+      <div id='main-container' className="main-container" style={{gridTemplateColumns: 'calc(18% - 5px) 5px 64% 5px calc(18% - 5px)', gridTemplateRows: 'calc(10% - 5px) 5px 40% 20% 5px calc(30% - 5px)'}}>
+
+        <div style={{gridColumn: 'span 3', gridRow: 1}} className="top-header" id='status-highlight'>
           <div className="scrolling-text-div">
             <Suspense>
               <Status/>
             </Suspense>
           </div>
         </div>
+
+        <div draggable className='grid-slider mobile-hide' style={{gridRowStart: 1, gridRowEnd: 7, gridColumn: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
+        onDrag={(e) => dragHSliderOne(e)}
+        ></div>
         
         <CenterPanel/>
 
-        <div className="mobile-hide" style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 5, height: '100%'}}>
+        <div draggable className='grid-slider mobile-hide' style={{gridRowStart: 2, gridRowEnd: 7, gridColumn: 4, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
+        onDrag={(e) => dragHSliderTwo(e)}
+        ></div>
+
+        <div className="mobile-hide" style={{gridColumn: 5, gridRowStart: 2, gridRowEnd: 5, height: '100%'}}>
           <Suspense fallback={<Fallback/>}>
             <ChatPanel/>
           </Suspense>
@@ -693,6 +747,7 @@ const App = () => {
         </Suspense>
 
         </div>
+
     </div>
   );
 }

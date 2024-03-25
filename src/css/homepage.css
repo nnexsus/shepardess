@@ -8,8 +8,6 @@
     width: calc(100% - 9px);
 
     display: grid;
-    grid-template-columns: 18% 64% 18%;
-    grid-template-rows: 10% 40% 20% 30%;
     align-items: center;
     gap: 3px;
 }

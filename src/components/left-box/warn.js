@@ -19,9 +19,7 @@ const Warn = () => {
     const getWarnings = () => {
         axios.get("https://api.weather.gov/alerts/active?status=actual&message_type=alert&region_type=land&urgency=Immediate,Expected&severity=Extreme,Severe&certainty=Observed,Likely,Possible&limit=25").then((res) => {
             setWarning(res.data)
-            console.log(res.data)
         }).catch((e) => {
-            console.log(e)
             setWarning({
                 "features": [
                     {"id": 0,

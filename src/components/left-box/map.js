@@ -64,7 +64,6 @@ const Map = () => {
 
     useEffect(() => {
         socket.on('set_poly', (data) => {
-            console.log(data)
             var newstate = []
             data.polygons.forEach((el) => {
                 var correctedBox = []
@@ -95,13 +94,11 @@ const Map = () => {
         socket.on('remove_poly', (data) => {
             var newarr = polystate
             polystate.find((el, ind) => {
-                console.log(el.id + " == " + data.id + " at: " + ind)
                 if (el.id === data.id) {
                     newarr.splice(ind, 1)
                     return true;
                 }
             });
-            console.log(newarr)
             setPolystate(newarr)
           })    
           return () => socket.off('remove_poly')
