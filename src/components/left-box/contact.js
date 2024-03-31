@@ -3,7 +3,7 @@
 const Contact = () => {
 
     return (
-        <div className="contact-full" style={{background: 'url(/images/bgs/Circles.png', color: 'white', fontFamily: 'ms ui gothic'}}>
+        <div className="contact-full" style={{background: 'url(/images/bgs/Circles.png', color: 'white'}}>
             <div>
                 <h4>Contact</h4>
                 <p>Email: <a href="mailto:nnexsus.service@gmail.com" style={{color: 'lightblue', lineBreak: 'anywhere'}}>nnexsus.service @ gmail</a></p>

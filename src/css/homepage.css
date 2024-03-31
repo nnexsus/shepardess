@@ -1,3 +1,7 @@
+h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
+    font-family: ms ui gothic;
+}
+
 .App {
     height: calc(100vh - 20px);
     width: 100%;
@@ -74,15 +78,16 @@
     padding: 0px 3px;
     margin: 0px 12px;
 
-    font-family: 'dotty';
     font-weight: 10;
     font-size: 46px;
-    line-height: 25px;
-    margin-top: 5px;
-    margin-bottom: -2px;
+    line-height: 20px;
     
     white-space: nowrap;
     text-align: center;
+}
+
+.scrolling-text i {
+    font-family: 'dotty';
 }
 
 .feeds-container {
@@ -249,7 +254,7 @@
     outline-offset: -2px;
 }
 
-.stream-container::-webkit-scrollbar-thumb, .message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb {
+.stream-container::-webkit-scrollbar-thumb, .message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb, .thick-scroller::-webkit-scrollbar-thumb {
     background-color: rgba(255,255,255,0.1);
     -webkit-transition: 0.2s ease;
     transition: 0.2s ease;
@@ -259,17 +264,32 @@
     border: none;
 }
 
-.stream-container::-webkit-scrollbar-thumb:hover, .message-container-wrapper::-webkit-scrollbar-thumb:hover, .stream-list::-webkit-scrollbar-thumb:hover {
+.stream-container::-webkit-scrollbar-thumb:hover, .message-container-wrapper::-webkit-scrollbar-thumb:hover, .stream-list::-webkit-scrollbar-thumb:hover, .thick-scroller::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255,255,255,0.2);
 }
 
-.stream-container::-webkit-scrollbar-thumb:active, .message-container-wrapper::-webkit-scrollbar-thumb:active, .stream-list::-webkit-scrollbar-thumb:active {
+.stream-container::-webkit-scrollbar-thumb:active, .message-container-wrapper::-webkit-scrollbar-thumb:active, .stream-list::-webkit-scrollbar-thumb:active, .thick-scroller::-webkit-scrollbar-thumb:active {
     outline-width: 2px;
     outline-offset: -3px;
 }
 
 .message-container-wrapper::-webkit-scrollbar, .stream-list::-webkit-scrollbar {
     width: 8px;
+}
+
+.thick-scroller::-webkit-scrollbar {
+    height: 12px;
+}
+
+.thick-scroller::-webkit-scrollbar-track {
+    background:-webkit-repeating-linear-gradient(90deg, #000000 0%, #004212 0.75%);
+    background:-o-repeating-linear-gradient(90deg, #000000 0%, #004212 0.75%);
+    background:-moz-repeating-linear-gradient(90deg, #000000 0%, #004212 0.75%);
+    background:repeating-linear-gradient(90deg, #000000 0%, #004212 0.75%);
+    border-radius: 2px;
+    height: 12px;
+    outline: solid black 1px;
+    outline-offset: -1px;
 }
 
 .message-container-wrapper::-webkit-scrollbar-track, .message-container-wrapper::-webkit-scrollbar-button:single-button, .stream-list::-webkit-scrollbar-track, .stream-list::-webkit-scrollbar-button:single-button {
@@ -286,7 +306,7 @@
     outline-offset: -1px;
 }
 
-.message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb {
+.message-container-wrapper::-webkit-scrollbar-thumb, .stream-list::-webkit-scrollbar-thumb, .thick-scroller::-webkit-scrollbar-thumb {
     outline: solid 1px lime;
 }
 
@@ -337,7 +357,6 @@
 
 .empty-stream-container p {
     color: white;
-    font-family: ms ui gothic;
     opacity: 0.4;
     background: rgba(0,0,0,0.4);
     border-radius: 5px;
@@ -347,6 +366,14 @@
 
 .invert-img {
     transform: rotateY(180deg) rotateX(180deg);
+}
+
+.op-low {
+    opacity: 0.2;
+}
+
+.op-low:hover {
+    opacity: 0.9;
 }
 
 
@@ -425,9 +452,9 @@
     }
 
     .scrolling-text {
-        margin: 10px 12px -2px;
+        margin: 0px 12px;
         font-size: 76px;
-        line-height: 44px;
+        line-height: 28px;
     }
 
     .stream-box-container {

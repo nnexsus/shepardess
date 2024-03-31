@@ -127,7 +127,7 @@ const ControlMap = ({ socket, apikey }) => {
     
         useEffect(() => {
             socket.on('remove_poly', (data) => {
-                var newarr = polystate
+                var newarr = [...polystate]
                 newarr.find((el, ind) => {
                     if (el.id === data.id) {
                         newarr.splice(ind, 1)
@@ -262,12 +262,12 @@ const ControlMap = ({ socket, apikey }) => {
                 />
                 <div style={{position: 'absolute', zIndex: 401, right: 0}}>
                     <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
-                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0', fontFamily: 'ms ui gothic'}}>New Polygon Settings</h2>
+                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0'}}>New Polygon Settings</h2>
                         <input className="analog-input" style={{marginTop: '16px'}} type='text' value={newpoly.title} onChange={(e) => setNewpoly({"title": e.currentTarget.value, "color": newpoly.color})} placeholder='Popup Title, required' />
                         <input className="analog-input" type='text' value={newpoly.color} onChange={(e) => setNewpoly({"title": newpoly.title, "color": e.currentTarget.value})} placeholder='Hex color, default: Blue'/>
                     </div>
                     <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
-                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0', fontFamily: 'ms ui gothic'}}>New Marker Settings</h2>
+                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0'}}>New Marker Settings</h2>
                         <input className="analog-input" style={{marginTop: '16px'}} type='text' value={markers.title} onChange={(e) => setMarkers({"title": e.currentTarget.value, "coords": markers.coords, "type": markers.type})} placeholder='Marker Title' />
                         <select className='analog-input' defaultValue={"marker"} value={markers.type} onChange={(e) => setMarkers({"title": markers.title, "type": e.currentTarget.value, "coords": markers.type})} name='Marker Type'>
                             <option value={"marker"}>Marker</option>

@@ -25,7 +25,7 @@ const Chat = ({ socket, username, streams }) => {
         
         const Emote = () => {
             const addEmote = (path) => {
-                setNewmessage(newmessage + ` </images/emotes/${path}> `)
+                updateMessage(newmessage + ` <${path}> `)
             }
             return (
                 <div style={{display: 'flex', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', flexWrap: 'wrap', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px', imageRendering: 'auto'}}>
@@ -41,7 +41,7 @@ const Chat = ({ socket, username, streams }) => {
         const Effects = () => {
             return (
                 <div style={{display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px'}}>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fontcolor">Color:</label>
+                    <label style={{color: 'white'}} htmlFor="input-fontcolor">Color:</label>
                     <select id="input-fontcolor" defaultValue={'lightgreen'} value={effects.color} onChange={(e) => setEffects({"color": e.currentTarget.value, "font": effects.font, "effect": effects.effect, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'springgreen'} style={{color: 'springgreen'}}>B-Green</option>
                         <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
@@ -52,7 +52,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
                         <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-fonttype">Font:</label>
+                    <label style={{color: 'white'}} htmlFor="input-fonttype">Font:</label>
                     <select id="input-fonttype" defaultValue={'ms ui gothic'} value={effects.font} onChange={(e) => setEffects({"color": effects.color, "font": e.currentTarget.value, "effect": effects.effect, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'ms ui gothic'} style={{color: 'white', fontFamily: 'ms ui gothic'}}>ms ui gothic</option>
                         <option className="format-dropdown" value={'blurpix'} style={{color: 'white', fontFamily: 'blurpix'}}>blurpix</option>
@@ -60,7 +60,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'monospace'} style={{color: 'white', fontFamily: 'monospace'}}>Monospace</option>
                         <option className="format-dropdown" value={'fantasy'} style={{color: 'white', fontFamily: 'fantasy'}}>Fantasy</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effect">Decor:</label>
+                    <label style={{color: 'white'}} htmlFor="input-effect">Decor:</label>
                     <select id="input-effect" defaultValue={'none'} value={effects.effect} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": e.currentTarget.value, "effectColor": effects.effectColor})}>
                         <option className="format-dropdown" value={'none'} style={{color: 'white'}}>None</option>
                         <option className="format-dropdown" value={'underline'} style={{color: 'white', textDecoration: 'underline'}}>Underline</option>
@@ -68,7 +68,7 @@ const Chat = ({ socket, username, streams }) => {
                         <option className="format-dropdown" value={'underline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wavy-U</option>
                         <option className="format-dropdown" value={'overline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wave-O</option>
                     </select>
-                    <label style={{color: 'white', fontFamily: 'ms ui gothic'}} htmlFor="input-effectColor">Color:</label>
+                    <label style={{color: 'white'}} htmlFor="input-effectColor">Color:</label>
                     <select id="input-effectColor" defaultValue={'lightgreen'} value={effects.effectColor} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": effects.effect, "effectColor": e.currentTarget.value})}>
                         <option className="format-dropdown" value={'lightgreen'} style={{color: 'springgreen'}}>B-Green</option>
                         <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
@@ -90,10 +90,17 @@ const Chat = ({ socket, username, streams }) => {
     
         var Panel = panels[activePanel];
 
+        const updateMessage = (value) => {
+            document.getElementById("message-input").style.color = `rgb(${value.length * 1.2}, ${255 - (value.length * 1.2)}, 0)`
+            if (value.length <=  255) {
+                setNewmessage(value)
+            }
+        }
+
         return (
             <div className="message-write">
                 <div className="message-input" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
-                    <input id="message-input" style={{width: 'calc(100% - 12px)', height: '35px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', borderRight: 'none', color: 'lime', fontFamily: 'ms ui gothic'}} type="text" placeholder="Message" value={newmessage} onChange={(e) => setNewmessage(e.currentTarget.value)} />
+                    <input id="message-input" style={{width: 'calc(100% - 12px)', height: '35px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', borderRight: 'none', fontFamily: 'ms ui gothic'}} type="text" placeholder="Message" value={newmessage} onChange={(e) => updateMessage(e.currentTarget.value)} />
                     <button style={{width: '42px', height: '42px', cursor: 'pointer', backgroundImage: 'url(/images/16icons/arrow.gif)', backgroundSize: 'cover', border: 'inset 3px', borderLeft: 'none', fontFamily: 'ms ui gothic'}} onClick={() => sendMessage()}><b style={{textShadow: '0px 0px 2px white'}}>Send</b></button>
                 </div>
                 <div className="emote-panel-select" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
@@ -154,6 +161,18 @@ const Chat = ({ socket, username, streams }) => {
             return () => socket.off('set_stream')
         }, [socket, streams, setStreams])
 
+        const attemptOpenStream = (reference) => {
+            var obj = document.getElementById(`stream-${reference.id}`)
+            if (obj !== null) {
+                obj.click()
+            } else {
+                document.getElementById('close-stream-button').click()
+                setTimeout(() => {
+                    document.getElementById(`stream-${reference.id}`).click()
+                }, [500])
+            }
+        }
+
         return (
             <div className="message-container-wrapper" ref={messageContainer}>
                 {messages.map((el, ind) => {
@@ -205,19 +224,18 @@ const Chat = ({ socket, username, streams }) => {
                                 <p title={`${el.author}`} className="message-author" style={{color: `${el.author === 'ShepardessBot' ? "yellow" : "red"}`, margin: '0 4px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', fontWeight: 700, padding: '0 2px', overflow: 'hidden', textOverflow: 'ellipsis', outline: `${el.author === 'ShepardessBot' ? "yellow" : "red"} solid 1px`}}>{el.author}</p>
                                 <p className="message-author" style={{margin: '0 4px'}}><i title={`${titledate}`} style={{fontSize: '8px', color: 'aliceblue', margin: '0 8px 0 0', textDecoration: 'underline'}}>{date}</i></p>
                             </div>
-                            <p className="message-message" style={{color: `${color}`, fontFamily: `${font}`, padding: '6px', textDecoration: `${decor}`, fontStyle: `${el.author === 'ShepardessBot' ? "italic" : "normal"}`, backgroundImage: 'url(/images/bgs/test-container.png', backgroundPosition: 'center', backgroundSize: '100% 100%'}}>
+                            <p className="message-message" style={{color: `${color}`, fontFamily: `${font}`, padding: '6px 6px 6px 8px', textDecoration: `${decor}`, fontStyle: `${el.author === 'ShepardessBot' ? "italic" : "normal"}`, backgroundImage: 'url(/images/bgs/test-container.png', backgroundPosition: 'center', backgroundSize: '100% 100%'}}>
                                 {texts.map((el, ind) => {
                                     var img = (imgs.length >= ind + 1)
                                     return (
-                                        <span key={`emote-${ind}`}>{el}{img ? <img loading='lazy' className="image-render" alt="emote" style={{margin: '0 3px', width: '16px', height: '16px'}} src={`${imgs[ind]}`} /> : null}</span>
+                                        <span key={`emote-${ind}`}>{el}{img ? <img loading='lazy' className="image-render" alt="emote" style={{margin: '0 3px', width: '16px', height: '16px'}} src={`/images/emotes/${imgs[ind]}`} /> : null}</span>
                                     )
                                 })}
                             </p>
                             {reference ? 
                                 <div style={{outline: '1px solid blue', outlineOffset: '-8px', backgroundImage: 'url(/images/bgs/bordertest3.png)', backgroundSize: '100% 100%'}}>
-                                    <p style={{margin: '12px', outline: '2px inset lightblue', padding: '2px', background: 'black'}}><a style={{color: 'lightblue'}} 
-                                    href={`#stream-${reference.id}`} 
-                                    onClick={() => document.getElementById(`stream-${reference.id}`).click()}>Streamlink: {reference.title}</a></p>
+                                    <p style={{margin: '12px', outline: '2px inset lightblue', padding: '2px', background: 'black'}}><a style={{color: 'lightblue', cursor: 'pointer'}} 
+                                    onClick={() => attemptOpenStream(reference)}>Streamlink: {reference.title}</a></p>
                                 </div>
                             : null}
                             <div style={{width: '100%', height: '9px', backgroundImage: 'url(/images/bgs/bordertest2.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat'}}>
@@ -241,7 +259,7 @@ const Chat = ({ socket, username, streams }) => {
         }, [])    
         return (
             <div style={{height: '10%', backgroundImage: 'url(/images/bgs/bluesteel_widecontainer.png', backgroundSize: "100% 100%", padding: '0 7px', backgroundRepeat: 'no-repeat', display: 'flex', alignItems: 'center'}}>
-                <h4 style={{fontFamily: 'ms ui gothic', width: '100%', textAlign: 'center', fontSize: '18px', color: 'darkslategray'}}>Online: </h4>
+                <h4 style={{width: '100%', textAlign: 'center', fontSize: '18px', color: 'darkslategray'}}>Online: </h4>
                 <p style={{fontFamily: 'dotty', fontSize: '30px', color: 'lime', textShadow: '0 0 4px lime', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', margin: 0, padding: '5px', width: 'calc(100% + 42px)'}}>{users}</p>
             </div>
         )

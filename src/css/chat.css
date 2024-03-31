@@ -17,6 +17,22 @@
     background-color: #3f043f;
 }
 
+#message-input {
+    color: lime;
+}
+
+#message-input .input-full {
+    animation: fullmessage 1s ease linear;
+}
+
+@keyframes fullmessage {
+    0% {
+        color: red;
+    } 100% {
+        color: lime;
+    }
+}
+
 @keyframes messageappears {
     0% {
         opacity: 0;

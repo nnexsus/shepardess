@@ -111,7 +111,7 @@ const Status = () => {
       <>
         <div className='scroller'>
           {desc?.scrolling?.map((el, ind) => {
-            const colors = ['red', 'yellow', 'lime', '#00ddff', '#bb00ff', 'red']
+            const colors = ['red', 'yellow', 'lime', '#00ddff', '#bb00ff', 'red', 'orange', 'yellow', 'blue', 'lime']
             return (
               <p key={el} style={{textAlign: 'left', color: `${colors[ind]}`, textShadow: `0 0 3px ${colors[ind]}`}} className="scrolling-text">
                 <i>{el}</i>

@@ -28,7 +28,6 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    font-family: ms ui gothic;
     font-weight: bold;
     font-variant-caps: small-caps;
     text-shadow: 1px 1px 0px rgb(164, 0, 0);
@@ -91,11 +90,8 @@
     justify-content: space-around;
     flex-wrap: wrap;
     gap: 10px;
-
-    font-family: ms ui gothic;
 }
 .past-container button {
-    font-family: ms ui gothic;
     padding-left: 4px;
 }
 
@@ -155,7 +151,7 @@
 .map-details {
     display: grid;
     grid-template-columns: 33% 34% 33%;
-    grid-template-rows: 30px 35px;
+    grid-template-rows: 30px 35px 25px 25px 0px;
     align-items: center;
     justify-content: center;
 
@@ -171,10 +167,15 @@
     position: absolute;
     right: 0;
     top: 72px;
+
+    transition: 0.3s ease;
+}
+
+.map-details.key-show {
+    grid-template-rows: 30px 35px 25px 25px 100px;
 }
 
 .map-details p {
-    font-family: ms ui gothic;
     font-weight: bold;
     font-variant-caps: small-caps;
     margin: 0;
@@ -297,7 +298,7 @@
     transform: translateY(-100px);
 }
 
-.sliding-expanded .left-viewer .leaflet-pane {
+.sliding-expanded .left-viewer .leaflet-pane, .leaflet-pane.leaflet-popup-pane {
     transform: translateY(0px);
 }
 
@@ -310,7 +311,6 @@
     border-width: 3px;
     border-color:rgb(182, 255, 182) rgb(135, 153, 135) rgb(135, 153, 135) rgb(182, 255, 182);
     background: rgb(165 242 165);
-    font-family: ms ui gothic;
     width: 56px;
     height: 25px;
     margin: 2px;
@@ -335,13 +335,24 @@
 
 .warncontainer {
     display: grid;
-    grid-template-columns: 50% 50%;
-
-    font-family: ms ui gothic;
+    grid-template-columns: 33% 34% 33%;
 }
 
 .warncontainer h2 {
     font-size: 17px;
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: outset 3px;
+    border-color: #50c750 #0f660f #0f660f #50c750;
+    outline: solid black 1px;
+    background-color: green;
+    margin: 0 3px;
+    color: white;
+    cursor: pointer;
 }
 
 .contact-full {
@@ -374,7 +385,6 @@
 .settings-full {
     color: white;
     text-shadow: 0 0 3px black;
-    font-family: ms ui gothic;
     display: flex;
     flex-direction: column;
     align-items: center;

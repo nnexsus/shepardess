@@ -68,7 +68,7 @@
 }
 
 .popup-desc button {
-    width: 70px;
+    width: 65px;
     height: 50px;
     font-size: 12px;
 }
@@ -221,7 +221,6 @@
     width: 100%; 
     margin: 0;
     text-align: center; 
-    font-family: ms ui gothic;
     font-weight: bold;
     font-variant-caps: small-caps;
     white-space: nowrap; 
@@ -399,6 +398,10 @@
     justify-content: left;
 }
 
+.group-stream-name {
+    margin: 0 8px;
+}
+
 @media screen and (max-width: 750px) {
     .buttons-flex {
         align-items: flex-start;
@@ -417,5 +420,19 @@
     }
     .logo-container, .top-header-cc {
         display: none;
+    }
+}
+
+@media screen and (min-width: 1750px) {
+    .group-control-stream-box {
+        padding: 0 3px;
+    }
+    
+    .group-stream-name {
+        margin: 0 12px;
+    }
+
+    .group-grid-default .group-stream-name {
+        margin: 0 16px;
     }
 }

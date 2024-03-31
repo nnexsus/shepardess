@@ -261,7 +261,7 @@ const ControlPanel = () => {
                         "author": si.author,
                         [data.attribute]: data.newvalue
                     }
-                    var newarr = streams
+                    var newarr = [...streams]
                     newarr[ind] = newdata
                     setStreams(newarr)
                 }
@@ -402,8 +402,8 @@ const ControlPanel = () => {
                     </div>
                 </div>
                 <div className='map-controls' style={{background: 'lightgray', border: 'outset 3px', outline: '2px black solid', gridRow: 1, gridColumn: 3}}>
-                    <h2 style={{color: 'black', fontFamily: 'ms ui gothic', textAlign: 'center'}}>Map Controls</h2>
-                    <h3 style={{color: 'black', fontFamily: 'ms ui gothic', textAlign: 'center'}}>Right click to begin making points for a polygon. Double click to place a marker.</h3>
+                    <h2 style={{color: 'black', textAlign: 'center'}}>Map Controls</h2>
+                    <h3 style={{color: 'black', textAlign: 'center'}}>Right click to begin making points for a polygon. Double click to place a marker.</h3>
                     <div style={{width: 'calc(100% - 12px)', height: 'calc(100% - 12px)', border: 'inset 3px', padding: '3px', background: 'black'}}>
                         <ControlMap socket={socket} apikey={key.key}/>
                     </div>

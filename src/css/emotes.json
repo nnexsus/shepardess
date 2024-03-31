@@ -103,6 +103,10 @@
         {
             "name": "GORILLA HAIL",
             "path": "hail.gif"
+        },
+        {
+            "name": "Supercell",
+            "path": "supercell.gif"
         }
     ]
 }

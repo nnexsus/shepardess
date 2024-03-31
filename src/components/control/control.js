@@ -31,7 +31,8 @@ const Control = () => {
         "threat": "none",
         "scrolling": "",
         "qrd": "",
-        "desc": ""
+        "desc": "",
+        "lastUpdate": ""
     })
 
     const [newscroll, setNewscroll] = useState("Scrolling text.")
@@ -234,11 +235,15 @@ const Control = () => {
 
     useEffect(() => {
         socket.on('set_desc', (data) => {
+            var date = new Date(parseInt(data[5].text))
+            var datetext = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+            console.log(date, " -- ", datetext)
           setDesc({
             "threat": data[4].text,
             "scrolling": data[0].text,
             "qrd": data[1].text,
-            "desc": data[2].text
+            "desc": data[2].text,
+            "lastUpdate": datetext
           })
         })
     
@@ -283,7 +288,7 @@ const Control = () => {
                         "author": si.author,
                         [data.attribute]: data.newvalue
                     }
-                    var newarr = streams
+                    var newarr = [...streams]
                     newarr[ind] = newdata
                     setStreams(newarr)
                 }
@@ -428,7 +433,7 @@ const Control = () => {
                             <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "highwind" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being high winds" /> <p>High Wind</p>
                         </div>
                         <div onClick={() => changeThreat("flooding")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "flood" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood" /> <p>Flooding</p>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "flooding" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being a flood" /> <p>Flooding</p>
                         </div>
                         <div onClick={() => changeThreat("thunderstorm")} className="status-light-div control-light-div" title='Click to toggle.'>
                             <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
@@ -437,16 +442,21 @@ const Control = () => {
                             <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
                         </div>
                     </div>
-                    <div className='popup-desc'>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "bighail"})}>Hail Confirmed</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "derecho"})}>Derecho Occuring</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "highwinds"})}>High Winds Reported</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "tornado"})}>Tornado Spotted</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "funnel"})}>Funnel Cloud Spotted</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "flooding"})}>Flooding Warning</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency"})}>Emergency Alert</button>
+                    <div>
                         <button onClick={() => axios.get('https://arina.lol/api/shepardess/yt-test2')}>UPDATE LIVESTREAMS</button>
+                        <p>LAST UPDATE: {desc.lastUpdate} CST</p>
+                    </div>
+                    <div className='popup-desc'>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency001"})}>E001: Technical Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency002"})}>E002: Car Funcion Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency003"})}>E003: Car Damage Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency004"})}>E004: Stranded</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency005"})}>E005: Injury</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency006"})}>E006: Situation Comprimise</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency007"})}>E007: DESPERATION CALL</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency008"})}>E008: S&R Assist!</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency009"})}>E009: PDS!</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency010"})}>E010: Unwarned tor!</button>
                     </div>
                 </div>
 
@@ -653,6 +663,15 @@ const Control = () => {
                                         })}
                                     </select>
                                 </div>
+                                <div className='popup-desc'>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "bighail"})}>Hail Confirmed</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "derecho"})}>Derecho Occuring</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "highwinds"})}>High Winds Reported</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "tornado"})}>Tornado Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "funnel"})}>Funnel Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "flooding"})}>Flooding Warning</button>
+                                </div>
                                 <button className='analog-button' style={{backgroundColor: 'darkred'}} onClick={() => deleteStream(el.id)}>Remove</button>
                             </div>
                         )
@@ -670,8 +689,8 @@ const Control = () => {
             </div>
 
             <div className='map-controls' style={{background: 'lightgray', border: 'outset 3px', outline: '2px black solid'}}>
-                <h2 style={{color: 'black', fontFamily: 'ms ui gothic', textAlign: 'center'}}>Map Controls</h2>
-                <h3 style={{color: 'black', fontFamily: 'ms ui gothic', textAlign: 'center'}}>Right click to begin making points for a polygon. Double click to place a marker.</h3>
+                <h2 style={{color: 'black', textAlign: 'center'}}>Map Controls</h2>
+                <h3 style={{color: 'black', textAlign: 'center'}}>Right click to begin making points for a polygon. Double click to place a marker.</h3>
                 <div style={{width: 'calc(100% - 12px)', height: 'calc(100% - 12px)', border: 'inset 3px', padding: '3px', background: 'black'}}>
                     <ControlMap socket={socket} apikey={key.key}/>
                 </div>

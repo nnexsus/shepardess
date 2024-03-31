@@ -9,13 +9,17 @@ const ChatPanel = () => {
 
     const [active, setActive] = useState("join")
 
+    useEffect(() => {
+        sessionStorage?.getItem('username')
+    }, [])
+
     const Join = () => {
         const [username, setUsername] = useState(sessionStorage?.getItem('username'))
 
         return (
             <div id="chat-panelh" style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                <input id="chat-username" style={{border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', fontFamily: 'ms ui gothic', color: 'lime', width: 'calc(100% - 12px)', height: '40px'}} type="text" defaultValue={username} onChange={(e) => sessionStorage.setItem('username', e.currentTarget.value)} placeholder="Username" />
-                <button style={{border: 'outset 3px', margin: '3px', cursor: 'pointer', background: 'black', fontFamily: 'ms ui gothic', color: 'lime'}} onClick={() => JoinRoom()}>JOIN LIVE CHAT</button>
+                <input id="chat-username" style={{border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', color: 'lime', width: 'calc(100% - 12px)', height: '40px'}} type="text" defaultValue={username} onChange={(e) => sessionStorage.setItem('username', e.currentTarget.value)} placeholder="Username" />
+                <button style={{border: 'outset 3px', margin: '3px', cursor: 'pointer', background: 'black', color: 'lime'}} onClick={() => JoinRoom()}>JOIN LIVE CHAT</button>
             </div>
         )
     }
