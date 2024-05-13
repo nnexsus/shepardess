@@ -91,8 +91,8 @@ const Map = () => {
                 var final = []
                 var olarr = li.split(" ")
                 olarr.forEach((el) => {
-                    if(el.length === 8) {
-                        final.push([parseFloat(`${el.substring(0, 2)}.${el.substring(2, 4)}`), parseFloat(`-${el.substring(4, 6)}.${el.substring(6, 8)}`)])
+                    if(el.length === 8 && el !== '99999999') {
+                        final.push([parseFloat(`${el.substring(0, 2)}.${el.substring(2, 4)}`), parseFloat(`-${(el.substring(4, 6) === '00' ? '1' + el.substring(4, 6) : el.substring(4, 6))}.${el.substring(6, 8)}`)])
                     }
                 })
                 outs.push({"coordinates": final, "color": riskTypeColors[`${type}`][`${riskcol}`], "desc": `${riskcol}% chance for ${type} given by the SPC for ${dayDesc[day]}`})
@@ -346,7 +346,7 @@ const Map = () => {
                 {markerstate?.map((el, ind) => {
                     const Link = () => {
                         return (
-                            <a href={`${el.link}`}>Media</a>
+                            <a href={`${el.link}`}><img src={`${el.link}`} alt="decor" width={'240px'} height={'120px'} /></a>
                         )
                     }
                     return (

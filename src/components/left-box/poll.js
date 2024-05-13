@@ -3,10 +3,6 @@
 const Poll = () => {
     return (
         <div style={{background: 'url(/images/bgs/Waves.png)', backgroundSize: '64px', overflowY: 'scroll', marginTop: '6px', height: 'calc(100% - 6px)', width: '100%', display: 'grid', gridTemplateColumns: "25% 25% 25% 25%", justifyItems: 'center', justifyContent: 'space-around'}}>
-            <a href="https://nnexsus.net/" target="_blank" rel="noreferrer">
-                <img loading='lazy' alt="link to my site" width={'64px'} height={'64px'} src="/images/16icons/moon.png" />
-                <p style={{color: 'lightblue'}}>My site.</p>
-            </a>
             <a href="https://www.youtube.com/@_nexsus/videos" target="_blank" rel="noreferrer">
                 <img loading='lazy' alt="link to my youtube" width={'64px'} height={'64px'} src="/images/16icons/youtube.png" />
                 <p style={{color: 'lightblue'}}>Youtube</p>

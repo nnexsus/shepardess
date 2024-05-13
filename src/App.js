@@ -125,7 +125,6 @@ const App = () => {
   const CenterPanel = () => {
 
     useEffect(() => {
-      console.log("Center rerender")
       socket.emit('sync_stream')
       socket.emit('sync_group')
     }, [])
@@ -230,7 +229,7 @@ const App = () => {
           var streamsarr = []
           var groupsarr = []
           data.forEach((el) => {
-            if (el.groupname !== null && el.groupname !== "NULL") {
+            if (el.groupname !== null && el.groupname !== "0") {
               groupsarr.push(el)
             } else {
               streamsarr.push(el)
@@ -459,7 +458,7 @@ const App = () => {
                         <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
 
                         <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
-                        <p title={`${el.groupname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>Tag: {el.groupname !== null ? el.groupname : "None"}</p>
+                        <p title={`${el.groupname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>Tag: {((el.groupname !== null) && (el.groupname !== '0')) ? el.groupname : "None"}</p>
                         <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
                       </div>
                   </div>
@@ -645,7 +644,7 @@ const App = () => {
     return (
       <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 4, height: '97%'}} className="description-section">
       <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%', flexDirection: 'column'}}>
-        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to version 1.0!</p>
+        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to version 1.0.2!</p>
         <div style={{background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
           <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '3vw', fontStyle: 'italic', fontWeight: 400, textAlign: 'center'}}>SHEPARDESS</h1>
         </div>

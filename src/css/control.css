@@ -34,11 +34,14 @@
 }
 
 .control-desc-part {
-    width: 100%;
+    width: calc(100% - 12px);
 
     display: flex;
     align-items: center;
     justify-content: space-around;
+
+    margin: 4px;
+    border: black solid 2px;
 }
 
 .control-desc-part textarea {
@@ -142,6 +145,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
 }
 
 .stream-container {
@@ -241,6 +245,9 @@
     background-color: darkgray;
 
     width: 295px;
+
+    outline: black 1px solid;
+    outline-offset: 1px;
 }
 
 .group-container {
@@ -402,6 +409,16 @@
     margin: 0 8px;
 }
 
+.control-status {
+    display: grid;
+    grid-template-rows: 50% 50%;
+}
+
+.control-collapsed {
+    height: 50px;
+    overflow: hidden;
+}
+
 @media screen and (max-width: 750px) {
     .buttons-flex {
         align-items: flex-start;
@@ -412,7 +429,12 @@
         flex-direction: column;
     }
     .control-app {
-        height: 200vh;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .control-status {
+        grid-template-rows: auto;
     }
     .control-account {
         grid-column: span 3;

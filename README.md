@@ -2,6 +2,14 @@
 
 Shepardess is a hub for stormchasing.
 
+Update v1.0.2!!
+```diff
++ Control panel redesign, espeically for mobile use.
++ Fixes to SPC polygons on the map.
++ Various smaller bugfixes, especially related to setting data on the backend.
++ Various smaller design fixes or asset updates.
+```
+
 Changelog (from Beta Version 0.9.1):
 ```diff
 MAJOR:

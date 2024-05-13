@@ -22,18 +22,6 @@ const ControlMap = ({ socket, apikey }) => {
     const [points, setPoints] = useState([])
     const [lines, setLines] = useState([])
 
-    const [newpoly, setNewpoly] = useState({
-        "title": "",
-        "coords": "",
-        "color": ""
-    })
-
-    const [markers, setMarkers] = useState({
-        "title": "",
-        "coords": "",
-        "type": ""
-    })
-
     const [miles, setMiles] = useState(false)
 
     useEffect(() => {
@@ -60,11 +48,22 @@ const ControlMap = ({ socket, apikey }) => {
     }, [socket, miles, setMiles])
 
     const MapComp = () => {
-        const map = useMap()
-        const mapEvent = useMapEvent('contextmenu', (e) => {
+        const [newpoly, setNewpoly] = useState({
+            "title": "",
+            "color": ""
+        })
+
+        const [markers, setMarkers] = useState({
+            "title": "",
+            "coords": "",
+            "type": "",
+            "link": ""
+        })
+
+        useMapEvent('contextmenu', (e) => {
             createPoint(e.latlng)
         })
-        const eventTwo = useMapEvent('dblclick', (e) => {
+        useMapEvent('dblclick', (e) => {
             createMarker(e.latlng)
         })
 
@@ -195,7 +194,8 @@ const ControlMap = ({ socket, apikey }) => {
             var data = {
                 "title": markers.title,
                 "coords": fullcoords,
-                "type": markers.type
+                "type": markers.type,
+                "link": markers.link
             }
             var parsed = JSON.stringify(fullcoords)
             socket.emit('send_add_marker', {'coordinates': parsed, 'type': data.type, 'title': data.title, 'key': apikey})
@@ -226,7 +226,26 @@ const ControlMap = ({ socket, apikey }) => {
                     return (
                         <Marker icon={icon} key={`custompoint-${el[0]}-${ind}`} position={el}>
                             <Tooltip><p>Click to open menu.</p></Tooltip>
-                            <Popup><button onClick={() => createPoly()}>Close & Create Poly</button></Popup>
+                            <Popup>
+                            <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
+                                <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0', textShadow: 'none'}}>New Polygon Settings</h2>
+                                <input className="analog-input" style={{marginTop: '16px'}} type='text' value={newpoly.title} onChange={(e) => setNewpoly({"title": e.currentTarget.value, "color": newpoly.color})} placeholder='Popup Title, required' />
+                                <select style={{width: '100%'}} className='analog-input' defaultValue={"pink"} name='Color' onChange={(e) => setNewpoly({"title": newpoly.title, "color": e.currentTarget.value})}>
+                                    <option style={{color: 'red'}} value={"red"}>Target Area</option>
+                                    <option style={{color: 'purple'}} value={"purple"}>Tornado Risk</option>
+                                    <option style={{color: 'lime'}} value={"lime"}>Hail Risk</option>
+                                    <option style={{color: 'lightblue'}} value={"lightblue"}>Winds Risk</option>
+                                    <option style={{color: 'cyan'}} value={"cyan"}>Derecho Risk</option>
+                                    <option style={{color: 'yellow'}} value={"yellow"}>Future Outlook</option>
+                                    <option style={{color: 'orange'}} value={"orange"}>Far Future Outlook</option>
+                                    <option style={{color: 'pink'}} value={"pink"}>Special</option>
+                                    <option style={{color: 'green'}} value={"green"}>Special 2</option>
+                                    <option style={{color: 'blue'}} value={"blue"}>Special 3</option>
+                                    <option style={{color: 'rebeccapurple'}} value={"rebeccapurple"}>Special 4</option>
+                                </select>
+                                <button onClick={() => createPoly()}>Close & Create Poly</button>
+                            </div>
+                            </Popup>
                         </Marker>
                     )
                 })}
@@ -234,14 +253,47 @@ const ControlMap = ({ socket, apikey }) => {
                     return (
                         <Polyline key={`line-${el[0]}-${ind}`} positions={el}>
                             <Tooltip><p>Click to open menu.</p></Tooltip>
-                            <Popup><button onClick={() => createPoly()}>Close & Create Poly</button></Popup>
+                            <Popup>
+                            <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
+                                <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0', textShadow: 'none'}}>New Polygon Settings</h2>
+                                <input className="analog-input" style={{marginTop: '16px'}} type='text' value={newpoly.title} onChange={(e) => setNewpoly({"title": e.currentTarget.value, "color": newpoly.color})} placeholder='Popup Title, required' />
+                                <select style={{width: '100%'}} className='analog-input' defaultValue={"pink"} name='Color' onChange={(e) => setNewpoly({"title": newpoly.title, "color": e.currentTarget.value})}>
+                                    <option style={{color: 'red'}} value={"red"}>Target Area</option>
+                                    <option style={{color: 'purple'}} value={"purple"}>Tornado Risk</option>
+                                    <option style={{color: 'lime'}} value={"lime"}>Hail Risk</option>
+                                    <option style={{color: 'lightblue'}} value={"lightblue"}>Winds Risk</option>
+                                    <option style={{color: 'cyan'}} value={"cyan"}>Derecho Risk</option>
+                                    <option style={{color: 'yellow'}} value={"yellow"}>Future Outlook</option>
+                                    <option style={{color: 'orange'}} value={"orange"}>Far Future Outlook</option>
+                                    <option style={{color: 'pink'}} value={"pink"}>Special</option>
+                                    <option style={{color: 'green'}} value={"green"}>Special 2</option>
+                                    <option style={{color: 'blue'}} value={"blue"}>Special 3</option>
+                                    <option style={{color: 'rebeccapurple'}} value={"rebeccapurple"}>Special 4</option>
+                                </select>
+                                <button onClick={() => createPoly()}>Close & Create Poly</button>
+                            </div>
+                            </Popup>
                         </Polyline>
                     )
                 })}
                 {markers.coords !== "" ? 
                     <Marker icon={L.icon({iconUrl: `/images/16icons/${markers.type}-marker.png`, iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [8, 8]})} position={markers.coords}>
                         <Tooltip><p>Click to open menu.</p></Tooltip>
-                        <Popup><button onClick={() => addMarker()}>Create Marker</button></Popup>
+                        <Popup>
+                            <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
+                                <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0'}}>New Marker Settings</h2>
+                                <input className="analog-input" style={{marginTop: '16px'}} type='text' value={markers.title} onChange={(e) => setMarkers({"title": e.currentTarget.value, "coords": markers.coords, "type": markers.type, "link": markers.link})} placeholder='Marker Title' />
+                                <input className="analog-input" style={{marginTop: '16px'}} type='text' value={markers.link} onChange={(e) => setMarkers({"title": markers.title, "coords": markers.coords, "type": markers.type, "link": e.currentTarget.value})} placeholder='Link (optional)' />
+                                <select className='analog-input' defaultValue={"marker"} value={markers.type} onChange={(e) => setMarkers({"title": markers.title, "type": e.currentTarget.value, "coords": markers.coords, "link": markers.link})} name='Marker Type'>
+                                    <option value={"marker"}>Marker</option>
+                                    <option value={"tornado"}>Tornado</option>
+                                    <option value={"bighail"}>Hail</option>
+                                    <option value={"flood"}>Flood</option>
+                                    <option value={"shelf"}>Shelf Cloud</option>
+                                </select>
+                            </div>
+                            <button onClick={() => addMarker()}>Create Marker</button>
+                        </Popup>
                     </Marker>
                 : null}
             </div>
@@ -261,22 +313,6 @@ const ControlMap = ({ socket, apikey }) => {
                     className="no-invert"
                 />
                 <div style={{position: 'absolute', zIndex: 401, right: 0}}>
-                    <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
-                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0'}}>New Polygon Settings</h2>
-                        <input className="analog-input" style={{marginTop: '16px'}} type='text' value={newpoly.title} onChange={(e) => setNewpoly({"title": e.currentTarget.value, "color": newpoly.color})} placeholder='Popup Title, required' />
-                        <input className="analog-input" type='text' value={newpoly.color} onChange={(e) => setNewpoly({"title": newpoly.title, "color": e.currentTarget.value})} placeholder='Hex color, default: Blue'/>
-                    </div>
-                    <div style={{background: 'url(/images/bgs/green_steel_wide_container.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', padding: '0 20px 20px 20px', display: 'flex', flexDirection: 'column'}}>
-                        <h2 style={{textAlign: 'center', color: 'darkolivegreen', margin: '15px 0 0'}}>New Marker Settings</h2>
-                        <input className="analog-input" style={{marginTop: '16px'}} type='text' value={markers.title} onChange={(e) => setMarkers({"title": e.currentTarget.value, "coords": markers.coords, "type": markers.type})} placeholder='Marker Title' />
-                        <select className='analog-input' defaultValue={"marker"} value={markers.type} onChange={(e) => setMarkers({"title": markers.title, "type": e.currentTarget.value, "coords": markers.type})} name='Marker Type'>
-                            <option value={"marker"}>Marker</option>
-                            <option value={"tornado"}>Tornado</option>
-                            <option value={"bighail"}>Hail</option>
-                            <option value={"flood"}>Flood</option>
-                            <option value={"shelf"}>Shelf Cloud</option>
-                        </select>
-                    </div>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'black', border: 'inset 3px', outline: 'black solid 1px', margin: '5px'}}>
                         <button className="analog-button" onClick={() => socket.emit('send_toggle_miles', {'key': apikey})}>Toggle Milage Counter</button>
                         <p style={{color: 'white'}}><img loading='lazy' src="/images/bgs/status-light.png" width={'16px'} height={'16px'} style={{background: `${miles ? 'lime' : 'darkgreen'}`, borderRadius: '50%'}} />Currently: {miles ? "ON" : "OFF"}</p>

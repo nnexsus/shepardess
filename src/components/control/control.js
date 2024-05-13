@@ -9,13 +9,6 @@ const socket = io.connect('https://arina.lol');
 
 const Control = () => {
 
-    const [key, setKey] = useState({
-        "username": "",
-        "key": "key"
-    })
-
-    const [scrolling, setScrolling] = useState("WELCOME TO THE CONTROL PANEL!")
-
     const [stat, setStat] = useState({
         "chaseday": false,
         "traveling": false,
@@ -73,8 +66,7 @@ const Control = () => {
     //update functions
     const changeStatus = (status) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newstatus": !stat[`${status}`],
             "title": status
         }
@@ -83,8 +75,7 @@ const Control = () => {
 
     const changeDescs = (id) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newtext": newscroll,
             "id": id
         }
@@ -93,8 +84,7 @@ const Control = () => {
 
     const changeQRD = (id) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newtext": newQRD,
             "id": id
         }
@@ -103,8 +93,7 @@ const Control = () => {
 
     const changeDescription = (id) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newtext": newdesc,
             "id": id
         }
@@ -113,8 +102,7 @@ const Control = () => {
 
     const changeFeatured = (id) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newtext": id,
             "id": 3
         }
@@ -123,8 +111,7 @@ const Control = () => {
 
     const changeStream = (attribute, id, newvalue) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "attribute": attribute,
             "id": id,
             "newvalue": newvalue
@@ -134,8 +121,7 @@ const Control = () => {
 
     const sendNewStream = () => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "internalname": newCamera.internalname,
             "groupname": newCamera.groupname,
             "title": newCamera.title,
@@ -148,8 +134,7 @@ const Control = () => {
 
     const deleteStream = (id) => {
         const data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "id": id
         }
         socket.emit('send_remove_stream', {'id': data.id, 'user': data.user, 'key': data.key})
@@ -157,8 +142,7 @@ const Control = () => {
 
     const sendNewGroup = () => {
         const data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "internalname": newGroup.internalname,
             "title": newGroup.title,
             "icon": newGroup.icon
@@ -168,8 +152,7 @@ const Control = () => {
 
     const deleteGroup = (id) => {
         const data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "id": id
         }
         socket.emit('send_remove_group', {'internalname': data.id, 'key': data.key})
@@ -177,8 +160,7 @@ const Control = () => {
 
     const changeThreat = (newthreat) => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "newtext": newthreat,
             "id": 4
         }
@@ -187,8 +169,7 @@ const Control = () => {
 
     const sendNewWatcher = () => {
         var data = {
-            "key": key.key,
-            "user": key.username,
+            "key": localStorage.getItem("kaepyi"),
             "forHandle": newWatcher,
         }
         axios.post('https://arina.lol/api/shepardess/yt-test3', data).then((res) => {
@@ -264,8 +245,6 @@ const Control = () => {
 
     useEffect(() => {
         socket.on('set_stream', (data) => {
-            document.getElementById('stream-sync-light').style.background = 'lime'
-            document.getElementById('stream-sync-light').style.boxShadow = '0 0 5px lime'
           setStreams(data)
         })
     
@@ -372,6 +351,10 @@ const Control = () => {
         })
     }, [socket, watchers, setWatchers])
 
+    const f = (e) => {
+        localStorage.setItem("kaepyi", e.currentTarget.value)
+    }
+
     //map based events
 
     return (
@@ -380,34 +363,30 @@ const Control = () => {
                 <a href='/home' ><img loading='lazy' height={'50px'} src="/images/bgs/skull-logo.png" alt="logo" /></a>
             </div>
 
-            <div style={{gridColumn: 2, gridRow: 1, alignItems: 'center', justifyContent: 'center'}} className="top-header-cc">
-                <div style={{width: '98%'}} className="scrolling-text-div">
-                    <div className='scroller'>
-                        <p className='scrolling-text' style={{fontFamily: 'dotty'}}>{scrolling}</p>
-                    </div>
-                </div>
+            <div className='control-account control-desc-part' style={{gridColumn: 3, gridRow: 1}}>
+                <input type='password' placeholder='API key here.' value={localStorage.getItem('kaepiy')} onChange={(e) => f(e)} />
             </div>
 
-            <div style={{gridColumn: 'span 3', gridRow: 2, display: 'grid', gridTemplateRows: '50% 50%'}} className='control-status'>
+            <div style={{gridColumn: 'span 3', gridRow: 2}} className='control-status'>
                 <div className='buttons-flex'>
                     <div className="status-indicators-control">
                         <div onClick={() => changeStatus("chaseday")} className="status-light-div control-light-div" title='Click to toggle.'>
                             <img loading='lazy' src={`${"/images/lights/light_purple" + (stat?.chaseday ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for it being a chase day" /> <p>Chase Day</p>
                         </div>
                         <div onClick={() => changeStatus("traveling")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling" /> <p>Traveling</p>
+                            <img loading='lazy' src={`${"/images/lights/light_green" + (stat?.traveling ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for traveling" /> <p>Travel</p>
                         </div>
                         <div onClick={() => changeStatus("forecasting")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting" /> <p>Forecasting</p>
+                            <img loading='lazy' src={`${"/images/lights/light_cyan" + (stat?.forecasting ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for forecasting" /> <p>Forecast</p>
                         </div>
                         <div onClick={() => changeStatus("chasing")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing" /> <p>Chasing</p>
+                            <img loading='lazy' src={`${"/images/lights/light_blue" + (stat?.chasing ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for chasing" /> <p>Chase</p>
                         </div>
                         <div onClick={() => changeStatus("searchandrescue")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue" /> <p>Search & Rescue</p>
+                            <img loading='lazy' src={`${"/images/lights/light_yellow" + (stat?.searchandrescue ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for search & rescue" /> <p>S & R</p>
                         </div>
                         <div onClick={() => changeStatus("ending")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending" /> <p>Ending</p>
+                            <img loading='lazy' src={`${"/images/lights/light_orange" + (stat?.ending ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for ending" /> <p>End</p>
                         </div>
                         <div onClick={() => changeStatus("emergency")} className="status-light-div control-light-div" title='Click to toggle.'>
                             <img loading='lazy' src={`${"/images/lights/light_red" + (stat?.emergency ? "" : "_off") + ".webp"}`} width="50px" height="50px" alt="status light for emergency" /> <p>Emergency</p>
@@ -443,46 +422,40 @@ const Control = () => {
                         </div>
                     </div>
                     <div>
-                        <button onClick={() => axios.get('https://arina.lol/api/shepardess/yt-test2')}>UPDATE LIVESTREAMS</button>
+                        <button className='analog-button' style={{width: '100%'}} onClick={() => axios.get('https://arina.lol/api/shepardess/yt-test2')}>UPDATE LIVESTREAMS</button>
                         <p>LAST UPDATE: {desc.lastUpdate} CST</p>
                     </div>
                     <div className='popup-desc'>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency001"})}>E001: Technical Issues</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency002"})}>E002: Car Funcion Issues</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency003"})}>E003: Car Damage Issues</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency004"})}>E004: Stranded</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency005"})}>E005: Injury</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency006"})}>E006: Situation Comprimise</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency007"})}>E007: DESPERATION CALL</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency008"})}>E008: S&R Assist!</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency009"})}>E009: PDS!</button>
-                        <button onClick={() => socket.emit('send_popup', {"key": key.key, "popup": "emergency010"})}>E010: Unwarned tor!</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency001"})}>E001: Technical Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency002"})}>E002: Car Function Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency003"})}>E003: Car Damage Issues</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency004"})}>E004: Stranded</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency005"})}>E005: Injury</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency006"})}>E006: Situation Comprimise</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency007"})}>E007: DESPERATION CALL</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency008"})}>E008: S&R Assist!</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency009"})}>E009: PDS!</button>
+                        <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "popup": "emergency010"})}>E010: Unwarned tor!</button>
                     </div>
                 </div>
-
-                <div style={{width: '100%', display: 'grid', gridTemplateColumns: '50% 50%', gridRow: 2}}>
-                    <div className='control-desc'>
-                        <div className='control-desc-part'>
-                            <textarea type='text' placeholder='Scrolling Text, seperate colors with commas.' defaultValue={desc.scrolling} onChange={(e) => setNewscroll(e.currentTarget.value)} />
-                            <button onClick={() => changeDescs(0)}>Update</button>
-                        </div>
-                        <div className='control-desc-part'>
-                            <textarea type='text' style={{height: '80px'}} placeholder='QRD - Quick run down/title for desc' defaultValue={desc.qrd} onChange={(e) => setNewQRD(e.currentTarget.value)} />
-                            <button onClick={() => changeQRD(1)}>Update</button>
-                        </div>
-                        <div className='control-desc-part'>
-                            <textarea type='text' style={{height: '200px'}} placeholder='Full description text' defaultValue={desc.desc} onChange={(e) => setNewdesc(e.currentTarget.value)} />
-                            <button onClick={() => changeDescription(2)}>Update</button>
-                        </div>
+                <div className='control-desc'>
+                    <div className='control-desc-part'>
+                        <textarea type='text' placeholder='Scrolling Text, seperate colors with commas.' defaultValue={desc.scrolling} onChange={(e) => setNewscroll(e.currentTarget.value)} />
+                        <button title='Update' onClick={() => changeDescs(0)} style={{backgroundImage: 'url(/images/16icons/upload.png)', height: '100%', backgroundColor: 'white'}} className='analog-button square-button'></button>
                     </div>
+                    <div className='control-desc-part'>
+                        <textarea type='text' style={{height: '80px'}} placeholder='QRD - Quick run down/title for desc' defaultValue={desc.qrd} onChange={(e) => setNewQRD(e.currentTarget.value)} />
+                        <button title='Update' onClick={() => changeQRD(1)} style={{backgroundImage: 'url(/images/16icons/upload.png)', height: '100%', backgroundColor: 'white'}} className='analog-button square-button'></button>
+                    </div>
+                    <div className='control-desc-part'>
+                        <textarea type='text' style={{height: '200px'}} placeholder='Full description text' defaultValue={desc.desc} onChange={(e) => setNewdesc(e.currentTarget.value)} />
+                        <button title='Update' onClick={() => changeDescription(2)} style={{backgroundImage: 'url(/images/16icons/upload.png)', height: '100%', backgroundColor: 'white'}} className='analog-button square-button'></button>
 
-                    <div>
-                        <h1>Chat section</h1>
                     </div>
                 </div>
             </div>
 
-            <div className='control-camera' style={{gridColumn: 'span 3', gridRow: 3}}>
+            <div className='control-camera control-collapsed' id='control-camera' style={{gridColumn: 'span 3', gridRow: 3}}>
                 <div className='stream-container'>
                 <div className='cc-control-stream-box' style={{height: 'min-content', gridColumn: 'span 3'}}>
                         <h3 className='invert-text' style={{margin: 0}}>Add Stream:</h3>
@@ -549,7 +522,7 @@ const Control = () => {
                                 </div>
                             </div>
                             <div className='analog-input' style={{border: 'solid white 2px', padding: '3px', margin: '3px'}}>
-                                <input className='analog-input' title='Stream Type' style={{width: '22px'}} min={0} max={3} type='number' placeholder='0' onChange={(e) => setNewCamera({
+                                <input className='analog-input' title='Stream Type' style={{width: '22px'}} min={0} max={4} type='number' placeholder='0' onChange={(e) => setNewCamera({
                                     "internalname": `${newCamera.internalname}`,
                                     "groupname": newCamera.groupname,
                                     "title": `${newCamera.title}`,
@@ -562,6 +535,7 @@ const Control = () => {
                                 1 = <img loading='lazy' style={{background: 'lime'}} alt='car/moving camera' title='Car/Moving Camera' src='/images/16icons/carstream.png' width={'16px'} height={'16px'}/><br/>
                                 2 = <img loading='lazy' style={{background: 'lime'}} alt='screenshare' title='Screenshare' src='/images/16icons/audiostream.png' width={'16px'} height={'16px'}/><br/>
                                 3 = <img loading='lazy' style={{background: 'lime'}} alt='other' title='Other' src='/images/16icons/other.png' width={'16px'} height={'16px'}/>
+                                4 = <img loading='lazy' style={{background: 'lime'}} alt='video (not live)' title='Video (not live)' src='/images/16icons/videoicon.png' width={'16px'} height={'16px'}/>
                                 </p>
                             </div>
                         </div>
@@ -590,7 +564,7 @@ const Control = () => {
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                         <img loading='lazy' height={'32px'} width={'32px'} style={{border: 'solid  2px'}} src={el.icon} />
                                         <p style={{overflow: 'hidden', textOverflow: 'ellipsis', marginLeft: '5px', marginRight: '5px'}}>{el.title}</p>
-                                        <button>Remove</button>
+                                        <button style={{color: 'white', background: 'darkred'}} className='analog-button'>Remove</button>
                                     </div>
                                 )
                             })}
@@ -599,7 +573,7 @@ const Control = () => {
                     <div className='cc-control-stream-box' style={{height: 'min-content', gridColumn: 'span 3'}}>
                         <h3 className='invert-text' style={{margin: 0}}>Add Watcher:</h3>
                         <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                            <input className='analog-input' style={{width: '100%'}} type='text' placeholder='channel @ handle' onChange={(e) => setNewWatcher(e.currentTarget.value)}/>
+                            <input className='analog-input' style={{width: '100%'}} type='text' placeholder='channel @ handle (do not include @)' onChange={(e) => setNewWatcher(e.currentTarget.value)}/>
                         </div>
                         <button className='analog-button' onClick={() => sendNewWatcher()}>Submit</button>
                         <div style={{border: 'inset 3px', maxHeight: '210px', overflowY: 'scroll'}}>
@@ -608,7 +582,7 @@ const Control = () => {
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <img loading='lazy' height={'40px'} width={'40px'} style={{borderRadius: '50%', border: 'solid lime 2px'}} src={el.pfp} />
                                         <p style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>@{el.handle}</p>
-                                        <button>Remove</button>
+                                        <button style={{color: 'white', background: 'darkred'}} className='analog-button'>Remove</button>
                                     </div>
                                 )
                             })}
@@ -618,14 +592,14 @@ const Control = () => {
                         return (
                             <div key={el.id} className='cc-control-stream-box'>
                                 <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                                    <p style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} className='invert-text'>{el.title}</p>
-                                    <p className='analog-input'>Stream #{ind}</p>
+                                    <p style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '65%'}} className='invert-text'>{el.title}</p>
+                                    <p className='analog-input'>STR-{ind}</p>
                                 </div>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 'solid gray 2px'}}>
                                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-right', background: 'black', color: 'lime', border: 'inset 3px'}}>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                             <p style={{paddingLeft: '3px', fontSize: '12px'}}>ACTIVE:</p>
-                                            <button className='led-light' title={`Stream is ${el.active === 0 ? "inactive" : "active"}, click to toggle! (visual effect only)`} id={`stream-active-light-${el.id}`} onClick={() => changeStream("active", el.id, !el.active)} style={{cursor: 'pointer', outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, margin: '4px'}}></button>
+                                            <button className='led-light' title={`Stream is ${el.active === 0 ? "inactive" : "active"}, click to toggle!)`} id={`stream-active-light-${el.id}`} onClick={() => changeStream("active", el.id, !el.active)} style={{cursor: 'pointer', outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, margin: '4px'}}></button>
                                         </div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                             <p style={{paddingLeft: '3px', fontSize: '12px'}}>FEATURED:</p>
@@ -640,16 +614,16 @@ const Control = () => {
                                     </select>
                                 </div>
                                 <div style={{gridRow: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: 'solid gray 2px'}}>
-                                    <p>Title:</p>
-                                    <input className='analog-input' type='text' placeholder='stream title name' id={`store-new-title-${el.id}`} defaultValue={el.title}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('title', el.id, document.getElementById(`store-new-title-${el.id}`).value)}></button>
+                                    <img style={{width: '16px', height: '16px'}} alt='decor' src='/images/16icons/terminalicon.png'/>
+                                    <input style={{width: '100%'}} className='analog-input' type='text' placeholder='stream title name' id={`store-new-title-${el.id}`} defaultValue={el.title}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('title', el.id, document.getElementById(`store-new-title-${el.id}`).value)}></button>
                                 </div>
                                 <div style={{gridRow: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: 'solid gray 2px'}}>
-                                    <p>Link:</p>
-                                    <input className='analog-input' type='text' placeholder='stream link' id={`store-new-link-${el.id}`} defaultValue={el.link}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('link', el.id, document.getElementById(`store-new-link-${el.id}`).value)}></button>
+                                    <img style={{width: '16px', height: '16px'}} alt='decor' src='/images/16icons/terminallinkicon.png'/>
+                                    <input style={{width: '100%'}} className='analog-input' type='text' placeholder='stream link' id={`store-new-link-${el.id}`} defaultValue={el.link}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('link', el.id, document.getElementById(`store-new-link-${el.id}`).value)}></button>
                                 </div>
                                 <div style={{gridRow: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                    <p>Thumb:</p>
-                                    <input className='analog-input' type='text' placeholder='thumbnail link' id={`store-new-thumblink-${el.id}`} defaultValue={el.thumblink}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('thumblink', el.id, document.getElementById(`store-new-thumblink-${el.id}`).value)}></button>
+                                    <img style={{width: '16px', height: '16px'}} alt='decor' src='/images/16icons/terminalthumbicon.png'/>
+                                    <input style={{width: '100%'}} className='analog-input' type='text' placeholder='thumbnail link' id={`store-new-thumblink-${el.id}`} defaultValue={el.thumblink}/><button title='Update' style={{backgroundImage: 'url(/images/16icons/upload.png)', backgroundColor: 'white'}} className='analog-button square-button' onClick={() => changeStream('thumblink', el.id, document.getElementById(`store-new-thumblink-${el.id}`).value)}></button>
                                 </div>
                                 <img loading='lazy' style={{border: 'inset 3px'}} src={`${el.thumblink}`} height={'100px'} alt='thumbnail' />
                                 <div style={{gridRow: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: 'solid gray 2px'}}>
@@ -664,35 +638,27 @@ const Control = () => {
                                     </select>
                                 </div>
                                 <div className='popup-desc'>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "bighail"})}>Hail Confirmed</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "derecho"})}>Derecho Occuring</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "highwinds"})}>High Winds Reported</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "tornado"})}>Tornado Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "funnel"})}>Funnel Cloud Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": key.key, "stream": `$`, "popup": "flooding"})}>Flooding Warning</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "bighail"})}>Hail Confirmed</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "derecho"})}>Derecho Occuring</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "highwinds"})}>High Winds Reported</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "tornado"})}>Tornado Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "funnel"})}>Funnel Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "flooding"})}>Flooding Warning</button>
                                 </div>
-                                <button className='analog-button' style={{backgroundColor: 'darkred'}} onClick={() => deleteStream(el.id)}>Remove</button>
+                                <button className='analog-button' style={{backgroundColor: 'darkred', color: 'white'}} onClick={() => deleteStream(el.id)}>Remove</button>
                             </div>
                         )
                     }) : null}
                 </div>
-                <div className='sync-notifier'>
-                    <h3>Synced to server: </h3>
-                    <div id='stream-sync-light' className='led-light' style={{background: 'darkgreen', boxShadow: '0 0 2px darkgreen'}}></div>
-                </div>
-            </div>
-
-            <div className='control-account control-desc-part' style={{gridColumn: 3, gridRow: 1}}>
-                <input type='text' placeholder='Account name.' onChange={(e) => setKey({"username": e.currentTarget.value, "key": key.key})} />
-                <input type='password' placeholder='API key here.' onChange={(e) => setKey({"username": key.username, "key": e.currentTarget.value})} />
+                <button className='analog-button' onClick={() => document.getElementById('control-camera').classList.toggle('control-collapsed')}>Toggle Collapse</button>
             </div>
 
             <div className='map-controls' style={{background: 'lightgray', border: 'outset 3px', outline: '2px black solid'}}>
                 <h2 style={{color: 'black', textAlign: 'center'}}>Map Controls</h2>
                 <h3 style={{color: 'black', textAlign: 'center'}}>Right click to begin making points for a polygon. Double click to place a marker.</h3>
                 <div style={{width: 'calc(100% - 12px)', height: 'calc(100% - 12px)', border: 'inset 3px', padding: '3px', background: 'black'}}>
-                    <ControlMap socket={socket} apikey={key.key}/>
+                    <ControlMap socket={socket} apikey={localStorage.getItem("kaepyi")}/>
                 </div>
             </div>
         </div>

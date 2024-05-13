@@ -232,8 +232,8 @@ const Warn = () => {
                         <button className="filter-button" onClick={() => setFilter("fire")}><img src="/images/warns/fire.png" alt="decor" width={'32px'} height={'32px'} />Fire</button>
                         <button className="filter-button" onClick={() => setFilter("tropical")}><img src="/images/warns/hurricane.png" alt="decor" width={'32px'} height={'32px'} />Tropical</button>
                         <button className="filter-button" onClick={() => setFilter("temperature")}><img src="/images/warns/heat.png" alt="decor" width={'32px'} height={'32px'} />Temps</button>
-                        <button className="filter-button" onClick={() => setFilter("smoke")}><img src="/images/warns/.png" alt="decor" width={'32px'} height={'32px'} />Smoke/Dust/Fog</button>
-                        <button className="filter-button" onClick={() => setFilter("other")}><img src="/images/warns/.png" alt="decor" width={'32px'} height={'32px'} />Other</button>
+                        <button className="filter-button" onClick={() => setFilter("smoke")}><img src="/images/warns/smoke.png" alt="decor" width={'32px'} height={'32px'} />Smoke/Dust/Fog</button>
+                        <button className="filter-button" onClick={() => setFilter("other")}><img src="/images/warns/othersort.png" alt="decor" width={'32px'} height={'32px'} />Other</button>
                     </div>
                     <div className="warncontainer">
                         {warning.features.map((warn, ind) => {
@@ -245,6 +245,15 @@ const Warn = () => {
                             var pos = [8, 0, 0]
                             var lat = warn.geometry?.coordinates[0][0][1]
                             var lon = warn.geometry?.coordinates[0][0][0]
+                            const calcAvg = (values) => {
+                                var avg = []
+                                var tmpAvg = []
+                                values?.forEach((li) => {
+                                    tmpAvg.push(li[1])
+                                })
+                                console.log(tmpAvg)
+                            }
+                            var latAvg = calcAvg(warn.geometry?.coordinates[0])
                             pos[1] = (Math.floor((lon + 180) / 360 * Math.pow(2, pos[0])))
                             pos[2] = (Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, pos[0])))
                             var path = "M"
