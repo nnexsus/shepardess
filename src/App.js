@@ -27,6 +27,9 @@ const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-pan
 
 const App = () => {
 
+  const camtype = ['camera', 'carstream', 'audiostream', 'other', 'videoicon']
+  const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other', 'Video']
+
   var socket = io.connect('https://arina.lol');
 
   const [tutorial, setTutorial] = useState({
@@ -191,8 +194,6 @@ const App = () => {
           <div className="group-container-outer">
               <div className='group-container'>
                   {ids.ids.length > 0 ? ids.ids.map((el) => {
-                      const camtype = ['camera', 'carstream', 'audiostream', 'other']
-                      const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
                       return (
                       <div key={`${el.id}`} className="group-stream-box">
                           <div className='group-control-stream-box' id={`stream-${el.id}`} onClick={() => openStream(el)}>
@@ -389,8 +390,6 @@ const App = () => {
                   )
                 }) : null}
                 {streams.length > 0 ? streams.map((el) => {
-                    const camtype = ['camera', 'carstream', 'audiostream', 'other']
-                    const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
                     return (
                       <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
                         <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
@@ -440,8 +439,6 @@ const App = () => {
       return (
         <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px', background: 'url(/images/bgs/logo-bg.png)', pointerEvents: 'all'}}>
           {streams.length > 0 ? streams.map((el) => {
-              const camtype = ['camera', 'carstream', 'audiostream', 'other']
-              const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
               return (
                 <div draggable onDragStart={(e) => onDragStart(e, JSON.stringify(el))} key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
                   <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'grab'}`, alignItems: 'stretch'}}>
@@ -653,8 +650,6 @@ const App = () => {
         <p style={{textAlign: 'center', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Stream:</p>
       </div>
       {all.length > 0 ? all.map((el) => {
-          const camtype = ['camera', 'carstream', 'audiostream', 'camera']
-          const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other']
           if (el.internalname === featured) {
             return (
               <div key={`fstreambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}}>
