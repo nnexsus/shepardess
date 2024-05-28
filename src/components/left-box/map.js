@@ -347,7 +347,7 @@ const Map = () => {
                 {markerstate?.map((el, ind) => {
                     const Link = () => {
                         return (
-                            <a href={`${el.link}`}><img src={`${el.link}`} alt="decor" width={'240px'} height={'120px'} /></a>
+                            <a href={`${el.link}`}><iframe src={`${el.link}`} alt="decor" width={'240px'} height={'120px'} /></a>
                         )
                     }
                     return (

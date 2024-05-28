@@ -4,6 +4,7 @@ import React from 'react';
 
 import ControlPanel from './components/control/control-panel';
 import Control from './components/control/control';
+import NotFound from './components/404';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -17,6 +18,7 @@ root.render(
         <Route path='/contact' element={<App/>}/>
         <Route path='/home' element={<App/>}/>
         <Route path='/' element={<App/>}/>
+        <Route path='/*' element={<NotFound/>}/>
       </Routes>
     </Router>
   </div>

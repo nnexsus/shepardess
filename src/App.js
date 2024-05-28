@@ -641,7 +641,7 @@ const App = () => {
     return (
       <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 4, height: '97%'}} className="description-section">
       <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%', flexDirection: 'column'}}>
-        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to version 1.0.2!</p>
+        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to version 1.0.3!</p>
         <div style={{background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
           <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '3vw', fontStyle: 'italic', fontWeight: 400, textAlign: 'center'}}>SHEPARDESS</h1>
         </div>

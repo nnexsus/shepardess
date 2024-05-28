@@ -50,13 +50,13 @@ const ControlMap = ({ socket, apikey }) => {
     const MapComp = () => {
         const [newpoly, setNewpoly] = useState({
             "title": "",
-            "color": ""
+            "color": "pink"
         })
 
         const [markers, setMarkers] = useState({
             "title": "",
             "coords": "",
-            "type": "",
+            "type": "marker",
             "link": ""
         })
 
@@ -185,7 +185,7 @@ const ControlMap = ({ socket, apikey }) => {
 
         const createMarker = (latlng) => {
             var arr = [latlng.lat, latlng.lng]
-            setMarkers({"coords": arr, "type": markers.type, "title": markers.title})
+            setMarkers({"coords": arr, "type": markers.type, "title": markers.title, "link": markers.link})
         }
 
         const addMarker = () => {
@@ -198,7 +198,13 @@ const ControlMap = ({ socket, apikey }) => {
                 "link": markers.link
             }
             var parsed = JSON.stringify(fullcoords)
-            socket.emit('send_add_marker', {'coordinates': parsed, 'type': data.type, 'title': data.title, 'key': apikey})
+            socket.emit('send_add_marker', {'coordinates': parsed, 'type': data.type, 'title': data.title, 'link': data.link, 'key': apikey})
+        }
+
+        const cancelPoly = () => {
+            setPoints([])
+            setLines([])
+            setNewpoly({"title": '', "color": ''})
         }
 
         return (
@@ -239,11 +245,17 @@ const ControlMap = ({ socket, apikey }) => {
                                     <option style={{color: 'yellow'}} value={"yellow"}>Future Outlook</option>
                                     <option style={{color: 'orange'}} value={"orange"}>Far Future Outlook</option>
                                     <option style={{color: 'pink'}} value={"pink"}>Special</option>
-                                    <option style={{color: 'green'}} value={"green"}>Special 2</option>
-                                    <option style={{color: 'blue'}} value={"blue"}>Special 3</option>
-                                    <option style={{color: 'rebeccapurple'}} value={"rebeccapurple"}>Special 4</option>
+                                    <option style={{color: 'aliceblue'}} value={"aliceblue"}>Special 2</option>
+                                    <option style={{color: 'lightcoral'}} value={"lightcoral"}>Special 3</option>
+                                    <option style={{color: 'mediumorchid'}} value={"mediumorchid"}>Special 4</option>
+                                    <option style={{color: 'bisque'}} value={"bisque"}>Special 5</option>
+                                    <option style={{color: 'chocolate'}} value={"chocolate"}>Special 6</option>
+                                    <option style={{color: 'darkseagreen'}} value={"darkseagreen"}>Special 7</option>
+                                    <option style={{color: 'deeppink'}} value={"deeppink"}>Special 8</option>
+                                    <option style={{color: 'white'}} value={"white"}>Special 9</option>
                                 </select>
                                 <button onClick={() => createPoly()}>Close & Create Poly</button>
+                                <button onClick={() => cancelPoly()}>Cancel Poly</button>
                             </div>
                             </Popup>
                         </Marker>
@@ -266,11 +278,17 @@ const ControlMap = ({ socket, apikey }) => {
                                     <option style={{color: 'yellow'}} value={"yellow"}>Future Outlook</option>
                                     <option style={{color: 'orange'}} value={"orange"}>Far Future Outlook</option>
                                     <option style={{color: 'pink'}} value={"pink"}>Special</option>
-                                    <option style={{color: 'green'}} value={"green"}>Special 2</option>
-                                    <option style={{color: 'blue'}} value={"blue"}>Special 3</option>
-                                    <option style={{color: 'rebeccapurple'}} value={"rebeccapurple"}>Special 4</option>
+                                    <option style={{color: 'aliceblue'}} value={"aliceblue"}>Special 2</option>
+                                    <option style={{color: 'lightcoral'}} value={"lightcoral"}>Special 3</option>
+                                    <option style={{color: 'mediumorchid'}} value={"mediumorchid"}>Special 4</option>
+                                    <option style={{color: 'bisque'}} value={"bisque"}>Special 5</option>
+                                    <option style={{color: 'chocolate'}} value={"chocolate"}>Special 6</option>
+                                    <option style={{color: 'darkseagreen'}} value={"darkseagreen"}>Special 7</option>
+                                    <option style={{color: 'deeppink'}} value={"deeppink"}>Special 8</option>
+                                    <option style={{color: 'white'}} value={"white"}>Special 9</option>
                                 </select>
                                 <button onClick={() => createPoly()}>Close & Create Poly</button>
+                                <button onClick={() => cancelPoly()}>Cancel Poly</button>
                             </div>
                             </Popup>
                         </Polyline>
@@ -286,13 +304,17 @@ const ControlMap = ({ socket, apikey }) => {
                                 <input className="analog-input" style={{marginTop: '16px'}} type='text' value={markers.link} onChange={(e) => setMarkers({"title": markers.title, "coords": markers.coords, "type": markers.type, "link": e.currentTarget.value})} placeholder='Link (optional)' />
                                 <select className='analog-input' defaultValue={"marker"} value={markers.type} onChange={(e) => setMarkers({"title": markers.title, "type": e.currentTarget.value, "coords": markers.coords, "link": markers.link})} name='Marker Type'>
                                     <option value={"marker"}>Marker</option>
-                                    <option value={"tornado"}>Tornado</option>
-                                    <option value={"bighail"}>Hail</option>
+                                    <option value={"lightning"}>Lightning</option>
                                     <option value={"flood"}>Flood</option>
+                                    <option value={"bighail"}>Hail</option>
+                                    <option value={"supercell"}>Supercell</option>
+                                    <option value={"tornado"}>Tornado</option>
+                                    <option value={"derecho"}>Derecho</option>
                                     <option value={"shelf"}>Shelf Cloud</option>
                                 </select>
                             </div>
                             <button onClick={() => addMarker()}>Create Marker</button>
+                            <button onClick={() => setMarkers({"title": '', "type": 'marker', "coords": [0, 0], "link": ''})}>Cancel Marker</button>
                         </Popup>
                     </Marker>
                 : null}
