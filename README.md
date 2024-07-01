@@ -1,64 +1,36 @@
 # Shepardess.net
 
-Shepardess is a hub for stormchasing.
+Shepardess is a hub for weather, stormchasing, forecasting, and other information.
 
-Update v1.0.2!!
+Update: Eyewall (v1.1.0)
+
 ```diff
-+ Control panel redesign, espeically for mobile use.
-+ Fixes to SPC polygons on the map.
-+ Various smaller bugfixes, especially related to setting data on the backend.
-+ Various smaller design fixes or asset updates.
-```
+NEW:
++ Social panel rework! Now shows profiles of chasers, forecasters, etc. with links to everyones socials.
++ Chat panel rework! Rather than an inactive live chat, it is now a more active Live Updates, which will post photos, links, videos, and more for active weather events.
++ Past panel rework! The past panel will now aim to be more generalized in its coverage and provide more info on the day and weather itself rather than my personal outlook on it.
++ New Convective Outlook and Main Location Risk indicators in the top status panel!
++ Added tropical storm / hurricane cones, wind fields, and tracks as an optional layer on the map (with potentially more to come)!
++ Added Hurricane, Tropical Storm, Eyewall, and Hidden Gem markers to the map!
 
-Changelog (from Beta Version 0.9.1):
-```diff
-MAJOR:
-+ Multi-streaming!
-+ Custom stream URL option!
-+ Drag and drop stream panel!
-+ In-depth warnings and polygons!
-+ SPC 1 & 2 day risk outlooks!
-+ Panel and multi-stream resizing!
-+ Streamer handles!
-+ Past panel remodel!
-+ Popup panel remodel!
-+ Reduced site to one render!
-+ Heavily reduced network size downloads!
+CHANGES:
++ Improved Polygons, Markers, and Warning Polygons in the map (in both appearance and usage).
++ Map panel controls are formatted and hidden better.
++ Improved and fixed issues with the tutorial when you first open the page.
++ Greatly improved the map rendering, no longer rerendering or making multiple requests for the same data.
++ Fixed issues with SPC warnings not appearing on the map or updating.
++ Added a few 'No/None' placeholders to the Warnings panel.
++ Changed the 'Center' map control option to center on user location instead of mine (was a weird feature before).
++ Fixed a VERY annoying issue where the map would not scale correctly on smaller screens and/or mobile, causing the bottom of the tiles, polygons, markers, etc. to be cut off.
++ Fixed multiple issues with the site design on smaller screens and mobile.
++ Rewrote backend for better access security and to move towards multi-user authentication.
++ General design or static text updates as well.
++ Probably more that I've forgotten over like... a month or something.
 
- MINOR: 
-+ Added much more info to SPC warning boxes, my current location, markers, and other polygons!
-+ Added map key!
-+ Added many filters and ease of accessibility to the warnings panel!
-+ Mobile chat option in bottom panel!
-+ Downsized message emote size (takes less characters).
-+ Added message character color to signify when a message is near limit.
-```
+REMOVED:
+- Removed ability to chat in Live Chat (it was virtually unused as I had kinda anticipated).
+- Removed Search & Rescue and Forecasting indicators as they were pointless mostly.
+- Removed a few selected indicators, texts, hints, etc. from smaller screen and mobile designs.
+- Removed /control-panel setup for tablets. Was too outdated to update.
 
-Bug and design fixes (since Beta Version 0.9.1):
-```diff
-BUG AND TECHNICAL:
---Entire site
-+ Fixed all issues relating to portions of the site not automatically updating through websockets
---Featured panel
-+ Fixed bug with Featured panel not displaying the featured stream (websocket race condition)
---Status and scrolling text 
-+ Fixed bug and added fault tolerance to updates on the scrolling text feature (unhandled typing issue)
---Chat 
-+ Fixed bug with emotes appearing in the wrong places in longer chat (mapping misconfig)
-+ Fixed bug where new messages in chat could reset the message input field (bad component state handling on my part)
-+ Fixed an issue where chat streamlinks wouldn't open with a stream open (clicked a non-existant object)
-+ Fixed an issue where chat streamlinks wouldn't open the featured stream (double id reference)
-+ Fixed an issue where chat streamlinks wouldn't update the name when streams refreshed
---Map 
-+ Fixed an issue where future outlooks on the map
-+ Fixed an issue with map objects (markers, polygons, etc) being on the wrong z-axis
---Warnings
-+ Fixed an issue where the warning polygons would be flipped across the x-axis
-
-DESIGN:
---Stream panel
-+ Fixed many issues with display proportions for texts and icons in smaller streambox sizes.
-+ Fixed streamgroup box proportions and scaling.
-+ Implemented flexbox design on stream grid.
-+ A LOT - and I mean a TON of icon and asset micro-updates to simplify or enhance designs.
 ```

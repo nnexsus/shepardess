@@ -41,15 +41,18 @@
 
 .status-indicators-control {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 25px;
 }
 
 .status-light-div p {
     color: white;
-    font-size: 12px;
+    font-size: 9px;
+    text-align: center;
     margin: 0;
     padding: 0;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 
@@ -71,6 +74,10 @@
         width: 100%;
         display: grid;
         grid-template-columns: repeat(6, 16%);
+    }
+
+    .hidden-indicators {
+        display: none;
     }
 }
 

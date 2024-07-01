@@ -1,14 +1,12 @@
 .control-app {
-    height: 100vh;
-
+    height: calc(100vh - 20px);
+    width: calc(100vw - 20px);
     display: grid;
-    grid-template-columns: 20% 60% 20%;
-    grid-template-rows: 15% 100% 100%;
+    grid-template-columns: 10% 70% 20%;
+    grid-template-rows: 10% 90%;
 }
 
 .control-status {
-    margin: 15px;
-
     border-color: #fff8ff #000 #000 #fff8ff;
     border-style: outset;
     border-width: 2px;
@@ -18,10 +16,9 @@
 
 .control-light-div {
     background-color: darkslategray;
-    margin: 6px;
+    margin: 1px;
     border: outset 3px;
     outline: solid 1px black;
-
     cursor: pointer;
 }
 
@@ -42,10 +39,12 @@
 
     margin: 4px;
     border: black solid 2px;
+    overflow: hidden;
 }
 
 .control-desc-part textarea {
     width: 100%;
+    overflow: scroll;
 }
 
 .popup-desc {
@@ -244,7 +243,7 @@
     border: inset 3px;
     background-color: darkgray;
 
-    width: 295px;
+    width: 250px;
 
     outline: black 1px solid;
     outline-offset: 1px;
@@ -346,7 +345,11 @@
     height: 16px;
 }
 
-.control-app h1, .control-app h2, .control-app h3, .control-app h4, .control-app p, .control-app textarea, .control-app input, .control-app button, .control-app select, .control-app option {
+.control-app h1, .control-app h2, .control-app h3, .control-app h4, .control-app p {
+    font-family: ms ui gothic;
+}
+
+.control-app textarea, .control-app input, .control-app button, .control-app select, .control-app option {
     font-family: blurpix;
 }
 
@@ -389,7 +392,7 @@
 .status-indicators-control {
     border: inset 3px;
     background: black;
-    margin: 3px 6px;
+    padding: 5px;
 }
 
 
@@ -403,6 +406,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
+    flex-wrap: wrap;
 }
 
 .group-stream-name {
@@ -419,10 +423,23 @@
     overflow: hidden;
 }
 
+.control-accounts-wrapper {
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border: inset 3px;
+    padding: 2px;
+    background: url('/public/images/bgs/moon-bg.png');
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.p-control-grid {
+    max-width: 100% !important;
+}
+
 @media screen and (max-width: 750px) {
     .buttons-flex {
         align-items: flex-start;
-        flex-direction: column;
         justify-content: space-between;
     }
     .control-desc {
@@ -442,6 +459,14 @@
     }
     .logo-container, .top-header-cc {
         display: none;
+    }
+
+    .control-accounts-wrapper {
+        height: 240px;
+    }
+
+    .control-app .message-container-wrapper {
+        height: 300px !important;
     }
 }
 

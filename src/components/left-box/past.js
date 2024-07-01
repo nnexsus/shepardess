@@ -21,34 +21,35 @@ const Past = () => {
     }
 
     return (
-        <div className='past-container'>
+        <div className='past-container' style={{backgroundImage: 'url(/images/bgs/moon-bg.png)', backgroundSize: '128px'}}>
             {inits !== null ? inits.map((el, ind) => {
                 var datef = el.date.split('T')
-                var initresult = ['Absolute Failure', 'Terrible', 'Bad', 'Sucky', 'Meh', 'Fair', 'Decent', 'Good', 'Great', 'Amazing', 'Perfect']
-                var initcol = ['#d92d27', 'rgb(217 46 183)', 'rgb(217 128 46)', '#cfb13c', '#a2d642', '#23cf5e', '#2ed99a', '#5991ff', '#7859ff', '#7b2ed9', '#fff200']
-                var indexcolor = ['#FFC2D4', '#FF9EBB', '#FF7AA2', '#E05780', '#B9375E', '#8A2846', '#023E8A', '#0077B6', '#0096C7', '#00B4D8', '#48CAE4', '#90E0EF', '#ADE8F4']
+                const initcol = ['#5991ff', '#2ed99a', '#23cf5e', '#a2d642', '#ccc000', '#cfb13c', 'rgb(217 128 46)', 'rgb(187 88 86)', 'rgb(207 60 60)', '#d92d27', 'rgb(227 76 203)']
+                const links = (el.alttext !== null && el.alttext !== "") ? JSON.parse(el.alttext) : false
                 return (
                     <div key={el.date} className='p-grid'>
-                        <div style={{backgroundImage: `url(${el.imageref})`, backgroundSize: 'auto 100%', backgroundPosition: 'center', border: 'outset 3px'}}>
-                            <div className='p-project'>
-                                <div style={{border: 'inset 3px', backgroundColor: `${initcol[el.initresult]}`, margin: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'}} title={`${el.initresult}/10 - Observed: ${el.customid}`}>
-                                    <img width={'calc(100% - 4px)'} height={'calc(100% - 4px)'} src={`/images/emotes/${el.customid}.gif`} alt='decor' style={{margin: '2px', outline: 'solid black 2px'}} />
+                        <div style={{border: 'outset 3px'}}>
+                            <div className='p-project' style={{backgroundImage: 'url(/images/bgs/past-container-center.png)', backgroundSize: '100%'}}>
+                                <h3 style={{color: 'rgb(34, 97, 101)', backgroundColor: 'black', gridColumn: 'span 3', margin: '-6px', padding: '22px 0', textAlign: 'center', backgroundImage: 'url(/images/bgs/past-container-top.png)', backgroundSize: '100% 100%', fontSize: '22px'}}>{el.title}</h3>
+                                <h4 className='past-yeartag' style={{gridColumn: 3, padding: 0}}>{datef[0]}</h4>
+                                <div style={{gridColumnStart: 1, gridColumnEnd: 3, gridRowStart: 2, gridRowEnd: 4, margin: '3px', backgroundImage: `url(${el.imageref})`, backgroundSize: 'cover', backgroundPosition: 'center', border: 'inset 2px', outline: 'black solid 1px', outlineOffset: '1px'}}>
+                                    <h4 style={{opacity: 0.8, color: 'white', background: 'rgba(0,0,0,0.3)', margin: 0}}>Credit: {el.imgcredit}</h4>
                                 </div>
-                                <div className='past-tags' style={{margin: '12px'}}>
-                                    <h4 className='past-h4' style={{backgroundColor: `${initcol[el.initresult]}`}}>{initresult[el.initresult]} - {el.initresult}/10</h4>
-                                    <h4 className='past-yeartag'>{datef[0]}</h4>
-                                    {el.alttext !== null ? 
-                                        <a href={`${el.alttext}`} target='_blank' rel='noreferrer'><button className='past-expand'>Media<img loading='lazy' style={{padding: '3px'}} width={'24px'} height={'24px'} alt='decor' src='/images/16icons/audiostream.png' /></button></a>
-                                    :
-                                        <button style={{filter: 'grayscale(1)'}} className='past-expand'>No media<img loading='lazy' style={{padding: '3px'}} width={'24px'} height={'24px'} alt='decor' src='/images/16icons/audiostream.png' /></button>
-                                    }
-                                </div>
-                                <div className='past-titles' style={{gridColumn: 'span 2'}}>
-                                    <h3 style={{color: `${indexcolor[ind]}`, backgroundColor: 'black'}}>{el.title}</h3>
-                                </div>
-                                <div style={{gridColumn: 'span 2'}}>
+                                <img title={`Severity ${el.initresult}/10 - Primary threat: ${el.customid}`} width={'calc(100% - 4px)'} height={'calc(100% - 4px)'} src={`/images/emotes/${el.customid}.gif`} alt='decor' style={{margin: '2px', outline: 'solid black 1px', outlineOffset: '1px', border: 'inset 3px', backgroundColor: `${initcol[el.initresult]}`}} />
+                                <div style={{gridColumn: 'span 3', display: 'flex', flexDirection: 'column'}}>
+                                    <div id={`pastlinks-${ind}`} className='past-desc' style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: 'repeat(3, 33%)'}}>
+                                        {links ?
+                                            links.map((el, ind2) => {
+                                                return (
+                                                    <a key={`pastlinks-${ind}-${ind2}`} rel='noreferrer' target='_blank' href={`${el.link}`}>
+                                                        <button className='past-expand' style={{display: 'flex', justifyContent: 'center', paddingTop: '4px', width: '100%'}}><img loading='lazy' width={'24px'} height={'24px'} alt='decor' src='/images/16icons/audiostream.png' style={{paddingRight: '2px'}} /><p>{el.title}</p></button>
+                                                    </a>
+                                                )
+                                            })
+                                        :null}
+                                    </div>
                                     <p className='past-desc' id={`pastchase-${ind}`} style={{WebkitLineClamp: 2, overflow: 'hidden'}}>{el.HTMLdesc}</p>
-                                    <button id={`expandpast-${ind}`} className='past-expand' onClick={() => expand(ind)}>Expand <img loading='lazy' style={{marginLeft: '3px'}} width={'24px'} height={'24px'} alt='decor' src='/images/bgs/Book.ico' /></button>
+                                    <button id={`expandpast-${ind}`} className='past-expand' onClick={() => expand(ind)} style={{display: 'flex', justifyContent: 'center', paddingTop: '4px'}}><p>Expand</p> <img loading='lazy' width={'24px'} height={'24px'} alt='decor' src='/images/bgs/Book.ico' /></button>
                                 </div>
                             </div>
                         </div>
@@ -60,5 +61,3 @@ const Past = () => {
 }
 
 export default Past;
-
-//<img loading='lazy' style={{cursor: 'pointer'}} title='click to expand' alt='project preview' className='webimg' loading={'lazy'} src={`${el.imageref}`} width="90%" height={'100%'} />

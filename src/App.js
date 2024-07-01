@@ -11,19 +11,19 @@ import './css/left-box.css';
 import './css/status.css';
 
 const texts = [
-  "Hi!! Welcome to Shepardess!! If you're new and would like a quick, tutorial... I could show you around!",
-  "Yeah! I'll show you! This is the bottom section, and right now its on the map. This shows my current location, NWS warnings, radar, custom areas, and a lot more!! A lot happens here, it's a very important panel!",
-  "You can expand or contract the bottom section by hitting the double arrow button, or swap the map for another panel with these red buttons.",
-  "Next is the chat panel!! It's anonymous, so you can enter any name to join!! It's optional, though, so you don't have to join.",
+  "Hi! Welcome to Shepardess!! If you're new and would like a quick, tutorial; I could show you around!",
+  "Yeah! I'll show you! First, this is the bottom panel. It has a ton of info behind the different menus! You can hit those red buttons to change the active menu.",
+  "Also, you can make the bottom panel bigger by hitting the double arrow button.",
+  "Next is the live update panel!! This panel updates with important info and links and stuff all the time in severe weather!! You'll see it eventually.",
   "These up here are the status indicators. They're a really fast way to know what's going on!! If one of these images has a title, then that means it's active!",
-  "Hmm... this is pretty much it, then. This is the stream panel. All you have to do is click an entry and it'll connect you to the stream right here!",
+  "Almost done! This is the main action, the stream panel. Click on any of these to start watching! You can hit the 4 squares button in a stream to activate multi-stream too, try it!",
   "I think you're all set!! Just watch for popups on the site! They will notify if a stream has a funnel cloud, tornado, shelf cloud, hail, etc. on it currently!! Enjoy Shepardess!!"
 ]
  //[rowS, rowE], [colS, colE] -- except for button, which is [colS, colE], [row]
-const gridhazel = [[[9, 11], [9, 11]], [[4, 11], [12, 11]], [[4, 11], [12, 11]], [[15, 15], [7, 11]], [[6, 6], [6, 6]], [[1, 1], [8, 8]]]
-const gridbubble = [[[12, 16], [7, 11]], [[7, 13], [7, 12]], [[7, 13], [7, 12]], [[17, 21], [3, 7]], [[9, 13], [3, 8]], [[1, 5], [3, 8]]]
-const gridbutton = [[[8, 12], [13]], [[8, 11], [13]], [[8, 11], [13]], [[17, 21], [14]], [[5, 10], [10]], [[1, 4], [12]]]
-const highlightid = ['tutorial-panel', 'bottom-panel', 'bottom-panel', 'chat-panelh', 'status-highlight', 'status-highlight', 'status-highlight', 'main-sliding-container']
+const gridhazel =  [[[9, 11], [9, 11]],  [[4, 11], [12, 11]], [[4, 11], [12, 11]], [[10, 10], [7, 11]], [[6, 6], [6, 6]],  [[1, 1], [8, 8]],         [[1, 1], [8, 8]]]
+const gridbubble = [[[12, 16], [7, 11]], [[7, 11], [7, 11]],  [[7, 11], [7, 11]],  [[13, 17], [3, 7]],  [[9, 13], [3, 7]], [[1, 5], [3, 7]],         [[1, 5], [3, 7]]]
+const gridbutton = [[[8, 12], [13]],     [[8, 11], [13]],     [[8, 11], [13]],     [[13, 17], [14]],    [[5, 10], [10]],   [[1, 4], [12]],           [[1, 4], [12]]]
+const highlightid =['tutorial-panel',    'bottom-panel',      'bottom-panel',      'chat-panelh',       'status-highlight','main-sliding-container', 'main-sliding-container', 'main-sliding-container']
 
 const App = () => {
 
@@ -31,66 +31,6 @@ const App = () => {
   const camtypetext = ['Static Camera', 'Car Camera', 'Screenshare', 'Other', 'Video']
 
   var socket = io.connect('https://arina.lol');
-
-  const [tutorial, setTutorial] = useState({
-    "active": false,
-    "stage": 0,
-    "text": texts[0],
-    "gridhazel": gridhazel[0],
-    "gridbubble": gridbubble[0],
-    "gridbutton": gridbutton[0]
-  })
-
-  const tutorialAdvance = () => {
-    var newnum = tutorial.stage + 1
-    var newarr = {
-      "active": true,
-      "stage": newnum,
-      "text": texts[newnum],
-      "gridhazel": gridhazel[newnum],
-      "gridbubble": gridbubble[newnum],
-      "gridbutton": gridbutton[newnum]
-    }
-    if ((newnum) >= 6) {
-      newarr = {
-        "active": false,
-        "stage": newnum,
-        "text": "",
-        "gridhazel": gridhazel[0],
-        "gridbubble": gridbubble[0],
-        "gridbutton": gridbutton[0]
-      }
-      localStorage.setItem('tutorial', 'false')
-    }
-    document.getElementById(`${highlightid[newnum]}`).style.zIndex = 501
-    setTutorial(newarr)
-  }
-
-  const tutorialSkip = () => {
-    var newarr = {
-      "active": false,
-      "stage": 0,
-      "text": "",
-      "gridhazel": gridhazel[0],
-      "gridbubble": gridbubble[0],
-      "gridbutton": gridbutton[0]
-    }
-    setTutorial(newarr)
-    localStorage.setItem('tutorial', 'false')
-  }
-
-  useEffect(() => {
-    if(localStorage.getItem('tutorial') !== 'false') {
-      setTutorial({
-        "active": true,
-        "stage": 0,
-        "text": texts[0],
-        "gridhazel": gridhazel[0],
-        "gridbubble": gridbubble[0],
-        "gridbutton": gridbutton[0]
-      })
-    }
-  }, [])
 
   const toggleGroup = (id) => {
     document.getElementById(`${id}`).classList.toggle('group-grid-default')
@@ -114,7 +54,8 @@ const App = () => {
     "emergency008": "If you're recieving this popup, we have an emergency ongoing! Emergency 008: Search and rescue assistance needed! I and/or other chasers with me are performing search and rescue after potential storm damage. This popup is a request for people to request for assistance, as major damage or potentially better gear is required to continue - or, there may be more people in need of help that we cannot fit.",
     "emergency009": "If you're recieving this popup, we have an emergency ongoing! Emergency 009: Particularly Dangerous Situation! The storm we are chasing is particularly dangerous, and is a major threat for anyone that could be potentially affected. This popup is a request for people to relay the severity of the event ongoing.",
     "emergency010": "If you're recieving this popup, we have an emergency ongoing! Emergency 010: Unwarned or unconfirmed tornado! The storm we are chasing is currently unwarned or the tornado is not set to spotter confirmed. This popup is a request to relay information to correct sources to confirm this tornado, as I am in a position where I can not comfortably.",
-    "shelfcloud": "If you're recieving this popup, we have a Shelf Cloud ongoing on stream! Click the OPEN STREAM button below to watch live!"
+    "shelfcloud": "If you're recieving this popup, we have a Shelf Cloud ongoing on stream! Click the OPEN STREAM button below to watch live!",
+    "landfall": "If you're recieving this popup, a Tropical Storm or Hurricane is making landfall on stream! Click the OPEN STREAM button below to watch live!",
   }
 
   const Fallback = () => {
@@ -133,7 +74,9 @@ const App = () => {
     }, [])
 
   useEffect(() => {
-    document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
+    if (window.innerWidth >= 701) {
+      document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
+    }
   }, [])
 
   const LeftBox = () => {
@@ -148,9 +91,9 @@ const App = () => {
           <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
           <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
           <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-          <button className='account-leftpanel-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
-          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Chat <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
+          <button id='about-button' onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
+          <button className='account-leftpanel-button' id='accounts-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
+          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Live <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
         </div>
         <div style={{gridRow: 3}} className="left-viewer">
           <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
@@ -365,6 +308,7 @@ const App = () => {
       return (
           <div id='feed-panel' style={{height: 'calc(100% - 20px)', padding: '10px'}}>
             <div className='stream-container'>
+              <p style={{color: 'white', maxWidth: '180px'}}>Click on group titles to expand the folder, or click on a stream title/thumbnail to open it!</p>
                 {groups.length > 0 ? groups.map((el) => {
                   var info = []
                   streamgroup.forEach((il) => {
@@ -641,13 +585,13 @@ const App = () => {
     return (
       <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 4, height: '97%'}} className="description-section">
       <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%', flexDirection: 'column'}}>
-        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to version 1.0.3!</p>
+        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to  Update: Eyewall!</p>
         <div style={{background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
           <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '3vw', fontStyle: 'italic', fontWeight: 400, textAlign: 'center'}}>SHEPARDESS</h1>
         </div>
       </div>
       <div style={{width: '100%', backgroundImage: 'url(/images/bgs/darkbluesteel_widecontainer.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
-        <p style={{textAlign: 'center', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Stream:</p>
+        <p style={{textAlign: 'center', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Media:</p>
       </div>
       {all.length > 0 ? all.map((el) => {
           if (el.internalname === featured) {
@@ -829,20 +773,89 @@ const App = () => {
     )
   }
 
+  const Tutorial = () => {
+    const [tutorial, setTutorial] = useState({
+      "active": false,
+      "stage": 0,
+      "text": texts[0],
+      "gridhazel": gridhazel[0],
+      "gridbubble": gridbubble[0],
+      "gridbutton": gridbutton[0]
+    })
+  
+    const tutorialAdvance = () => {
+      var newnum = tutorial.stage + 1
+      var newarr = {
+        "active": true,
+        "stage": newnum,
+        "text": texts[newnum],
+        "gridhazel": gridhazel[newnum],
+        "gridbubble": gridbubble[newnum],
+        "gridbutton": gridbutton[newnum]
+      }
+      if ((newnum) >= 7) {
+        newarr = {
+          "active": false,
+          "stage": newnum,
+          "text": "",
+          "gridhazel": gridhazel[0],
+          "gridbubble": gridbubble[0],
+          "gridbutton": gridbutton[0]
+        }
+        localStorage.setItem('tutorial', 'false')
+      }
+      document.getElementById(`${highlightid[newnum]}`).style.zIndex = 501
+      setTutorial(newarr)
+    }
+  
+    const tutorialSkip = () => {
+      var newarr = {
+        "active": false,
+        "stage": 0,
+        "text": "",
+        "gridhazel": gridhazel[0],
+        "gridbubble": gridbubble[0],
+        "gridbutton": gridbutton[0]
+      }
+      setTutorial(newarr)
+      localStorage.setItem('tutorial', 'false')
+    }
+  
+    useEffect(() => {
+      if(localStorage.getItem('tutorial') !== 'false') {
+        setTutorial({
+          "active": true,
+          "stage": 0,
+          "text": texts[0],
+          "gridhazel": gridhazel[0],
+          "gridbubble": gridbubble[0],
+          "gridbutton": gridbutton[0]
+        })
+      }
+    }, [])
+
+    return (
+      <>
+        <img src='/images/stopwatchstop.gif' width={'64px'} height={'64px'} alt='decor' className='stopwatch' />
+        {tutorial.active ?
+          <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
+            <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8) sepia(0.7)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>
+              <img loading='lazy' className='hazel' style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
+              <div style={{backgroundImage: 'url(/images/bubble.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', gridRowStart: `${tutorial.gridbubble[1][0]}`, gridRowEnd: `${tutorial.gridbubble[1][1]}`, gridColumnStart: `${tutorial.gridbubble[0][0]}`, gridColumnEnd: `${tutorial.gridbubble[0][1]}`, marginBottom: '-10px', overflowY: 'scroll'}}>
+                <p className='tutorial-text' style={{padding: '20px 12px 0px 12px', margin: 0, marginBottom: '10px'}}>{tutorial.text}</p>
+              </div>
+              <button style={{gridColumnStart: `${tutorial.gridbutton[0][0]}`, gridColumnEnd: `${tutorial.gridbutton[0][1]}`, gridRow: `${tutorial.gridbutton[1][0]}`, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialAdvance()}>Continue!</button>
+              <button style={{gridColumnStart: 12, gridColumnEnd: 14, gridRow: 13, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialSkip()}>Skip</button>
+            </div>
+          </div>
+        : null}
+      </>
+    )
+  }
+
   return (
     <div className="App">
-      {tutorial.active ?
-        <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
-          <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>
-            <img loading='lazy' className='hazel' style={{gridRowStart: `${tutorial.gridhazel[1][0]}`, gridRowEnd: `${tutorial.gridhazel[1][1]}`, gridColumnStart: `${tutorial.gridhazel[0][0]}`, gridColumnEnd: `${tutorial.gridhazel[0][1]}`}} src='/images/hazel.png' height={'128px'} alt='Hazel' />
-            <div style={{gridRowStart: `${tutorial.gridbubble[1][0]}`, gridRowEnd: `${tutorial.gridbubble[1][1]}`, gridColumnStart: `${tutorial.gridbubble[0][0]}`, gridColumnEnd: `${tutorial.gridbubble[0][1]}`, padding: '39px 18px 0px 20px', backgroundImage: 'url(/images/bubble.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
-              <p className='tutorial-text' style={{margin: 0}}>{tutorial.text}</p>
-            </div>
-            <button style={{gridColumnStart: `${tutorial.gridbutton[0][0]}`, gridColumnEnd: `${tutorial.gridbutton[0][1]}`, gridRow: `${tutorial.gridbutton[1][0]}`, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialAdvance()}>Continue!</button>
-            <button style={{gridColumnStart: 12, gridColumnEnd: 14, gridRow: 13, backgroundImage: 'url(/images/bgs/play.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', color: 'white'}} onClick={() => tutorialSkip()}>Skip</button>
-          </div>
-        </div>
-      : null}
+      <Tutorial/>
       <SitePopup/>
       <div id='main-container' className="main-container" style={{gridTemplateColumns: 'calc(18% - 5px) 5px 64% 5px calc(18% - 5px)', gridTemplateRows: 'calc(10% - 5px) 5px 40% 20% 5px calc(30% - 5px)'}}>
 
@@ -863,12 +876,13 @@ const App = () => {
         <div draggable className='grid-slider mobile-hide' style={{gridRowStart: 2, gridRowEnd: 7, gridColumn: 4, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
         onDrag={(e) => dragHSliderTwo(e)}
         ></div>
-
-        <div className="mobile-hide" style={{gridColumn: 5, gridRowStart: 2, gridRowEnd: 7, height: '100%'}}>
-          <Suspense fallback={<Fallback/>}>
-            <ChatPanel/>
-          </Suspense>
-        </div>
+        {window.innerWidth >= 701 ?
+          <div className="mobile-hide" id="chat-panelh" style={{gridColumn: 5, gridRowStart: 2, gridRowEnd: 7, height: '100%'}}>
+            <Suspense fallback={<Fallback/>}>
+              <ChatPanel/>
+            </Suspense>
+          </div>
+        : null}
 
         <Suspense fallback={<Fallback/>}>
             <QRD/>

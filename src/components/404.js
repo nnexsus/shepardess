@@ -9,7 +9,6 @@ const NotFound = () => {
                     <ul>
                         <li><img width={'17px'} height={'16px'} alt="decor" src="/images/bgs/skull-logo-mini.png" /><a style={{color: 'lightblue'}} href="/home">/home</a></li>
                         <li><img width={'17px'} height={'16px'} alt="decor" src="/images/16icons/terminalicon.png" /><a style={{color: 'lightblue'}} href="/control">/control</a></li>
-                        <li><img width={'17px'} height={'16px'} alt="decor" src="/images/16icons/terminalthumbicon.png" /><a style={{color: 'lightblue'}} href="/control-panel">/control-panel</a></li>
                     </ul>
                 </div>
             </div>

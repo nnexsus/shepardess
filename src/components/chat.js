@@ -1,120 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-import emotes from '../css/emotes.json';
-
 import '../css/chat.css';
 
-const Chat = ({ socket, username, streams }) => {
-    const InputMessage = () => {
-        const [activePanel, setActivePanel] = useState('emote')
-        const [newmessage, setNewmessage] = useState('')
-        const [effects, setEffects] = useState({
-            "color": "lightgreen",
-            "font": "ms ui gothic",
-            "effect": "none",
-            "effectColor": "none"
-        })
-
-        const sendMessage = () => {
-            if (newmessage !== '' && newmessage !== null) {
-                const __createdtime__ = Date.now()
-                socket.emit('send_message', {'username': `${username}`, 'message': newmessage, '__createdtime__': __createdtime__, 'effects': JSON.stringify(effects)})
-                setNewmessage('')
-            }
-        }
-        
-        const Emote = () => {
-            const addEmote = (path) => {
-                updateMessage(newmessage + ` <${path}> `)
-            }
-            return (
-                <div style={{display: 'flex', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', flexWrap: 'wrap', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px', imageRendering: 'auto'}}>
-                    {emotes.emotes.map((el, ind) => {
-                        return (
-                            <img loading='lazy' key={`emoji-${ind}`} className="emote-select" alt="emote" src={`/images/emotes/${el.path}`} width={'16px'} height={'16px'} onClick={() => addEmote(`${el.path}`)} title={`${el.name}`}/>
-                        )
-                    })}
-                </div>
-            )
-        }
-    
-        const Effects = () => {
-            return (
-                <div style={{display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px'}}>
-                    <label style={{color: 'white'}} htmlFor="input-fontcolor">Color:</label>
-                    <select id="input-fontcolor" defaultValue={'lightgreen'} value={effects.color} onChange={(e) => setEffects({"color": e.currentTarget.value, "font": effects.font, "effect": effects.effect, "effectColor": effects.effectColor})}>
-                        <option className="format-dropdown" value={'springgreen'} style={{color: 'springgreen'}}>B-Green</option>
-                        <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
-                        <option className="format-dropdown" value={'orange'} style={{color: 'orange'}}>Orange</option>
-                        <option className="format-dropdown" value={'red'} style={{color: 'red'}}>Red</option>
-                        <option className="format-dropdown" value={'rebeccapurple'} style={{color: 'rebeccapurple'}}>Purple</option>
-                        <option className="format-dropdown" value={'aqua'} style={{color: 'aqua'}}>Blue</option>
-                        <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
-                        <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
-                    </select>
-                    <label style={{color: 'white'}} htmlFor="input-fonttype">Font:</label>
-                    <select id="input-fonttype" defaultValue={'ms ui gothic'} value={effects.font} onChange={(e) => setEffects({"color": effects.color, "font": e.currentTarget.value, "effect": effects.effect, "effectColor": effects.effectColor})}>
-                        <option className="format-dropdown" value={'ms ui gothic'} style={{color: 'white', fontFamily: 'ms ui gothic'}}>ms ui gothic</option>
-                        <option className="format-dropdown" value={'blurpix'} style={{color: 'white', fontFamily: 'blurpix'}}>blurpix</option>
-                        <option className="format-dropdown" value={'cursive'} style={{color: 'white', fontFamily: 'cursive'}}>Comic Sans</option>
-                        <option className="format-dropdown" value={'monospace'} style={{color: 'white', fontFamily: 'monospace'}}>Monospace</option>
-                        <option className="format-dropdown" value={'fantasy'} style={{color: 'white', fontFamily: 'fantasy'}}>Fantasy</option>
-                    </select>
-                    <label style={{color: 'white'}} htmlFor="input-effect">Decor:</label>
-                    <select id="input-effect" defaultValue={'none'} value={effects.effect} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": e.currentTarget.value, "effectColor": effects.effectColor})}>
-                        <option className="format-dropdown" value={'none'} style={{color: 'white'}}>None</option>
-                        <option className="format-dropdown" value={'underline'} style={{color: 'white', textDecoration: 'underline'}}>Underline</option>
-                        <option className="format-dropdown" value={'overline'} style={{color: 'white', textDecoration: 'overline'}}>Overline</option>
-                        <option className="format-dropdown" value={'underline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wavy-U</option>
-                        <option className="format-dropdown" value={'overline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wave-O</option>
-                    </select>
-                    <label style={{color: 'white'}} htmlFor="input-effectColor">Color:</label>
-                    <select id="input-effectColor" defaultValue={'lightgreen'} value={effects.effectColor} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": effects.effect, "effectColor": e.currentTarget.value})}>
-                        <option className="format-dropdown" value={'lightgreen'} style={{color: 'springgreen'}}>B-Green</option>
-                        <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
-                        <option className="format-dropdown" value={'orange'} style={{color: 'orange'}}>Orange</option>
-                        <option className="format-dropdown" value={'red'} style={{color: 'red'}}>Red</option>
-                        <option className="format-dropdown" value={'rebeccapurple'} style={{color: 'rebeccapurple'}}>Purple</option>
-                        <option className="format-dropdown" value={'aqua'} style={{color: 'aqua'}}>Blue</option>
-                        <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
-                        <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
-                    </select>
-                </div>
-            )
-        }
-    
-        const panels = {
-            "emote": Emote,
-            "effects": Effects
-        }
-    
-        var Panel = panels[activePanel];
-
-        const updateMessage = (value) => {
-            document.getElementById("message-input").style.color = `rgb(${value.length * 1.2}, ${255 - (value.length * 1.2)}, 0)`
-            if (value.length <=  255) {
-                setNewmessage(value)
-            }
-        }
-
-        return (
-            <div className="message-write">
-                <div className="message-input" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
-                    <input id="message-input" style={{width: 'calc(100% - 12px)', height: '35px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', borderRight: 'none', fontFamily: 'ms ui gothic'}} type="text" placeholder="Message" value={newmessage} onChange={(e) => updateMessage(e.currentTarget.value)} />
-                    <button style={{width: '42px', height: '42px', cursor: 'pointer', backgroundImage: 'url(/images/16icons/arrow.gif)', backgroundSize: 'cover', border: 'inset 3px', borderLeft: 'none', fontFamily: 'ms ui gothic'}} onClick={() => sendMessage()}><b style={{textShadow: '0px 0px 2px white'}}>Send</b></button>
-                </div>
-                <div className="emote-panel-select" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
-                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/emote.gif" width={'16px'} height={'16px'} onClick={() => setActivePanel('emote')} />
-                    <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/font.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
-                </div>
-                <div className="emote-panel-active" style={{display: 'flex', flexDirection: 'column', margin: '3px', height: '40%'}}>
-                    <Panel/>
-                </div>
-            </div>
-        )
-    }
-
-
+const Chat = ({ socket }) => {
     const Messages = ({ socket }) => {
         const [streams, setStreams] = useState([])
         const [messages, setMessages] = useState([])
@@ -219,12 +107,12 @@ const Chat = ({ socket, username, streams }) => {
 
                     return (
                         <div className={`message-container ${el.new === true ? "new-message" : "old-message"}`} key={`message-${ind}`}>
-                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'url(/images/bgs/bordertest.png)', backgroundSize: '100% 100%'}}>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'url(/images/bgs/bordertest.png)', backgroundSize: '100% 100%', height: '41px'}}>
                                 <img loading='lazy' alt="decor" style={{margin: '0 5px'}} src={`/images/16icons/${el.author === 'ShepardessBot' ? "hazel.png" : "avatar.png"}`} width={'24px'} height={'24px'} />
                                 <p title={`${el.author}`} className="message-author" style={{color: `${el.author === 'ShepardessBot' ? "yellow" : "red"}`, margin: '0 4px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', fontWeight: 700, padding: '0 2px', overflow: 'hidden', textOverflow: 'ellipsis', outline: `${el.author === 'ShepardessBot' ? "yellow" : "red"} solid 1px`}}>{el.author}</p>
                                 <p className="message-author" style={{margin: '0 4px'}}><i title={`${titledate}`} style={{fontSize: '8px', color: 'aliceblue', margin: '0 8px 0 0', textDecoration: 'underline'}}>{date}</i></p>
                             </div>
-                            <p className="message-message" style={{color: `${color}`, fontFamily: `${font}`, padding: '6px 6px 6px 8px', textDecoration: `${decor}`, fontStyle: `${el.author === 'ShepardessBot' ? "italic" : "normal"}`, backgroundImage: 'url(/images/bgs/test-container.png', backgroundPosition: 'center', backgroundSize: '100% 100%'}}>
+                            <p className="message-message" style={{color: `${color}`, fontFamily: `${font}`, padding: '6px 6px 6px 8px', overflowWrap: 'anywhere', textDecoration: `${decor}`, fontStyle: `${el.author === 'ShepardessBot' ? "italic" : "normal"}`, backgroundImage: 'url(/images/bgs/test-container.png)', backgroundPosition: 'center', backgroundSize: '100% 100%'}}>
                                 {texts.map((el, ind) => {
                                     var img = (imgs.length >= ind + 1)
                                     return (
@@ -232,6 +120,21 @@ const Chat = ({ socket, username, streams }) => {
                                     )
                                 })}
                             </p>
+                            {(el?.embed !== undefined && el?.embed !== null) ? 
+                                <div className="message-message message-embed" style={{backgroundImage: 'url(/images/bgs/test-container.png', backgroundPosition: 'center', backgroundSize: '100% 100%'}}>
+                                    <div style={{width: 'calc(100% - 24px)', margin: '7px', padding: '2px', background: 'darkblue', border: 'inset 2px', outline: 'solid black 1px', outlineOffset: '1px', overflow: 'hidden'}}>
+                                        <p style={{overflowWrap: 'anywhere', color: 'white', margin: '3px'}}><b>{el.embed.split("|")[0]}</b></p>
+                                        <p style={{overflowWrap: 'anywhere', color: 'lightgray', margin: '1px'}}>{el.embed.split("|")[1]}</p>
+                                        <hr style={{color: 'black', margin: '2px'}} />
+                                        {el.image ? 
+                                            <a target="_blank" href={`${el.image}`} rel="noreferrer" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', borderRadius: '2px'}}>
+                                                <p style={{margin: 0, padding: 0, color: 'lightblue'}}>Open link</p>
+                                                <iframe alt="image" style={{imageRendering: 'auto'}} width={'fit-content'}  height={'140px'} title="embed" src={`${el.image}`} />
+                                            </a>
+                                        : null}
+                                    </div>
+                                </div>
+                            : null}
                             {reference ? 
                                 <div style={{outline: '1px solid blue', outlineOffset: '-8px', backgroundImage: 'url(/images/bgs/bordertest3.png)', backgroundSize: '100% 100%'}}>
                                     <p style={{margin: '12px', outline: '2px inset lightblue', padding: '2px', background: 'black'}}><a style={{color: 'lightblue', cursor: 'pointer'}} 
@@ -258,10 +161,15 @@ const Chat = ({ socket, username, streams }) => {
             return () => socket.off('chatroom_users')
         }, [])    
         return (
-            <div style={{height: '10%', backgroundImage: 'url(/images/bgs/bluesteel_widecontainer.png', backgroundSize: "100% 100%", padding: '0 7px', backgroundRepeat: 'no-repeat', display: 'flex', alignItems: 'center'}}>
-                <h4 style={{width: '100%', textAlign: 'center', fontSize: '18px', color: 'darkslategray'}}>Online: </h4>
-                <p style={{fontFamily: 'dotty', fontSize: '30px', color: 'lime', textShadow: '0 0 4px lime', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', margin: 0, padding: '5px', width: 'calc(100% + 42px)'}}>{users}</p>
-            </div>
+            <>
+                <div className='description-banner'>
+                    <img loading='lazy' src='/images/16icons/control.png' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p><span className="smallscreen-hide">LIVE</span> UPDATES</p>
+                </div>
+                <div style={{height: '10%', backgroundImage: 'url(/images/bgs/bluesteel_widecontainer.png', backgroundSize: "100% 100%", padding: '0 7px', backgroundRepeat: 'no-repeat', display: 'flex', alignItems: 'center'}}>
+                    <h4 style={{width: '100%', textAlign: 'center', fontSize: '18px', color: 'darkslategray'}}>Online: </h4>
+                    <p style={{fontFamily: 'dotty', fontSize: '30px', color: 'lime', textShadow: '0 0 4px lime', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', margin: 0, padding: '5px', width: 'calc(100% + 42px)'}}>{users}</p>
+                </div>
+            </>
         )
     }
 
@@ -271,9 +179,120 @@ const Chat = ({ socket, username, streams }) => {
             <div className="chat-full-container">
                 <Messages socket={socket}/>
             </div>
-            <InputMessage/>
         </div>
     )
 }
 
 export default Chat;
+
+/*
+
+const InputMessage = () => {
+    const [activePanel, setActivePanel] = useState('emote')
+    const [newmessage, setNewmessage] = useState('')
+    const [effects, setEffects] = useState({
+        "color": "lightgreen",
+        "font": "ms ui gothic",
+        "effect": "none",
+        "effectColor": "none"
+    })
+
+    const sendMessage = () => {
+        if (newmessage !== '' && newmessage !== null) {
+            const __createdtime__ = Date.now()
+            socket.emit('send_message', {'username': `${username}`, 'message': newmessage, '__createdtime__': __createdtime__, 'effects': JSON.stringify(effects)})
+            setNewmessage('')
+        }
+    }
+    
+    const Emote = () => {
+        const addEmote = (path) => {
+            updateMessage(newmessage + ` <${path}> `)
+        }
+        return (
+            <div style={{display: 'flex', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', flexWrap: 'wrap', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px', imageRendering: 'auto'}}>
+                {emotes.emotes.map((el, ind) => {
+                    return (
+                        <img loading='lazy' key={`emoji-${ind}`} className="emote-select" alt="emote" src={`/images/emotes/${el.path}`} width={'16px'} height={'16px'} onClick={() => addEmote(`${el.path}`)} title={`${el.name}`}/>
+                    )
+                })}
+            </div>
+        )
+    }
+
+    const Effects = () => {
+        return (
+            <div style={{display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'scroll', maxWidth: '100%', border: 'inset 3px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', padding: '3px'}}>
+                <label style={{color: 'white'}} htmlFor="input-fontcolor">Color:</label>
+                <select id="input-fontcolor" defaultValue={'lightgreen'} value={effects.color} onChange={(e) => setEffects({"color": e.currentTarget.value, "font": effects.font, "effect": effects.effect, "effectColor": effects.effectColor})}>
+                    <option className="format-dropdown" value={'springgreen'} style={{color: 'springgreen'}}>B-Green</option>
+                    <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
+                    <option className="format-dropdown" value={'orange'} style={{color: 'orange'}}>Orange</option>
+                    <option className="format-dropdown" value={'red'} style={{color: 'red'}}>Red</option>
+                    <option className="format-dropdown" value={'rebeccapurple'} style={{color: 'rebeccapurple'}}>Purple</option>
+                    <option className="format-dropdown" value={'aqua'} style={{color: 'aqua'}}>Blue</option>
+                    <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
+                    <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
+                </select>
+                <label style={{color: 'white'}} htmlFor="input-fonttype">Font:</label>
+                <select id="input-fonttype" defaultValue={'ms ui gothic'} value={effects.font} onChange={(e) => setEffects({"color": effects.color, "font": e.currentTarget.value, "effect": effects.effect, "effectColor": effects.effectColor})}>
+                    <option className="format-dropdown" value={'ms ui gothic'} style={{color: 'white', fontFamily: 'ms ui gothic'}}>ms ui gothic</option>
+                    <option className="format-dropdown" value={'blurpix'} style={{color: 'white', fontFamily: 'blurpix'}}>blurpix</option>
+                    <option className="format-dropdown" value={'cursive'} style={{color: 'white', fontFamily: 'cursive'}}>Comic Sans</option>
+                    <option className="format-dropdown" value={'monospace'} style={{color: 'white', fontFamily: 'monospace'}}>Monospace</option>
+                    <option className="format-dropdown" value={'fantasy'} style={{color: 'white', fontFamily: 'fantasy'}}>Fantasy</option>
+                </select>
+                <label style={{color: 'white'}} htmlFor="input-effect">Decor:</label>
+                <select id="input-effect" defaultValue={'none'} value={effects.effect} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": e.currentTarget.value, "effectColor": effects.effectColor})}>
+                    <option className="format-dropdown" value={'none'} style={{color: 'white'}}>None</option>
+                    <option className="format-dropdown" value={'underline'} style={{color: 'white', textDecoration: 'underline'}}>Underline</option>
+                    <option className="format-dropdown" value={'overline'} style={{color: 'white', textDecoration: 'overline'}}>Overline</option>
+                    <option className="format-dropdown" value={'underline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wavy-U</option>
+                    <option className="format-dropdown" value={'overline wavy'} style={{color: 'white', textDecoration: 'underline wavy'}}>Wave-O</option>
+                </select>
+                <label style={{color: 'white'}} htmlFor="input-effectColor">Color:</label>
+                <select id="input-effectColor" defaultValue={'lightgreen'} value={effects.effectColor} onChange={(e) => setEffects({"color": effects.color, "font": effects.font, "effect": effects.effect, "effectColor": e.currentTarget.value})}>
+                    <option className="format-dropdown" value={'lightgreen'} style={{color: 'springgreen'}}>B-Green</option>
+                    <option className="format-dropdown" value={'yellow'} style={{color: 'yellow'}}>Yellow</option>
+                    <option className="format-dropdown" value={'orange'} style={{color: 'orange'}}>Orange</option>
+                    <option className="format-dropdown" value={'red'} style={{color: 'red'}}>Red</option>
+                    <option className="format-dropdown" value={'rebeccapurple'} style={{color: 'rebeccapurple'}}>Purple</option>
+                    <option className="format-dropdown" value={'aqua'} style={{color: 'aqua'}}>Blue</option>
+                    <option className="format-dropdown" value={'cyan'} style={{color: 'cyan'}}>Cyan</option>
+                    <option className="format-dropdown" value={'lime'} style={{color: 'lime'}}>Green</option>
+                </select>
+            </div>
+        )
+    }
+
+    const panels = {
+        "emote": Emote,
+        "effects": Effects
+    }
+
+    var Panel = panels[activePanel];
+
+    const updateMessage = (value) => {
+        document.getElementById("message-input").style.color = `rgb(${value.length * 1.2}, ${255 - (value.length * 1.2)}, 0)`
+        if (value.length <=  255) {
+            setNewmessage(value)
+        }
+    }
+
+    return (
+        <div className="message-write">
+            <div className="message-input" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
+                <input id="message-input" style={{width: 'calc(100% - 12px)', height: '35px', backgroundImage: 'url(/images/bgs/BlackThatch.png)', border: 'inset 3px', borderRight: 'none', fontFamily: 'ms ui gothic'}} type="text" placeholder="Message" value={newmessage} onChange={(e) => updateMessage(e.currentTarget.value)} />
+                <button style={{width: '42px', height: '42px', cursor: 'pointer', backgroundImage: 'url(/images/16icons/arrow.gif)', backgroundSize: 'cover', border: 'inset 3px', borderLeft: 'none', fontFamily: 'ms ui gothic'}} onClick={() => sendMessage()}><b style={{textShadow: '0px 0px 2px white'}}>Send</b></button>
+            </div>
+            <div className="emote-panel-select" style={{display: 'flex', margin: '3px', outline: '1px black solid'}}>
+                <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/emote.gif" width={'16px'} height={'16px'} onClick={() => setActivePanel('emote')} />
+                <img loading='lazy' alt="decor" style={{border: 'outset 3px', background: 'black', cursor: 'pointer'}} src="/images/16icons/font.png" width={'16px'} height={'16px'} onClick={() => setActivePanel('effects')} />
+            </div>
+            <div className="emote-panel-active" style={{display: 'flex', flexDirection: 'column', margin: '3px', height: '40%'}}>
+                <Panel/>
+            </div>
+        </div>
+    )
+}
+*/
