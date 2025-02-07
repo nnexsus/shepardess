@@ -2,7 +2,6 @@ import { Suspense, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 import LeftPanel from './components/left-box/leftpanel';
-import ChatPanel from './components/chat/chatpanel';
 import Stream from './components/stream';
 import Status from './components/status';
 
@@ -14,16 +13,15 @@ const texts = [
   "Hi! Welcome to Shepardess!! If you're new and would like a quick, tutorial; I could show you around!",
   "Yeah! I'll show you! First, this is the bottom panel. It has a ton of info behind the different menus! You can hit those red buttons to change the active menu.",
   "Also, you can make the bottom panel bigger by hitting the double arrow button.",
-  "Next is the live update panel!! This panel updates with important info and links and stuff all the time in severe weather!! You'll see it eventually.",
   "These up here are the status indicators. They're a really fast way to know what's going on!! If one of these images has a title, then that means it's active!",
   "Almost done! This is the main action, the stream panel. Click on any of these to start watching! You can hit the 4 squares button in a stream to activate multi-stream too, try it!",
   "I think you're all set!! Just watch for popups on the site! They will notify if a stream has a funnel cloud, tornado, shelf cloud, hail, etc. on it currently!! Enjoy Shepardess!!"
 ]
  //[rowS, rowE], [colS, colE] -- except for button, which is [colS, colE], [row]
-const gridhazel =  [[[9, 11], [9, 11]],  [[4, 11], [12, 11]], [[4, 11], [12, 11]], [[10, 10], [7, 11]], [[6, 6], [6, 6]],  [[1, 1], [8, 8]],         [[1, 1], [8, 8]]]
-const gridbubble = [[[12, 16], [7, 11]], [[7, 11], [7, 11]],  [[7, 11], [7, 11]],  [[13, 17], [3, 7]],  [[9, 13], [3, 7]], [[1, 5], [3, 7]],         [[1, 5], [3, 7]]]
-const gridbutton = [[[8, 12], [13]],     [[8, 11], [13]],     [[8, 11], [13]],     [[13, 17], [14]],    [[5, 10], [10]],   [[1, 4], [12]],           [[1, 4], [12]]]
-const highlightid =['tutorial-panel',    'bottom-panel',      'bottom-panel',      'chat-panelh',       'status-highlight','main-sliding-container', 'main-sliding-container', 'main-sliding-container']
+const gridhazel =  [[[9, 11], [9, 11]],  [[4, 11], [12, 11]], [[4, 11], [12, 11]], [[6, 6], [6, 6]],  [[1, 1], [8, 8]],         [[1, 1], [8, 8]]]
+const gridbubble = [[[12, 16], [7, 11]], [[7, 11], [7, 11]],  [[7, 11], [7, 11]],  [[9, 13], [3, 7]], [[1, 5], [3, 7]],         [[1, 5], [3, 7]]]
+const gridbutton = [[[8, 12], [13]],     [[8, 11], [13]],     [[8, 11], [13]],     [[5, 10], [10]],   [[1, 4], [12]],           [[1, 4], [12]]]
+const highlightid =['tutorial-panel',    'bottom-panel',      'bottom-panel',      'status-highlight','main-sliding-container', 'main-sliding-container', 'main-sliding-container']
 
 const App = () => {
 
@@ -79,34 +77,6 @@ const App = () => {
     }
   }, [])
 
-  const LeftBox = () => {
-
-    const [panel, setPanel] = useState("map")
-
-    return (
-      <div className="left-box">
-        <div className="left-buttons">
-          <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('main-sliding-container').classList.toggle('sliding-expanded')} />
-          <button onClick={() => setPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("warn")} >Warn <img loading='lazy' alt='decor icon' src='/images/16icons/warn.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
-          <button onClick={() => setPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
-          <button id='about-button' onClick={() => setPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
-          <button className='account-leftpanel-button' id='accounts-button' onClick={() => setPanel("settings")} >Account <img loading='lazy' alt='decor icon' src='/images/16icons/settings.png' className='left-button-icon'/></button>
-          <button className='chat-leftpanel-button' onClick={() => setPanel("chat")} >Live <img loading='lazy' alt='decor icon' src='/images/16icons/chat.png' className='left-button-icon'/></button>
-        </div>
-        <div style={{gridRow: 3}} className="left-viewer">
-          <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
-            <p className="static-text">{panel.toUpperCase()}</p>
-          </div>
-          <Suspense fallback={<Fallback/>}>
-            <LeftPanel panel={panel}/>
-          </Suspense>
-        </div>
-      </div>
-    )
-  }
-
   const StreamContainer = () => {
     const [activestream, setActiveStream] = useState([null, null, null, null])
     const [multistream, setMultiStream] = useState(false)
@@ -138,7 +108,7 @@ const App = () => {
               <div className='group-container'>
                   {ids.ids.length > 0 ? ids.ids.map((el) => {
                       return (
-                      <div key={`${el.id}`} className="group-stream-box">
+                      <div key={`${el.id}`} className={`group-stream-box stream-box-${el.active}`}>
                           <div className='group-control-stream-box' id={`stream-${el.id}`} onClick={() => openStream(el)}>
                               <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
                                   <img loading='lazy' alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
@@ -147,12 +117,12 @@ const App = () => {
                                   </div>
                                   <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image" />
                               </div>
-                              <div style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                              <div className='colored-box' style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
                               <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
                               <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '10px'}}>
-                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
-                                  <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
-                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right.png'/>
+                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-left${el.active === 2 ? "-gold" : ""}.png`}/>
+                                  <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: `url(/images/bgs/handlebox-center${el.active === 2 ? "-gold" : ""}.png)`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                                  <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-right${el.active === 2 ? "-gold" : ""}.png`}/>
                               </div>
                           </div>
                       </div>
@@ -335,7 +305,7 @@ const App = () => {
                 }) : null}
                 {streams.length > 0 ? streams.map((el) => {
                     return (
-                      <div key={el.id} className='stream-box-container' style={{overflow: 'hidden', marginBottom: '10px'}}>
+                      <div key={el.id} className={`stream-box-container stream-box-${el.active}`} style={{overflow: 'hidden', marginBottom: '10px'}}>
                         <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
                             <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
                                 <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
@@ -344,7 +314,7 @@ const App = () => {
                                 </div>
                                 <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
                             </div>
-                            <div style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#879987 #B6FFB6 #B6FFB6 #879987 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                            <div className='colored-border' style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
                               <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
                             </div>
                             <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
@@ -381,8 +351,9 @@ const App = () => {
       }
 
       return (
-        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px', background: 'url(/images/bgs/logo-bg.png)', pointerEvents: 'all'}}>
+        <div className='stream-list' style={{display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', overflowY: 'scroll', margin: '10px', padding: '10px', outline: 'inset 3px', background: 'url(/images/bgs/logo-bg.png)', pointerEvents: 'all'}}>
           {streams.length > 0 ? streams.map((el) => {
+            var isfeatured = el.active === 2 ? "-gold" : ""
               return (
                 <div draggable onDragStart={(e) => onDragStart(e, JSON.stringify(el))} key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
                   <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'grab'}`, alignItems: 'stretch'}}>
@@ -394,13 +365,13 @@ const App = () => {
                           <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
                       </div>
                       <div style={{display: 'flex', alignItems: 'center', bottom: '12px'}}>
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
-                        <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-left-inverse${isfeatured}.png`}/>
+                        <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: `url(/images/bgs/handlebox-center-inverse${isfeatured}.png`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-right-inverse${isfeatured}.png`}/>
 
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-inverse.png'/>
-                        <p title={`${el.groupname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-inverse.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>Tag: {((el.groupname !== null) && (el.groupname !== '0')) ? el.groupname : "None"}</p>
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-inverse.png'/>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-left-inverse${isfeatured}.png`}/>
+                        <p title={`${el.groupname}`} style={{height: '22px', margin: 0, backgroundImage: `url(/images/bgs/handlebox-center-inverse${isfeatured}.png)`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212', whiteSpace: 'nowrap'}}>Tag: {el.groupname}</p>
+                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-right-inverse${isfeatured}.png`}/>
                       </div>
                   </div>
                 </div>
@@ -472,7 +443,7 @@ const App = () => {
                 <>
                   <div id='multi-stream-container' style={{display: 'grid', gridTemplateColumns: 'calc(50% - 8px) 3px calc(50% - 8px)', gridTemplateRows: 'calc(50% - 4px) 3px calc(50% - 4px)', height: '103%', gap: '5px'}}>
                     <div style={{position: 'absolute', overflow: 'hidden', top: 'auto', left: 'auto', height: '100%', width: '100%', zIndex: 500, pointerEvents: 'none'}}>
-                      <div id='stream-list-panel' style={{position: 'absolute', right: `${window.innerWidth - 250}px`, width: '250px', overflow: 'hidden', display: 'flex', alignItems: 'center', transition: '0.4s ease'}}>
+                      <div id='stream-list-panel' style={{position: 'absolute', right: `${window.innerWidth - 250}px`, width: '250px', height: '87%', overflow: 'hidden', display: 'flex', alignItems: 'center', transition: '0.4s ease'}}>
                         <StreamList/>
                         <img id='stream-list-toggle' src='/images/16icons/stream-panel-button.png' onClick={() => toggleSidePanel()} className='mobile-hide' width={'32px'} height={'32px'} alt='close stream' style={{cursor: 'pointer', pointerEvents: 'all'}} />
                       </div>
@@ -525,11 +496,11 @@ const App = () => {
   }
 
     return (
-      <div id='main-sliding-container' style={{gridColumn: 3, gridRowStart: 2, gridRowEnd: 7}} className="feeds-container sliding-expanded">
+      <div id='main-sliding-container' className="feeds-container sliding-expanded">
         <StreamContainer/>
 
         <div style={{gridRow: 2}} className="left-section" id='bottom-panel'>
-            <LeftBox/>
+            
         </div>
       </div>
     )
@@ -537,86 +508,163 @@ const App = () => {
 
   const Featured = () => {
 
-    const [featured, setFeatured] = useState("")
-    const [all, setAll] = useState([])
-
-    useEffect(() => {
-      socket.emit("sync_description")
-      socket.emit("sync_stream")
-    }, [])
-
-    useEffect(() => {
-      socket.on('set_desc', (data) => {
-        setFeatured(data[3].text)
-      })
-
-      return () => socket.off('set_desc')
-  }, [socket, featured, setFeatured])
-
-  useEffect(() => {
-    socket.on('update_desc', (data) => {
-        if(data.title === 3) {
-          setFeatured(data.newtext)
-        }
-      })
-      return () => socket.off('update_desc')
-  }, [socket, featured, setFeatured])
-
-  useEffect(() => {
-    socket.on('set_stream', (data) => {
-      setAll(data)
-    })
-
-    return () => socket.off('set_stream')
-  }, [socket, all, setAll])
-
-  const attemptOpenStream = (id) => {
-    var obj = document.getElementById(`stream-${id}`)
-    if (obj !== null) {
-        obj.click()
-    } else {
-        document.getElementById('close-stream-button').click()
-        setTimeout(() => {
-            document.getElementById(`stream-${id}`).click()
-        }, [500])
-    }
-}
+        const [stat, setStat] = useState({
+            "chaseday": false,
+            "traveling": false,
+            "forecasting": false,
+            "chasing": false,
+            "searchandrescue": false,
+            "emergency": false,
+            "ending": false,
+            "onhold": false
+        })
+    
+        const [desc, setDesc] = useState({
+          "scrolling": ["Connecting", " to ", "server"],
+          "threat": "none",
+          "outlook": "marginal",
+          "area": "midwest"
+        })
+    
+        useEffect(() => {
+          socket.emit('sync_status')
+          socket.emit('sync_description')
+        }, [socket])
+    
+        useEffect(() => {
+            socket.on('set_stat', (data) => {
+              setStat({
+                "chaseday": data[0].status,
+                "traveling": data[1].status,
+                "forecasting": data[2].status,
+                "chasing": data[3].status,
+                "searchandrescue": data[4].status,
+                "emergency": data[5].status,
+                "ending": data[6].status,
+                "onhold": data[7].status
+              })
+            })
+        
+            return () => socket.off('set_stat')
+          }, [socket, stat, setStat])
+        
+          useEffect(() => {
+            socket.on('update_stat', (data) => {
+              const newdata = {
+                "chaseday": stat.chaseday,
+                "traveling": stat.traveling,
+                "forecasting": stat.forecasting,
+                "chasing": stat.chasing,
+                "searchandrescue": stat.searchandrescue,
+                "emergency": stat.emergency,
+                "ending": stat.ending,
+                "onhold": stat.onhold,
+                [data.title]: data.newstatus
+              }
+              setStat(newdata)
+            })
+        
+            return () => socket.off('update_stat')
+          }, [socket, stat, setStat])
+    
+          useEffect(() => {
+            socket.on('set_desc', (data) => {
+              var newscroll = data[0].text.split(",")
+              setDesc({
+                "scrolling": newscroll,
+                "threat": data[4].text,
+                "outlook": data[6].text,
+                "area": data[7].text,
+                "recentChange": 0,
+              })
+            })
+      
+            return () => socket.off('set_desc')
+        }, [socket, desc, setDesc])
+      
+        useEffect(() => {
+          socket.on('update_desc', (data) => {
+              const vals = ["scrolling", "qrd", "desc", "", "threat", "lastUpdate", "outlook", "area"]
+              var newarr = {
+                  "scrolling": desc.scrolling,
+                  "qrd": desc.qrd,
+                  "desc": desc.desc,
+                  "threat": desc.threat,
+                  "recentChange": desc.lastUpdate,
+                  "outlook": desc.outlook,
+                  "area": desc.area,
+                  [`${vals[data.title]}`]: data.newtext
+              }
+              setDesc(newarr, setTimeout(() => {
+                var newarr = {
+                  "scrolling": desc.scrolling,
+                  "qrd": desc.qrd,
+                  "desc": desc.desc,
+                  "threat": desc.threat,
+                  "outlook": desc.outlook,
+                  "area": desc.area,
+                  "recentChange": 10,
+                  [`${vals[data.title]}`]: data.newtext
+                }
+                setDesc(newarr)
+              }, [2500]))
+            })
+            return () => socket.off('update_desc')
+        }, [socket, desc, setDesc])
 
     return (
-      <div style={{gridColumn: 1, gridRowStart: 1, gridRowEnd: 4, height: '97%'}} className="description-section">
-      <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%', flexDirection: 'column'}}>
-        <p style={{color: 'white', background: 'red', top: 0, width: '100%', margin: 0, textAlign: 'center', }}>Welcome to  Update: Eyewall!</p>
-        <div style={{background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-          <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '3vw', fontStyle: 'italic', fontWeight: 400, textAlign: 'center'}}>SHEPARDESS</h1>
+      <div style={{height: '97%', zIndex: '20', display: 'flex', flexDirection: 'column'}} className="description-section">
+        <div className='logo-container' style={{gridColumn: 1, gridRow: 1, width: '100%', flexDirection: 'column'}}>
+          <div style={{background: 'url(/images/bgs/skull-logo-final.png)', backgroundSize: 'cover', backgroundPosition: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <h1 style={{fontFamily: 'blurpix', color: 'white', margin: 0, textShadow: '3px 1px 3px black', fontSize: '300%', fontStyle: 'italic', fontWeight: 400, textAlign: 'center'}}>SHEPARDESS</h1>
+          </div>
         </div>
-      </div>
-      <div style={{width: '100%', backgroundImage: 'url(/images/bgs/darkbluesteel_widecontainer.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%'}}>
-        <p style={{textAlign: 'center', color: 'rgb(34 97 101)', fontWeight: '700', fontSize: '18px'}}>Featured Media:</p>
-      </div>
-      {all.length > 0 ? all.map((el) => {
-          if (el.internalname === featured) {
-            return (
-              <div key={`fstreambox-${el.id}`} className="group-stream-box featured-hover" style={{width: '180px', height: '180px', backgroundImage: "url(/images/bgs/orange_steel_container.png)", backgroundSize: '100% 100%'}}>
-                  <div id={`featuredstream`} className='group-control-stream-box' style={{margin: '0 6px'}} onClick={() => attemptOpenStream(el.id)}>
-                      <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                          <img loading='lazy' src='/images/bgs/status-light.png' width={'16px'} height={'16px'} alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
-                          <div style={{overflow: 'hidden', margin: '0 11px', width: '100%'}}>
-                            <p className="group-cam-title stream-title" title={`${el.title}`} type='text'>{el.title}</p>
-                          </div>
-                          <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' style={{height: '16px', width: '16px'}} className="type-image" />
-                      </div>
-                      <div style={{gridRow: 'span 2', width: 'calc(100% - 22px)', height: 'calc(100% - 4px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', borderColor: '#999387 #ffeab6 #ffeab6 #999387 ', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                      <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
-                      <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left-gold.png'/>
-                        <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: 'url(/images/bgs/handlebox-center-gold.png)', backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: 'rgb(79 81 15)'}}>{el.internalname}</p>
-                        <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-right-gold.png'/>
-                      </div>
-                  </div>
-              </div>
-            )
-          }
-      }) : <div style={{width: '180px'}}></div>}
+        <div className="status-indicators" style={{justifyContent: 'space-between'}}>
+            <img loading='lazy' className={`${desc?.recentChange === 6 ? "updated" :  ""}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + "-notitle.gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + ".gif"}`} 
+            src={`${"/images/lights/" + desc.outlook + ".gif"}`} width="100%" alt={`SPC has issued a ${desc.outlook} risk today.`} />
+
+            <img loading='lazy' className={`${desc?.recentChange === 7 ? "updated" :  ""}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + "-notitle.gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + ".gif"}`} 
+            src={`${"/images/lights/" + desc.area + ".gif"}`} width="100%" alt={`Todays risk is primarily in the ${desc.area} reigon(s).`} />
+
+            <img loading='lazy' className={`${desc?.recentChange === 4 ? "updated" :  ""}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + "-notitle.gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + ".gif"}`} 
+            src={`${"/images/lights/" + desc.threat + ".gif"}`} width="100%" alt={`todays threat type: ${desc.threat} threat.`} />
+
+            <img loading='lazy' className={`${stat?.chaseday ? "updated" :  "off"}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${stat?.chaseday ? "/images/lights/derecho-notitle.gif" :  "/images/lights/chaseday-off.gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} width="100%" alt="status light for it being a chase day" />
+
+            <img loading='lazy' className={`${stat?.traveling ? "updated" :  "off"} hidden-indicators`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "-notitle" : "-off") + ".gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} width="100%" alt="status light for traveling" />
+
+            <img loading='lazy' className={`${stat?.chasing ? "updated" :  "off"}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "-notitle" : "-off") + ".gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} width="100%" alt="status light for chasing" />
+
+            <img loading='lazy' className={`${stat?.onhold ? "updated" :  "off"} hidden-indicators`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "-notitle" : "-off") + ".gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} width="100%" alt="status light for being on hold" />
+
+            <img loading='lazy' className={`${stat?.ending ? "updated" :  "off"} hidden-indicators`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "-notitle" : "-off") + ".gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} width="100%" alt="status light for ending the chase" />
+
+            <img loading='lazy' className={`${stat?.emergency ? "updated" :  "off"}`} 
+            onMouseEnter={(e) => e.currentTarget.src = `${stat?.emergency ? "/images/lights/emergency-notitle.gif" :  "/images/lights/emergency-off.gif"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} 
+            src={`${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} width="100%" alt="status light for emergency" />
+        </div>
     </div>
     )
   }
@@ -686,7 +734,7 @@ const App = () => {
   }, [socket, desc, setDesc])
 
     return (
-      <div className='qrd-section' style={{gridColumn: 1, gridRowStart: 4, gridRowEnd: 7, overflow: 'scroll', height: '97%', minHeight: '200px', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
+      <div className='qrd-section' style={{overflow: 'scroll', height: '97%', zIndex: '20', minHeight: '200px', background: 'url(/images/bgs/BlackThatch.png)', border: 'outset 3px', outline: 'black 1px solid', outlineOffset: '-1px'}}>
         <div className='description-banner'>
             <img loading='lazy' src='/images/bgs/opendir.gif' alt='decor' style={{margin: '0 8px 0 4px'}} width={'18px'} height={'18px'} /><p style={{}}>INFO</p>
         </div>
@@ -708,32 +756,6 @@ const App = () => {
         </div>
     </div>
     )
-  }
-
-  const dragHSliderOne = (e) => {
-    e.preventDefault()
-    var curr = (document.getElementById('main-container').style.gridTemplateColumns).toString()
-    var matches = curr.matchAll(/(\d+(\.\d+)?)%/gm)
-    var currarr = []
-    for (const match of matches) {
-      currarr.push(match[1])
-    }
-    if (e.pageX !== 0 && ((e.pageX / window.innerWidth) * 100).toFixed(1) >= 13 && ((e.pageX / window.innerWidth) * 100).toFixed(1) <= 40) {
-      document.getElementById('main-container').style.gridTemplateColumns = `calc(${((e.pageX / window.innerWidth) * 100).toFixed(1)}% - 5px) 5px ${((100 - currarr[2]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% 5px calc(${currarr[2]}% - 5px)`
-    } 
-  }
-
-  const dragHSliderTwo = (e) => {
-    e.preventDefault()
-    var curr = (document.getElementById('main-container').style.gridTemplateColumns).toString()
-    var matches = curr.matchAll(/(\d+(\.\d+)?)%/gm)
-    var currarr = []
-    for (const match of matches) {
-      currarr.push(match[1])
-    }
-    if (e.pageX !== 0 && (Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)) >= 38 && (Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)) <= 70) {
-      document.getElementById('main-container').style.gridTemplateColumns = `calc(${currarr[0]}% - 5px) 5px ${Math.abs((currarr[0]) - ((e.pageX / window.innerWidth) * 100)).toFixed(1)}% 5px calc(${Math.abs((100 - (e.pageX / window.innerWidth) * 100)).toFixed(1)}% - 5px)`
-    } 
   }
 
   const SitePopup = () => {
@@ -836,7 +858,7 @@ const App = () => {
 
     return (
       <>
-        <img src='/images/stopwatchstop.gif' width={'64px'} height={'64px'} alt='decor' className='stopwatch' />
+        <img src='/images/stopwatchrotate.gif' width={'64px'} height={'64px'} alt='decor' className='stopwatch' />
         {tutorial.active ?
           <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
             <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8) sepia(0.7)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>
@@ -853,13 +875,47 @@ const App = () => {
     )
   }
 
+  const LeftBox = () => {
+
+    const [panel, setPanel] = useState("map")
+
+    const openPanel = (pane) => {
+      if (pane === panel) {
+        document.getElementById('left-viewer').classList.toggle('viewer-expanded')
+      } else {
+        setPanel(pane)
+        document.getElementById('left-viewer').classList.add('viewer-expanded')
+      }
+    }
+
+    return (
+      <div className="left-box" style={{border: 'blue 1px dashed', height: '100%'}}>
+        <div className="left-buttons" style={{flexDirection: 'column', alignItems: 'center'}}>
+          <img loading='lazy' className='expand-button left-expand' alt='expand' src='/images/16icons/up-button.png' title='Expand/Contract bottom container.' style={{pointerEvents: 'all', cursor: 'pointer'}} onClick={() => document.getElementById('left-viewer').classList.toggle('viewer-expanded')} />
+          <button onClick={() => openPanel("map")} >Map <img loading='lazy' alt='decor icon' src='/images/16icons/map.png' className='left-button-icon'/></button>
+          <button onClick={() => openPanel("past")} >Past <img loading='lazy' alt='decor icon' src='/images/16icons/past.png' className='left-button-icon'/></button>
+          <button onClick={() => openPanel("social")} >Social <img loading='lazy' alt='decor icon' src='/images/16icons/social.png' className='left-button-icon'/></button>
+          <button id='about-button' onClick={() => openPanel("contact")} >About+ <img loading='lazy' alt='decor icon' src='/images/16icons/contact.png' className='left-button-icon'/></button>
+        </div>
+        <div id='left-viewer' style={{position: 'absolute', zIndex: '10'}} className="left-viewer">
+          <div className="scrolling-text-div" style={{paddingBottom: '12px', zIndex: 3}}>
+            <p className="static-text">{panel.toUpperCase()}</p>
+          </div>
+          <Suspense fallback={<Fallback/>}>
+            <LeftPanel panel={panel}/>
+          </Suspense>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="App">
       <Tutorial/>
       <SitePopup/>
-      <div id='main-container' className="main-container" style={{gridTemplateColumns: 'calc(18% - 5px) 5px 64% 5px calc(18% - 5px)', gridTemplateRows: 'calc(10% - 5px) 5px 40% 20% 5px calc(30% - 5px)'}}>
+      <div id='main-container' className="main-container">
 
-        <div style={{gridColumn: 'span 3', gridRow: 1}} className="top-header" id='status-highlight'>
+        <div className="top-header" id='status-highlight'>
           <div className="scrolling-text-div">
             <Suspense>
               <Status/>
@@ -867,22 +923,8 @@ const App = () => {
           </div>
         </div>
 
-        <div draggable className='grid-slider mobile-hide' style={{gridRowStart: 1, gridRowEnd: 7, gridColumn: 2, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
-        onDrag={(e) => dragHSliderOne(e)}
-        ></div>
-        
+        <LeftBox/>
         <CenterPanel/>
-
-        <div draggable className='grid-slider mobile-hide' style={{gridRowStart: 2, gridRowEnd: 7, gridColumn: 4, border: 'blue 1px dashed', height: '100%', cursor: 'ew-resize'}}
-        onDrag={(e) => dragHSliderTwo(e)}
-        ></div>
-        {window.innerWidth >= 701 ?
-          <div className="mobile-hide" id="chat-panelh" style={{gridColumn: 5, gridRowStart: 2, gridRowEnd: 7, height: '100%'}}>
-            <Suspense fallback={<Fallback/>}>
-              <ChatPanel/>
-            </Suspense>
-          </div>
-        : null}
 
         <Suspense fallback={<Fallback/>}>
             <QRD/>

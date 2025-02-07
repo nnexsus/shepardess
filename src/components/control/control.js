@@ -383,8 +383,11 @@ const Control = () => {
 
     const Messages = () => {
         return (
-            <div style={{width: 'calc(100% - 10px)', height: 'calc(100% - 10px)', border: 'inset 3px', padding: '2px', background: 'url(/images/bgs/moon-bg.png)'}}>
+            <div style={{width: 'calc(100% - 10px)', height: 'calc(100% - 10px)', border: 'inset 3px', padding: '2px', background: 'url(/images/bgs/moon-bg.png)', display: 'flex', justifyContent: 'space-between'}}>
                 <p style={{color: 'white'}}>Welcome to the control panel!</p>
+                <div className='control-account control-desc-part' style={{width: 'fit-content', border: 'none'}}>
+                    <input type='password' placeholder='API key here.' defaultValue={localStorage.getItem('kaepyi')} onChange={(e) => f(e)} />
+                </div>
             </div>
         )
     }
@@ -398,11 +401,7 @@ const Control = () => {
                 <a style={{outline: 'outset 2px'}} href='/control/map' ><img loading='lazy' height={'24px'} src="/images/16icons/terminalthumbicon.png" alt="logo" /></a>
             </div>
 
-            <div className='control-account control-desc-part' style={{gridColumn: 3, gridRow: 1}}>
-                <input type='password' placeholder='API key here.' defaultValue={localStorage.getItem('kaepyi')} onChange={(e) => f(e)} />
-            </div>
-
-            <div style={{gridColumn: 2, gridRow: 1}}>
+            <div style={{gridColumn: 'span 2', gridRow: 1}}>
                 <Messages/>
             </div>
 
@@ -410,12 +409,8 @@ const Control = () => {
                 <Accounts/>
             </div>
 
-            <div style={{gridColumn: 2, gridRow: 2}} className='control-status'>
+            <div style={{gridColumn: 'span 2', gridRow: 2}} className='control-status'>
                 <MainControl/>
-            </div>
-            
-            <div style={{gridColumn: 3, gridRow: 2}}>
-                <ControlChat apikey={localStorage.getItem("kaepyi")}/>
             </div>
         </div>
     )

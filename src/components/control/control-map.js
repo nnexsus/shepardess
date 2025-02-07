@@ -75,6 +75,7 @@ const MapWrapper = () => {
                     createPoint(e.latlng)
                 })
                 useMapEvent('dblclick', (e) => {
+                    console.log(e)
                     createMarker(e.latlng)
                 })
 
@@ -352,6 +353,7 @@ const MapWrapper = () => {
                         <div style={{position: 'absolute', zIndex: 401, right: 0}}>
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'black', border: 'inset 3px', outline: 'black solid 1px', margin: '5px'}}>
                                 <button className="analog-button" onClick={() => socket.emit('send_toggle_miles', {'key': apikey})}>Toggle Milage Counter</button>
+                                <button className="map-menu-button" title="Toggles the marker and icon layers on/off." onClick={() => document.querySelectorAll('.leaflet-marker-icon').forEach((el) => el.classList.toggle('hidden'))}>Icons</button>
                                 <p style={{color: 'white'}}><img loading='lazy' src="/images/bgs/status-light.png" width={'16px'} height={'16px'} style={{background: `${miles ? 'lime' : 'darkgreen'}`, borderRadius: '50%'}} />Currently: {miles ? "ON" : "OFF"}</p>
                             </div>
                         </div>

@@ -361,7 +361,7 @@ const StreamsWrapper = () => {
                                         </div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                             <p style={{paddingLeft: '3px', fontSize: '12px'}}>FEATURED:</p>
-                                            <button className='led-light' title={`Stream is not featured click to set!`} id={`stream-featured-light-${el.internalname}`} onClick={() => changeFeatured(el.internalname)} style={{cursor: 'pointer', outlineOffset: '-1px', background: "#3d3902", boxShadow: "0 0 2px #3d3902", margin: '4px'}}></button>
+                                            <button className='led-light' title={`Stream is not featured click to set!`} id={`stream-featured-light-${el.internalname}`} onClick={() => changeStream("active", el.id, (el.active === 2 ? 1 : 2))} style={{cursor: 'pointer', outlineOffset: '-1px', background: "#3d3902", boxShadow: "0 0 2px #3d3902", margin: '4px'}}></button>
                                         </div>
                                     </div>
                                     <select className='analog-input' defaultValue={el.type} onChange={(e) => changeStream('type', el.id, e.currentTarget.value)} name="Stream Type">

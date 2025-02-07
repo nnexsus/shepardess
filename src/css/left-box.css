@@ -11,35 +11,38 @@
     padding: 2px;
     box-sizing: border-box;
 
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 25px 2px calc(100% - 42px);
+    display: flex;
+    flex-direction: column;
 }
 
 .left-buttons {
     display: flex;
+    height: 100%;
 }
 
 .left-buttons img {
     pointer-events: none;
+    transform: rotate(90deg);
 }
 
 .left-buttons button {
-    width: 25%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
     font-weight: bold;
     font-variant-caps: small-caps;
     text-shadow: 1px 1px 0px rgb(164, 0, 0);
+    writing-mode: vertical-lr;
+    text-orientation: sideways;
 }
 
 .left-buttons button, .past-expand {
-    background-image: url('/public/images/bgs/play.png');
-    background-size: cover;
+    background-image: url('/public/images/bgs/playv.png');
+    background-size: 100% 100%;
     border-style: outset;
     border-width: 0px;
-    height: 28px;
+    height: 25%;
     image-rendering: pixelated;
     outline: 1px solid #000;
     padding: 0;
@@ -49,6 +52,7 @@
 .past-expand {
     display: flex;
     align-items: center;
+    background-image: url('/public/images/bgs/play.png') !important;
 }
 
 .left-buttons button:hover {
@@ -57,7 +61,7 @@
 }
 
 .left-buttons button:active {
-    background-image: url('/public/images/bgs/play-indent.png');
+    background-image: url('/public/images/bgs/playv-indent.png');
     text-shadow: 1px 1px 0px black;
     color: white;
     filter: brightness(0.9);
@@ -65,7 +69,8 @@
 
 .left-viewer {
     background-color: black;
-    height: 100%;
+    height: 85%;
+    width: 60vw;
 
     background: #04061a;
     border-bottom: solid 3px #dadbe8;
@@ -78,6 +83,13 @@
 
     display: grid;
     grid-template-rows: 12px calc(100% - 12px);
+
+    transition: 0.3s ease;
+    margin-left: -100vw;
+}
+
+.viewer-expanded {
+    margin-left: calc(0vw + 40px);
 }
 
 .past-container {
@@ -103,6 +115,7 @@
     padding: 0 2px 2px;
     max-width: fit-content;
     max-width: 48%;
+    transform: scale(0.98);
 }
 
 .p-project {
@@ -176,7 +189,7 @@
 }
 
 .map-details.control-show {
-    grid-template-rows: 14px 40px 25px 25px 25px 25px 25px 25px 0px;
+    grid-template-rows: 14px 40px 25px 25px 25px 25px 25px 25px 25px 0px;
 }
 
 .map-details.control-show div {
@@ -185,11 +198,11 @@
 }
 
 .map-details.key-show {
-    grid-template-rows: 14px 0px 0px 0px 0px 0px 0px 0px 20px;
+    grid-template-rows: 14px 0px 0px 0px 0px 0px 0px 0px 0px 20px;
 }
 
 .map-details.control-show.key-show {
-    grid-template-rows: 14px 40px 25px 25px 25px 25px 25px 25px 20px;
+    grid-template-rows: 14px 40px 25px 25px 25px 25px 25px 25px 25px 20px;
 }
 
 .map-details p {
@@ -331,6 +344,14 @@
     transform: translateY(0px);
 }
 
+.leaflet-marker-icon {
+    display: none;
+}
+
+.leaflet-marker-icon.hidden {
+    display: flex;
+}
+
 .leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive {
     opacity: 0.5;
     transition: 0.1s linear;
@@ -462,16 +483,19 @@ path.leaflet-interactive:hover {
 }
 
 @media screen and (max-width: 700px) {
+    .left-viewer {
+        margin-left: -200vw;
+    }
+
+    .viewer-expanded {
+        margin-left: calc(-100vw + 60px);
+        width: 81%;
+    }
+
     .left-box {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-    }
-
-    .left-buttons {
-        display: grid;
-        grid-template-columns: 33% 33% 33%;
-        justify-items: center;
     }
 
     .left-buttons button {
@@ -507,10 +531,6 @@ path.leaflet-interactive:hover {
 @media screen and (min-width: 1750px) {
     .left-box {
         grid-template-rows: 50px 2px calc(100% - 72px);
-    }
-
-    .left-buttons button, .past-expand {
-        height: 50px;
     }
 
     .left-buttons button {

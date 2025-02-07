@@ -37,12 +37,12 @@ const Past = () => {
                                 </div>
                                 <img title={`Severity ${el.initresult}/10 - Primary threat: ${el.customid}`} width={'calc(100% - 4px)'} height={'calc(100% - 4px)'} src={`/images/emotes/${el.customid}.gif`} alt='decor' style={{margin: '2px', outline: 'solid black 1px', outlineOffset: '1px', border: 'inset 3px', backgroundColor: `${initcol[el.initresult]}`}} />
                                 <div style={{gridColumn: 'span 3', display: 'flex', flexDirection: 'column'}}>
-                                    <div id={`pastlinks-${ind}`} className='past-desc' style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: 'repeat(3, 33%)'}}>
+                                    <div id={`pastlinks-${ind}`} className='past-desc' style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: 'repeat(3, 33%)', minHeight: '40px'}}>
                                         {links ?
                                             links.map((el, ind2) => {
                                                 return (
-                                                    <a key={`pastlinks-${ind}-${ind2}`} rel='noreferrer' target='_blank' href={`${el.link}`}>
-                                                        <button className='past-expand' style={{display: 'flex', justifyContent: 'center', paddingTop: '4px', width: '100%'}}><img loading='lazy' width={'24px'} height={'24px'} alt='decor' src='/images/16icons/audiostream.png' style={{paddingRight: '2px'}} /><p>{el.title}</p></button>
+                                                    <a key={`pastlinks-${ind}-${ind2}`} rel='noreferrer' target='_blank' href={`${el.link}`} style={{height: '36px'}}>
+                                                        <button className='past-expand' style={{display: 'flex', justifyContent: 'center', paddingTop: '4px', width: '100%', height: '100%', padding: 0, margin: 0}}><img loading='lazy' width={'24px'} height={'24px'} alt='decor' src='/images/16icons/audiostream.png' style={{paddingRight: '2px'}} /><p>{el.title}</p></button>
                                                     </a>
                                                 )
                                             })

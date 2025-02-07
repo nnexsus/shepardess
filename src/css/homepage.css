@@ -14,6 +14,9 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     display: grid;
     align-items: center;
     gap: 3px;
+
+    grid-template-columns: 260px 40px calc(100% - 300px);
+    grid-template-rows: calc(10% - 5px) 5px 40% 20% 5px calc(30% - 5px);
 }
 
 .logo-container {
@@ -26,6 +29,7 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     height: 100%;
     background-color: black;
     overflow: hidden;
+    max-height: 140px;
 }
 
 .scrolling-text-div {
@@ -99,8 +103,6 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     height: 100%;
     margin-top: 5px;
 
-    display: grid; 
-    grid-template-rows: 67% 33%; 
     height: calc(100% - 6px);
     transition: 0.3s ease;
 }
@@ -381,6 +383,36 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     filter: sepia(1);
 }
 
+.top-header {
+    width: calc(100% - 5px);
+    grid-column: span 2;
+    grid-row: 1;
+}
+
+.qrd-section {
+    grid-column: 1;
+    grid-row-start: 4;
+    grid-row-end: 7;
+}
+
+.description-section {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: 4;
+}
+
+.feeds-container {
+    grid-column: 3;
+    grid-row-start: 2;
+    grid-row-end: 7;
+}
+
+.left-box {
+    grid-row-start: 2;
+    grid-row-end: 7;
+    grid-column: 2;
+}
+
 @keyframes stopwatch {
     0% {
         opacity: 1;
@@ -396,10 +428,6 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
 
 
 @media screen and (max-width: 1050px) {
-    .main-container {
-        grid-template-rows: 16% 24% 30% 30%;
-    }
-
     .group-stream-box {
         scale: 0.75;
     }
@@ -421,30 +449,35 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
         height: 200vh;
         width: 100%;
     
-        display: flex;
-        flex-direction: column;
+        display: grid;
         align-items: center;
+
+        grid-template-columns: calc(100% - 40px) 40px;
+        grid-template-rows: 40px calc(40% - 40px) 30% 30%;
     }
 
     .feeds-container {
-        display: grid; 
-        grid-template-rows: 50% 50%; 
+        display: flex; 
+        flex-direction: column; 
         height: calc(200% - 6px);
         transition: 0.3s ease;
         width: 100%;
-        max-height: 70%;
-    }
+        height: 100%;
 
-    .sliding-expanded {
-        grid-template-rows: 50% 50%; 
-    }
-
-    #feed-panel {
-        max-height: 65vh;
+        grid-column: 1;
+        grid-row: 2;
     }
 
     .top-header {
         width: 100%;
+        grid-column: span 2;
+        grid-row: 1;
+    }
+
+    .left-box {
+        grid-column: 2;
+        grid-row-start: 2;
+        grid-row-end: 3;
     }
 
     .description-section {
@@ -452,6 +485,14 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
 
         display: flex;
         flex-direction: row;
+
+        grid-column: span 2;
+        grid-row: 3;
+    }
+
+    .qrd-section {
+        grid-column: span 2;
+        grid-row: 4;
     }
 
     .logo-container {

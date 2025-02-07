@@ -1,5 +1,6 @@
 .status-indicators {
     display: flex;
+    flex-wrap: wrap;
     border: inset 3px;
     background-color: black;
 }
@@ -66,31 +67,5 @@
     } 100% {
         background: #04061a;
         background-image: url(/public/images/bgs/BlackThatch.png);
-    }
-}
-
-@media screen and (max-width: 1050px) {
-    .status-indicators {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(6, 16%);
-    }
-
-    .hidden-indicators {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 700px) {
-    .status-indicators {
-        display: grid;
-        grid-template-columns: 33% 33% 33%;
-    }
-}
-
-@media screen and (min-width: 1750px) {
-    .status-indicators img {
-        max-width: 200px;
-        max-height: 85px;
     }
 }

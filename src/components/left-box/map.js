@@ -78,6 +78,11 @@ const Map = () => {
         socket.emit('sync_poly')
     }, [])
 
+    const reloadMap = () => {
+        socket.emit('sync_location')
+        socket.emit('sync_poly')
+    }
+
     const MapComp = () => {
 
         const [outlooks, setOutlooks] = useState([])
@@ -320,6 +325,14 @@ const Map = () => {
             )
         }
 
+        const toggleIcons = (year) => {
+            sessionStorage.setItem('yearfilter', year)
+            document.getElementById('set-yearfilter').click()
+            setTimeout(() => {
+                document.querySelectorAll('.leaflet-marker-icon').forEach((el) => el.classList.toggle('hidden'))
+            }, [50])
+        }
+
         return (
             <div>
                 <Marker icon={locationIcon} position={[locdata.lat, locdata.lon]} >
@@ -354,7 +367,10 @@ const Map = () => {
                     <div style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
                         <button className="map-menu-button" title="Moves the map to your general position (may take a second)." onClick={() => locate()}>Center</button>
                         <button className="map-menu-button" title="Toggles the radar layer on/off." onClick={() => document.querySelectorAll('.no-invert').forEach((el) => el.classList.toggle('hidden'))}>Radar</button>
-                        <button className="map-menu-button" title="Toggles the marker and icon layers on/off." onClick={() => document.querySelectorAll('.leaflet-marker-icon').forEach((el) => el.classList.toggle('hidden'))}>Icons</button>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
+                        <button className="map-menu-button" title="Toggles the marker and icon layers on/off." onClick={() => toggleIcons("2024")}>2024</button>
+                        <button className="map-menu-button" title="Toggles the marker and icon layers on/off." onClick={() => toggleIcons("2025")}>2025</button>
                     </div>
                     <div className="hanging-buttons" style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
                         <p>SPC Risk Type Outlooks</p>
@@ -378,7 +394,7 @@ const Map = () => {
                         <Wind/>
                     </div>
                     <div className="hanging-buttons" style={{display: 'flex', flexWrap: 'wrap', overflowY: 'scroll', gridColumn: 'span 3', maxHeight: '100%', padding: '0 16px', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
-                        <p style={{textAlign: 'center'}}>Key: </p>
+                        <p style={{textAlign: 'center'}}>Key (hover): </p>
                         <p style={{color: 'white'}}><b title="Target Area" style={{color: 'red'}}>■</b></p>
                         <p style={{color: 'white'}}><b title="Greater Hail Risk" style={{color: 'lime'}}>■</b></p>
                         <p style={{color: 'white'}}><b title="Greater Tornado Risk" style={{color: 'purple'}}>■</b></p>
@@ -394,6 +410,9 @@ const Map = () => {
                 </div>
 
                 <div className="car-details" style={{zIndex: 402, display: 'flex', justifyContent: 'flex-start'}}>
+                    <button onClick={() => reloadMap()} className="hover-bright" title="reload map and details" style={{background: 'blue', border: 'solid black 1px', borderRadius: '0 4px 4px 0', cursor: 'pointer'}} >
+                        <img src="/images/16icons/refresh8px.png" alt="refresh map" width={'8px'} height={'8px'} />
+                    </button>
                     <img loading='lazy' src="/images/16icons/miles-counter.png" width={'20'} height={'24'} alt="decor" />
                     <p title={`~${locdata.miles.toFixed(1)} miles traveled this trip.`} style={{width: '46px', height: '24px', color: 'black', backgroundImage: 'url(/images/16icons/miles-counter-center.png)', backgroundSize: '46px 24px', lineHeight: '20px', textAlign: 'center'}}>{locdata.miles.toFixed(2)}mi</p>
                     <img loading='lazy' src="/images/16icons/miles-counter-end.png" width={'8'} height={'24'} alt="decor" />
@@ -406,7 +425,6 @@ const Map = () => {
         const [warns, setWarns] = useState([])
 
         const updateWarnings = () => {
-            console.log("Updating warnings")
             var updateWarn = [] 
             axios.get('https://api.weather.gov/alerts/active?status=actual&message_type=alert&region_type=land&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate&certainty=Observed,Likely&limit=50').then((res) => {
                 res?.data?.features?.forEach((el) => {
@@ -451,6 +469,7 @@ const Map = () => {
 
         const [polystate, setPolystate] = useState([])
         const [markerstate, setMarkerstate] = useState([])
+        const [yearfilter, setYearfilter] = useState("2025")
         const map = useMap()
 
         useEffect(() => {
@@ -485,12 +504,7 @@ const Map = () => {
                     newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color})
                 })
                 setPolystate(newstate)
-    
-                var mark = []
-                data.markers.forEach((el) => {
-                    mark.push({"coordinates": el.coordinates?.reverse(), "title": el.title, "type": el.type, "link": el.link})
-                })
-                setMarkerstate(mark)
+                setMarkerstate(data.markers)
               })
               return () => socket.off('set_poly')
         }, [polystate, setPolystate])
@@ -523,20 +537,31 @@ const Map = () => {
         return (
             <>
                 {markerstate?.map((el, ind) => {
-                    const Link = () => {
+                    if (el.date.includes(yearfilter)) {
+                        const Link = () => {
+                            return (
+                                <div style={{display: 'flex', flexDirection: 'column'}}>
+                                    {el.link.substring(0, 1) === "/" ?
+                                        <>
+                                            <a style={{color: 'lightblue'}} href={`https://nnexsus.net/image${el.link}`}>Open Full</a>
+                                            <img src={`https://arina.lol/api/win7/thumb${el.link}`} alt="decor" width={'240px'} height={'120px'} />
+                                        </>
+                                    : 
+                                        <>
+                                            <a style={{color: 'lightblue'}} href={`${el.link}`}>Open Source</a>
+                                            <iframe src={`${el.link}`} alt="decor" width={'240px'} height={'120px'} />
+                                        </>
+                                    }
+                                    <button style={{border: 'outset 2px', outline: 'black 1px solid', background: 'darkgreen', color: 'white'}} onClick={() => document.getElementsByClassName('leaflet-popup-close-button')[0].click()}>Close</button>
+                                </div>
+                            )
+                        }
                         return (
-                            <div style={{display: 'flex', flexDirection: 'column'}}>
-                                <a style={{color: 'lightblue'}} href={`${el.link}`}>Open Source</a>
-                                <iframe src={`${el.link}`} alt="decor" width={'240px'} height={'120px'} />
-                                <button style={{border: 'outset 2px', outline: 'black 1px solid', background: 'darkgreen', color: 'white'}} onClick={() => document.getElementsByClassName('leaflet-popup-close-button')[0].click()}>Close</button>
-                            </div>
+                            <Marker key={`mark-${el.coordinates[0]}-${ind}`} icon={L.icon({iconUrl: `/images/16icons/${el.type}-marker${el.win7id !== null ? '-nn' : ''}.png`, iconSize: [16, 16], iconAnchor: [8, 0], popupAnchor: [0, 0]})} position={el.coordinates.reverse()} >
+                                <Popup><p>{el.title}<br/>{el?.link !== null ? <Link/> : null}</p></Popup>
+                            </Marker>
                         )
                     }
-                    return (
-                        <Marker key={`mark-${el.coordinates[0]}-${ind}`} icon={L.icon({iconUrl: `/images/16icons/${el.type}-marker.png`, iconSize: [16, 16], iconAnchor: [8, 0], popupAnchor: [0, 0]})} position={el.coordinates} >
-                            <Popup><p>{el.title}<br/>{el?.link !== null ? <Link/> : null}</p></Popup>
-                        </Marker>
-                    )
                 })}
                 {polystate?.map((el, ind) => {
                     var name = el.title.replace(/\s+/g, '')
@@ -546,6 +571,7 @@ const Map = () => {
                         </Polygon>
                     )
                 })}
+                <button id="set-yearfilter" style={{display: 'none'}} onClick={() => setYearfilter(sessionStorage.getItem('yearfilter'))}></button>
             </>
         )
     }

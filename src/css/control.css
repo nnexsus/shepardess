@@ -155,7 +155,7 @@
 
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 103%;
+    height: 100%;
 }
 
 .control-stream-box {
@@ -200,6 +200,22 @@
 
 .stream-box-container:hover .handle, .group-grid-default .group-control-stream-box:hover .handle, .featured-hover:hover .handle {
     display: flex;
+}
+
+.stream-box-0, .stream-box-1 {
+    background-image: url('/public/images/bgs/green_steel_container.png');
+}
+
+.stream-box-0 .colored-box, .stream-box-1 .colored-box {
+    border-color: #879987 #B6FFB6 #B6FFB6 #879987;
+}
+
+.stream-box-2 {
+    background-image: url('/public/images/bgs/orange_steel_container.png') !important;
+}
+
+.stream-box-2 .colored-box {
+    border-color: #999387 #ffeab6 #ffeab6 #999387;
 }
 
 @keyframes titlehover {
@@ -482,4 +498,8 @@
     .group-grid-default .group-stream-name {
         margin: 0 16px;
     }
+}
+
+.hover-bright:hover {
+    filter: brightness(2);
 }
