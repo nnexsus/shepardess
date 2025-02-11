@@ -103,51 +103,49 @@ const MapWrapper = () => {
 
                 //map based events
 
-                useEffect(() => {
-                    socket.on('set_poly', (data) => {
-                        var newstate = []
-                        data.polygons.forEach((el) => {
-                            var correctedBox = []
-                            el.coordinates.forEach(li => {
-                                correctedBox.push(li.reverse())
-                            });
-                            newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color, "id": el.id})
-                        })
-                        setPolystate(newstate)
-                    })
-                    return () => socket.off('set_poly')
-                }, [socket, polystate, setPolystate])
-            
-                useEffect(() => {
-                    socket.on('add_poly', (data) => {
-                        var parsed = JSON.parse(data.coordinates)
-                        var coord = []
-                        parsed.forEach((el) => {
-                            coord.push(el.reverse())
-                        })
-                        var newobj = {
-                            "id": data.id,
-                            "color": data.color,
-                            "title": data.title,
-                            "coordinates": coord
-                        }
-                        setPolystate((state) => [...state, newobj])
-                    })
-                    return () => socket.off('add_poly')
-                }, [socket, polystate, setPolystate])
-            
-                useEffect(() => {
-                    socket.on('remove_poly', (data) => {
-                        var newarr = [...polystate]
-                        newarr.find((el, ind) => {
-                            if (el.id === data.id) {
-                                newarr.splice(ind, 1)
-                            }
-                        });
-                        setPolystate(newarr)
-                    })    
-                    return () => socket.off('remove_poly')
-                }, [socket, polystate, setPolystate])
+        useEffect(() => {
+            socket.on('set_poly', (data) => {
+                var newstate = []
+                data.polygons.forEach((el) => {
+                    var correctedBox = []
+                    el.coordinates.forEach(li => {
+                        correctedBox.push(li.reverse())
+                    });
+                    newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color, "id": data.id})
+                })
+                setPolystate(newstate)
+              })
+              return () => socket.off('set_poly')
+        }, [polystate, setPolystate])
+    
+        useEffect(() => {
+            socket.on('add_poly', (data) => {
+                var correctedBox = []
+                console.log(data)
+                JSON.parse(data.coordinates).forEach(li => {
+                    correctedBox.push(li.reverse())
+                });
+                console.log([...polystate, {"coordinates": correctedBox, "title": data.title, "color": data.color, "id": data.id}])
+                setPolystate([...polystate, {"coordinates": correctedBox, "title": data.title, "color": data.color, "id": data.id}])
+              })
+              return () => socket.off('add_poly')
+        }, [polystate, setPolystate])
+    
+        useEffect(() => {
+            socket.on('remove_poly', (data) => {
+                console.log(data)
+                var newarr = [...polystate]
+                polystate.find((el, ind) => {
+                    if (el.id === data.id) {
+                        newarr.splice(ind, 1)
+                        return true;
+                    }
+                });
+                console.log(newarr)
+                setPolystate(newarr)
+              })    
+              return () => socket.off('remove_poly')
+        }, [polystate, setPolystate])
 
                 useEffect(() => {
                     socket.on('update_location', (data) => {

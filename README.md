@@ -2,6 +2,20 @@
 
 Shepardess is a hub for weather, stormchasing, forecasting, and other information.
 
+Patch v1.2.1 (Design QOL)
+```diff
++ Added location tracks - creates lines on the map for my path of travel.
++ Added marker year dividers to help filter through multiple years of markers.
++ Fixed markers, polygons, featured streams, and stream data not updating live correctly.
++ Added location indicators for Appalachia and the Ohio Valley.
++ Added threat indicator for Severe Thunderstorm.
++ Improved popups and added notifications on desktop and mobile (with consent).
++ Reduced size of all gifs - most to just a couple hundred bytes.
++ Many small design improvements and fixes, including placeholders.
++ Improved some backend communication and control panel designs.
+```
+
+
 Update: 2025 (v1.2.0)
 
 ```diff

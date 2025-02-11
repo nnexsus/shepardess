@@ -66,15 +66,9 @@ const App = () => {
 
   const CenterPanel = () => {
 
-    useEffect(() => {
-      socket.emit('sync_stream')
-      socket.emit('sync_group')
-    }, [])
-
   useEffect(() => {
-    if (window.innerWidth >= 701) {
-      document.getElementById('main-sliding-container').classList.remove('sliding-expanded')
-    }
+    socket.emit('sync_stream')
+    socket.emit('sync_group')
   }, [])
 
   const StreamContainer = () => {
@@ -111,14 +105,15 @@ const App = () => {
                       <div key={`${el.id}`} className={`group-stream-box stream-box-${el.active}`}>
                           <div className='group-control-stream-box' id={`stream-${el.id}`} onClick={() => openStream(el)}>
                               <div style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                                  <img loading='lazy' alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
-                                  <div className='group-stream-name' style={{overflow: 'hidden', width: '100%'}}>
+                                  <img loading='lazy' alt="decor" className='group-led-light' src="/images/bgs/status-light.png" title={`Camera is ${el.active == 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{outlineOffset: '-1px', background: `${el.active == 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active == 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`}} />
+                                  <div className='group-stream-name' style={{overflow: 'hidden'}}>
                                       <p className="group-cam-title stream-title" title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
                                   </div>
-                                  <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image" />
+                                  <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className="type-image group-type-image" />
                               </div>
-                              <div className='colored-box' style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div></div>
+                              <div className='colored-box' style={{gridRow: 'span 2', width: 'calc(100% - 21px)', height: 'calc(100% - 11px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', backgroundImage: `url(${el.thumblink}), url(/images/bgs/snowbackground.gif)`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                                <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.2) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active == 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
+                              </div>
                               <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '10px'}}>
                                   <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src={`/images/bgs/handlebox-left${el.active === 2 ? "-gold" : ""}.png`}/>
                                   <p title={`${el.internalname}`} style={{height: '22px', margin: 0, backgroundImage: `url(/images/bgs/handlebox-center${el.active === 2 ? "-gold" : ""}.png)`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', lineHeight: '22px', color: '#3a5212'}}>{el.internalname}</p>
@@ -160,8 +155,8 @@ const App = () => {
         socket.on('update_stream', (data) => {
             streams.forEach((el, ind) => {
                 if (el.id === data.id) {
-                    const si =  el
-                    const newdata = {
+                    const si = el
+                    var newdata = {
                         "title": si.title,
                         "id": si.id,
                         "internalname": si.internalname,
@@ -198,7 +193,7 @@ const App = () => {
           })
           })    
           return () => socket.off('update_stream')
-      }, [socket, streams, setStreams])
+      }, [socket, streams, setStreams, streamgroup, setStreamgroup])
     
       useEffect(() => {
         socket.on('add_stream', (data) => {
@@ -306,16 +301,16 @@ const App = () => {
                 {streams.length > 0 ? streams.map((el) => {
                     return (
                       <div key={el.id} className={`stream-box-container stream-box-${el.active}`} style={{overflow: 'hidden', marginBottom: '10px'}}>
-                        <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active === 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
+                        <div id={`stream-${el.id}`} className='control-stream-box' style={{cursor: `${el.active == 0 ? 'default' : 'pointer'}`, alignItems: 'stretch'}} onClick={() => openStream(el)}>
                             <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
-                                <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
-                                <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
+                                <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active == 0 ? "off." : "active."}`} title={`Camera is ${el.active == 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active == 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active == 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                                <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px'}}>
                                   <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
                                 </div>
-                                <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='stream-status-light' />
+                                <img loading='lazy' title={`${camtypetext[el.type]}`} src={`/images/16icons/${camtype[el.type]}.png`} alt='decor' className='type-image' />
                             </div>
                             <div className='colored-border' style={{gridRow: 'span 2', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', aspectRatio: '1/1', borderStyle: 'inset', borderWidth: '4px', backgroundImage: `url(${el.thumblink})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active === 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
+                              <div style={{height: '100%', width: '100%', background: 'repeating-linear-gradient(to top, rgba(255, 255, 255, 0.1) 0px 2px, transparent 2px 4px)', backdropFilter: `${el.active == 0 ? "grayscale(1)" : "grayscale(0)"}`}}></div>
                             </div>
                             <div className='handle' style={{position: 'absolute', alignItems: 'center', bottom: '12px'}}>
                               <img loading='lazy' alt="decor" height={'22px'} width={'7px'} src='/images/bgs/handlebox-left.png'/>
@@ -356,9 +351,9 @@ const App = () => {
             var isfeatured = el.active === 2 ? "-gold" : ""
               return (
                 <div draggable onDragStart={(e) => onDragStart(e, JSON.stringify(el))} key={el.id} className='stream-list-container' style={{marginBottom: '10px'}}>
-                  <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active === 0 ? 'default' : 'grab'}`, alignItems: 'stretch'}}>
+                  <div id={`stream-${el.id}`} className='control-stream-list' style={{cursor: `${el.active == 0 ? 'default' : 'grab'}`, alignItems: 'stretch'}}>
                       <div id={`stream-thumb-${el.id}`} style={{gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', border: 'solid gray 1px', borderRadius: '3px', padding: '3px', background: 'rgba(125,125,125,0.4)'}}>
-                          <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active === 0 ? "off." : "active."}`} title={`Camera is ${el.active === 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active === 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active === 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
+                          <img loading='lazy' src='/images/bgs/status-light.png' className='stream-status-light' alt={`Camera is ${el.active == 0 ? "off." : "active."}`} title={`Camera is ${el.active == 0 ? "off" : "active"}`} id={`stream-active-light-${el.id}`} style={{background: `${el.active == 0 ? "darkgreen" : "lime"}`, boxShadow: `${el.active == 0 ? "0 0 2px darkgreen" : "0 0 5px lime"}`, borderRadius: '50%'}} />
                           <div className='stream-title-container' style={{overflow: 'hidden', margin: '4px 9px', width: '100%'}}>
                             <p className='stream-title' title={`${el.title}-{ID: #${el.id}}`} type='text'>{el.title}<b style={{fontSize: '12px', margin: '0 4px', color: 'darkgray'}}>{`ID:${el.id}`}</b></p>
                           </div>
@@ -621,49 +616,49 @@ const App = () => {
         </div>
         <div className="status-indicators" style={{justifyContent: 'space-between'}}>
             <img loading='lazy' className={`${desc?.recentChange === 6 ? "updated" :  ""}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + "-notitle.gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + ".gif"}`} 
-            src={`${"/images/lights/" + desc.outlook + ".gif"}`} width="100%" alt={`SPC has issued a ${desc.outlook} risk today.`} />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + "-notitle.webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.outlook + ".webp"}`} 
+            src={`${"/images/lights/" + desc.outlook + ".webp"}`} width="100%" alt={`SPC has issued a ${desc.outlook} risk today.`} />
 
             <img loading='lazy' className={`${desc?.recentChange === 7 ? "updated" :  ""}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + "-notitle.gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + ".gif"}`} 
-            src={`${"/images/lights/" + desc.area + ".gif"}`} width="100%" alt={`Todays risk is primarily in the ${desc.area} reigon(s).`} />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + "-notitle.webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.area + ".webp"}`} 
+            src={`${"/images/lights/" + desc.area + ".webp"}`} width="100%" alt={`Todays risk is primarily in the ${desc.area} reigon(s).`} />
 
             <img loading='lazy' className={`${desc?.recentChange === 4 ? "updated" :  ""}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + "-notitle.gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + ".gif"}`} 
-            src={`${"/images/lights/" + desc.threat + ".gif"}`} width="100%" alt={`todays threat type: ${desc.threat} threat.`} />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + "-notitle.webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/" + desc.threat + ".webp"}`} 
+            src={`${"/images/lights/" + desc.threat + ".webp"}`} width="100%" alt={`todays threat type: ${desc.threat} threat.`} />
 
             <img loading='lazy' className={`${stat?.chaseday ? "updated" :  "off"}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${stat?.chaseday ? "/images/lights/derecho-notitle.gif" :  "/images/lights/chaseday-off.gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".gif"}`} width="100%" alt="status light for it being a chase day" />
+            onMouseEnter={(e) => e.currentTarget.src = `${stat?.chaseday ? "/images/lights/derecho-notitle.webp" :  "/images/lights/chaseday-off.webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/chaseday" + (stat?.chaseday ? "" : "-off") + ".webp"}`} width="100%" alt="status light for it being a chase day" />
 
             <img loading='lazy' className={`${stat?.traveling ? "updated" :  "off"} hidden-indicators`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "-notitle" : "-off") + ".gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".gif"}`} width="100%" alt="status light for traveling" />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "-notitle" : "-off") + ".webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/traveling" + (stat?.traveling ? "" : "-off") + ".webp"}`} width="100%" alt="status light for traveling" />
 
             <img loading='lazy' className={`${stat?.chasing ? "updated" :  "off"}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "-notitle" : "-off") + ".gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".gif"}`} width="100%" alt="status light for chasing" />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "-notitle" : "-off") + ".webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/chasing" + (stat?.chasing ? "" : "-off") + ".webp"}`} width="100%" alt="status light for chasing" />
 
             <img loading='lazy' className={`${stat?.onhold ? "updated" :  "off"} hidden-indicators`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "-notitle" : "-off") + ".gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".gif"}`} width="100%" alt="status light for being on hold" />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "-notitle" : "-off") + ".webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/onhold" + (stat?.onhold ? "" : "-off") + ".webp"}`} width="100%" alt="status light for being on hold" />
 
             <img loading='lazy' className={`${stat?.ending ? "updated" :  "off"} hidden-indicators`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "-notitle" : "-off") + ".gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".gif"}`} width="100%" alt="status light for ending the chase" />
+            onMouseEnter={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "-notitle" : "-off") + ".webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/ending" + (stat?.ending ? "" : "-off") + ".webp"}`} width="100%" alt="status light for ending the chase" />
 
             <img loading='lazy' className={`${stat?.emergency ? "updated" :  "off"}`} 
-            onMouseEnter={(e) => e.currentTarget.src = `${stat?.emergency ? "/images/lights/emergency-notitle.gif" :  "/images/lights/emergency-off.gif"}`} 
-            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} 
-            src={`${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".gif"}`} width="100%" alt="status light for emergency" />
+            onMouseEnter={(e) => e.currentTarget.src = `${stat?.emergency ? "/images/lights/emergency-notitle.webp" :  "/images/lights/emergency-off.webp"}`} 
+            onMouseLeave={(e) => e.currentTarget.src = `${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".webp"}`} 
+            src={`${"/images/lights/emergency" + (stat?.emergency ? "" : "-off") + ".webp"}`} width="100%" alt="status light for emergency" />
         </div>
     </div>
     )
@@ -760,12 +755,13 @@ const App = () => {
 
   const SitePopup = () => {
     const [popup, setPopup] = useState({
-      "popup": "tornado",
+      "popup": {"popup": "tornado", "id": 0},
       "active": false
     })
 
     useEffect(() => {
       socket.on('receive_popup', (data) => {
+        console.log(data)
         setPopup({
           active: true,
           "popup": data
@@ -775,19 +771,39 @@ const App = () => {
       return () => socket.off('receive_popup')
     }, [socket])
 
+    useEffect(() => {
+      if (popup.active) {
+        sendNotifiation()
+      }
+    }, [popup, setPopup])
+
+    const sendNotifiation = () => {
+      if (!("Notification" in window)) {
+        console.log('notifications not supported in this browser type')
+      } else if (Notification.permission === "granted") {
+        const notification = new Notification(`${popupWarnings[popup.popup.popup]}`, {title: `${popup.popup.popup}`, icon: `/images/popups/popup-${popup.popup.popup}.gif`});
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            const notification = new Notification(`${popupWarnings[popup.popup.popup]}`, {title: `${popup.popup.popup}`, icon: `/images/popups/popup-${popup.popup.popup}.gif`});
+          }
+        });
+      }
+    }    
+
     return (
       <div style={{position: 'fixed', width: '100%', top: '15vh', left: '30vw', display: `${popup.active ? "block" : "none"}`, zIndex: '519'}}>
         <div style={{display: 'grid', gridTemplateColumns: '50% 50%', gridTemplateRows: '28px calc(100% - 28px)', border: 'outset 3px', boxShadow: '3px 3px 5px 0 black', width: '50%', background: 'lightgray'}}>
           <div className='description-banner' style={{gridColumn: 'span 2'}}>
             <img style={{padding: '0 4px'}} alt='decor' src='/images/bgs/skull-logo-mini.png' width={'18px'} height={'18px'} />
-            <p style={{}}>URGENT UPDATE: {popup.popup.toUpperCase()}</p>
+            <p style={{}}>URGENT UPDATE: {popup.popup.popup.toUpperCase()}</p>
           </div>
-          <img loading='lazy' src={`/images/popups/popup-${popup.popup}.gif`} style={{zIndex: '20', aspectRatio: '1/1', gridRow: 2}} alt={`${popupWarnings[popup.popup]}`} title={`${popupWarnings[popup.popup]}`} />
+          <img loading='lazy' src={`/images/popups/popup-${popup.popup.popup}.gif`} style={{zIndex: '20', aspectRatio: '1/1', gridRow: 2}} alt={`${popupWarnings[popup.popup.popup]}`} title={`${popupWarnings[popup.popup.popup]}`} />
           <div style={{display: 'flex', flexDirection: 'column'}}>
-            <p style={{}}>{popupWarnings[popup.popup]}</p>
+            <p style={{}}>{popupWarnings[popup.popup.popup]}</p>
             <div style={{display: 'flex'}}>
-              <button style={{border: 'outset 3px', outline: '1px solid black', margin: '1px', cursor: 'pointer'}}>OPEN STREAM</button>
-              <button style={{border: 'outset 3px', outline: '1px solid black', margin: '1px', cursor: 'pointer'}} onClick={() => setPopup({active: false, "popup": "tornado"})}>CLOSE ALERT</button>
+              <button style={{border: 'outset 3px', outline: '1px solid black', margin: '1px', cursor: 'pointer'}} onClick={() => document.getElementById(`stream-${popup.popup.id}`).click()}>OPEN STREAM</button>
+              <button style={{border: 'outset 3px', outline: '1px solid black', margin: '1px', cursor: 'pointer'}} onClick={() => setPopup({active: false, "popup": popup.popup})}>CLOSE ALERT</button>
             </div>
           </div>
         </div>
@@ -858,7 +874,7 @@ const App = () => {
 
     return (
       <>
-        <img src='/images/stopwatchrotate.gif' width={'64px'} height={'64px'} alt='decor' className='stopwatch' />
+        <img src='/images/stopwatchrotate.webp' width={'64px'} height={'64px'} alt='decor' className='stopwatch' />
         {tutorial.active ?
           <div className='mobile-hide' style={{position: 'fixed', width: '100%', height: '100%', zIndex: 500}}>
             <div style={{position: 'absolute', top: 0, backdropFilter: 'saturate(0) brightness(0.8) sepia(0.7)', width: '100%', height: '100%', display: 'grid', gridTemplateColumns: 'repeat(20, 5%)', gridTemplateRows: 'repeat(20, 5%)'}}>

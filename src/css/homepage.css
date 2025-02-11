@@ -413,6 +413,10 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     grid-column: 2;
 }
 
+.stream-title-container, .group-stream-name {
+    width: 100%;
+}
+
 @keyframes stopwatch {
     0% {
         opacity: 1;
@@ -517,10 +521,6 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
 }
 
 @media screen and (min-width: 1750px) {
-    .main-container {
-        grid-template-columns: 15% 70% 15%;
-        grid-template-rows: 15% 40% 20% 25%;
-    }
 
     .scrolling-text {
         margin: 0px 12px;
@@ -529,18 +529,38 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     }
 
     .stream-box-container {
-        width: 250px;
-        height: 250px;
+        width: 350px;
+        height: 350px;
     }
 
     .group-grid {
-        width: 250px;
-        height: 250px;
+        width: 350px;
+        height: 350px;
     }
 
     .group-grid-default {
-        width: 500px;
-        height: 500px;
+        width: 550px;
+        height: 550px;
+    }
+
+    .colored-box {
+        scale: 0.89;
+    }
+
+    .colored-border {
+        scale: 0.86;
+    }
+
+    .stream-title-container, .group-stream-name {
+        width: 67%;
+    }
+
+    .stream-title-container {
+        transform: translateY(12px);
+    }
+
+    .group-stream-name {
+        transform: translateY(4px);
     }
 
     .left-button-icon {
@@ -552,8 +572,19 @@ h1, h2, h3, h4, h5, p, textarea, input, button, a, b, i, label, legend {
     }
 
     .stream-status-light {
-        height: 26px;
-        width: 26px;
+        transform: scale(2) translate(7px, 7px);
+    }
+
+    .type-image {
+        transform: scale(4) translate(-5px, 3px);
+    }
+
+    .group-led-light {
+        transform: scale(2) translate(3px, 2px);
+    }
+
+    .group-type-image {
+        transform: scale(2) translate(-3px, 2px);
     }
 
     .tutorial-text {

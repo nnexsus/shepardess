@@ -99,6 +99,10 @@ const Map = () => {
             "velocity": 0,
             "miles": 0
         })
+        const [locarchive, setLocarchive] = useState([{
+            "lat": 41,
+            "lon": -88,
+        }])
         const map = useMap()
 
         const locate = () => {
@@ -123,6 +127,10 @@ const Map = () => {
                     "velocity": data[0].velocity,
                     "miles": data[0].tmiles
                 })
+                setLocarchive([{
+                    "lat": data[0].lat,
+                    "lon": data[0].lon,
+                }])
               })
               return () => socket.off('set_location')
         }, [locdata, setLocdata])
@@ -141,6 +149,15 @@ const Map = () => {
                     "velocity": data.vel,
                     "miles": miles
                 })
+                var locstore = [...locarchive]
+                locstore.unshift({
+                    "lat": data.lat,
+                    "lon": data.lon,
+                })
+                if (locstore.length >= 50) {
+                    locstore.pop()
+                }
+                setLocarchive(locstore)
               })
               return () => socket.off('update_location')
         }, [locdata, setLocdata])
@@ -333,11 +350,27 @@ const Map = () => {
             }, [50])
         }
 
+        const History = () => {
+            return (
+                <>
+                    {locarchive.length >= 2 ? locarchive.map((el, ind) => {
+                        console.log(ind)
+                        if (ind === (locarchive.length - 1)) { return (<></>) }
+                        var positions = [[el.lat, el.lon], [locarchive[ind + 1].lat, locarchive[ind + 1].lon]]
+                        return (
+                            <Polyline key={ind + "12"} positions={positions} color="aliceblue"></Polyline>
+                        )
+                    }):null}
+                </>
+            )
+        }
+
         return (
             <div>
                 <Marker icon={locationIcon} position={[locdata.lat, locdata.lon]} >
                     <Popup>Last known position. <br/>({`LAT: ${locdata.lat}, LON: ${locdata.lon}`})<br/> <a href="#stream-22" style={{color: 'lightblue'}}>Live cam</a></Popup>
                 </Marker>
+                <History/>
                 <OutlookPolys/>
                 <svg>
                     <defs>
@@ -501,7 +534,7 @@ const Map = () => {
                     el.coordinates.forEach(li => {
                         correctedBox.push(li.reverse())
                     });
-                    newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color})
+                    newstate.push({"coordinates": correctedBox, "title": el.title, "color": el.color, "id": data.id})
                 })
                 setPolystate(newstate)
                 setMarkerstate(data.markers)
@@ -512,16 +545,19 @@ const Map = () => {
         useEffect(() => {
             socket.on('add_poly', (data) => {
                 var correctedBox = []
+                console.log(data)
                 JSON.parse(data.coordinates).forEach(li => {
                     correctedBox.push(li.reverse())
                 });
-                setPolystate((state) => [...state, {"coordinates": correctedBox, "title": data.title, "color": data.color}])
+                console.log([...polystate, {"coordinates": correctedBox, "title": data.title, "color": data.color, "id": data.id}])
+                setPolystate([...polystate, {"coordinates": correctedBox, "title": data.title, "color": data.color, "id": data.id}])
               })
               return () => socket.off('add_poly')
         }, [polystate, setPolystate])
     
         useEffect(() => {
             socket.on('remove_poly', (data) => {
+                console.log(data)
                 var newarr = [...polystate]
                 polystate.find((el, ind) => {
                     if (el.id === data.id) {
@@ -529,6 +565,7 @@ const Map = () => {
                         return true;
                     }
                 });
+                console.log(newarr)
                 setPolystate(newarr)
               })    
               return () => socket.off('remove_poly')

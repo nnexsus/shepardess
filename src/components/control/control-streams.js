@@ -396,13 +396,13 @@ const StreamsWrapper = () => {
                                     </select>
                                 </div>
                                 <div className='popup-desc'>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "bighail"})}>Hail Confirmed</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "derecho"})}>Derecho Occuring</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "highwinds"})}>High Winds Reported</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "tornado"})}>Tornado Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "funnel"})}>Funnel Cloud Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
-                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `$`, "popup": "flooding"})}>Flooding Warning</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "bighail"})}>Hail Confirmed</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "derecho"})}>Derecho Occuring</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "highwinds"})}>High Winds Reported</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "tornado"})}>Tornado Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "funnel"})}>Funnel Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "shelfcloud"})}>Shelf Cloud Spotted</button>
+                                    <button onClick={() => socket.emit('send_popup', {"key": localStorage.getItem("kaepyi"), "stream": `${el.id}`, "popup": "flooding"})}>Flooding Warning</button>
                                 </div>
                                 <button className='analog-button' style={{backgroundColor: 'darkred', color: 'white'}} onClick={() => deleteStream(el.id)}>Remove</button>
                             </div>
