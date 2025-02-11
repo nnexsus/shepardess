@@ -227,8 +227,8 @@ const Control = () => {
                         <div onClick={() => changeThreat("flooding")} className="status-light-div control-light-div" title='Click to toggle.'>
                             <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "flooding" ? "" : "_off") + ".webp"}`} width="32px" height="32px" alt="status light for the threat being a flood" /> <p>Flooding</p>
                         </div>
-                        <div onClick={() => changeThreat("thunderstorm")} className="status-light-div control-light-div" title='Click to toggle.'>
-                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "thunderstorm" ? "" : "_off") + ".webp"}`} width="32px" height="32px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
+                        <div onClick={() => changeThreat("thunderstormthreat")} className="status-light-div control-light-div" title='Click to toggle.'>
+                            <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "thunderstormthreat" ? "" : "_off") + ".webp"}`} width="32px" height="32px" alt="status light for the threat being an intense thunderstorm" /> <p>Thunderstorm</p>
                         </div>
                         <div onClick={() => changeThreat("duststorm")} className="status-light-div control-light-div" title='Click to toggle.'>
                             <img loading='lazy' src={`${"/images/lights/light_white" + (desc?.threat === "duststorm" ? "" : "_off") + ".webp"}`} width="32px" height="32px" alt="status light for the threat being an intense duststorm" /> <p>Dust Storm</p>
