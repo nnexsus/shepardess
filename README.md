@@ -2,6 +2,13 @@
 
 Shepardess is a hub for weather, stormchasing, forecasting, and other information.
 
+Patch v1.2.2
+```diff
++ Added a toggleable NWS Watch & Warning layer for the map.
+
+This will be the final of updates for a while for Shepardess besides some major reorganization of the code.
+```
+
 Patch v1.2.1 (Design QOL)
 ```diff
 + Added location tracks - creates lines on the map for my path of travel.

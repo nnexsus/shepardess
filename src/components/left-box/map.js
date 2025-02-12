@@ -4,6 +4,8 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import L from 'leaflet';
 
+import warnings from './map/warnings.json';
+
 const socket = io.connect('https://arina.lol');
 
 const polycolors = {
@@ -400,6 +402,7 @@ const Map = () => {
                     <div style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
                         <button className="map-menu-button" title="Moves the map to your general position (may take a second)." onClick={() => locate()}>Center</button>
                         <button className="map-menu-button" title="Toggles the radar layer on/off." onClick={() => document.querySelectorAll('.no-invert').forEach((el) => el.classList.toggle('hidden'))}>Radar</button>
+                        <button className="map-menu-button" title="Toggles the radar layer on/off." onClick={() => document.getElementById('draw-nwspolys').click()}>Warns</button>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center', gridColumn: 'span 3', background: 'url(/images/bgs/green_steel_wide_container_center.png)', backgroundSize: '100% 100%'}}>
                         <button className="map-menu-button" title="Toggles the marker and icon layers on/off." onClick={() => toggleIcons("2024")}>2024</button>
@@ -613,11 +616,59 @@ const Map = () => {
         )
     }
 
+    const NWSPolys = () => {
+        const [polys, setPolys] = useState([])
+
+        const getPolys = () => {
+            if (polys.length >= 1) {
+                setPolys([])
+            } else {
+                axios.get('https://api.weather.gov/alerts/active?status=actual&message_type=alert,update,cancel&region_type=land&urgency=Immediate,Expected&certainty=Observed,Likely,Possible&limit=100').then((res) => {
+                    var polyarr = []
+                    res.data.features.forEach((el, ind) => {
+                        if (el.geometry !== null) {
+                            polyarr.push({
+                                "id": ind,
+                                "coordinates": el.geometry.coordinates,
+                                "title": el.properties.parameters.NWSheadline,
+                                "headline": el.properties.headline,
+                                "body": el.properties.description,
+                                "issued": el.properties.sent,
+                                "expires": el.properties.expires,
+                                "type": el.properties.event
+                            })
+                        }
+                    })
+                    setPolys(polyarr)
+                })
+            }
+        }
+
+        return (
+            <>
+                {polys.length >= 1 ? polys.map((el, ind) => {
+                    var coords = []
+                    el.coordinates[0].forEach((li) => {
+                        coords.push(li.reverse())
+                    })
+                    return (
+                        <Polygon key={ind} positions={coords} fill fillColor={`${warnings.warningcolors[`${el.type}`].Color}`} weight={0.9} color="white" fillOpacity={0.7}>
+                            <Popup><div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}><h1>{el.type}</h1><h3>{el.title}</h3><p>{el.body}</p></div></Popup>
+                        </Polygon>
+                    )
+                })
+                :null}
+                <button id="draw-nwspolys" style={{display: 'none'}} onClick={() => getPolys()}></button>
+            </>
+        )
+    }
+
     const Polygons = () => {
         return (
             <>
                 <WarningPolys/>
                 <SpecialPolys/>
+                <NWSPolys/>
             </>
         )
     }

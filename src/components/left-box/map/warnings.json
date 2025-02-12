@@ -1,0 +1,205 @@
+{"warningcolors":
+{"Blizzard Warning": { 
+    "Label": "Blizzard Warning", "Color": "rgba(255, 69, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Blowing Dust Advisory": { 
+    "Label": "Blowing Dust Advisory", "Color": "rgba(189, 183, 107, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Blowing Dust Warning": { 
+    "Label": "Blowing Dust Warning", "Color": "rgba(255, 228, 196, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Coastal Flood Advisory": {
+    "Label": "Coastal Flood Advisory", "Color": "rgba(124, 252, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Coastal Flood Statement": {
+    "Label": "Coastal Flood Statement", "Color": "rgba(107, 142, 35, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Coastal Flood Warning": {
+    "Label": "Coastal Flood Warning", "Color": "rgba(34, 139, 34, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Coastal Flood Watch": {
+    "Label": "Coastal Flood Watch", "Color": "rgba(102, 205, 170, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Cold Weather Advisory": {
+    "Label": "Cold Weather Advisory", "Color": "rgba(175, 238, 238, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Dust Storm Warning": {
+    "Label": "Dust Storm Warning", "Color": "rgba(255, 228, 196, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Excessive Heat Warning": {
+    "Label": "Excessive Heat Warning", "Color": "rgba(199, 21, 133, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Excessive Heat Watch": {
+    "Label": "Excessive Heat Watch", "Color": "rgba(128, 0, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Extreme Cold Warning": {
+    "Label": "Extreme Cold Warning", "Color": "rgba(0, 0, 255, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Extreme Cold Watch": {
+    "Label": "Extreme Cold Watch", "Color": "rgba(95, 158, 160, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Extreme Fire Danger": {
+    "Label": "Extreme Fire Danger", "Color": "rgba(233, 150, 122, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Extreme Wind Warning": {
+    "Label": "Extreme Wind Warning", "Color": "rgba(255, 140, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Fire Warning": {
+    "Label": "Fire Warning", "Color": "rgba(160, 82, 45, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Fire Weather Watch": {
+    "Label": "Fire Weather Watch", "Color": "rgba(255, 222, 173, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flash Flood Statement": {
+    "Label": "Flash Flood Statement", "Color": "rgba(139, 0, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flash Flood Warning": {
+    "Label": "Flash Flood Warning", "Color": "rgba(139, 0, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flash Flood Watch": {
+    "Label": "Flash Flood Watch", "Color": "rgba(46, 139, 87, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flood Advisory": {
+    "Label": "Flood Advisory", "Color": "rgba(0, 255, 127, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flood Statement": {
+    "Label": "Flood Statement", "Color": "rgba(0, 255, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flood Warning": {
+    "Label": "Flood Warning", "Color": "rgba(0, 255, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Flood Watch": {
+    "Label": "Flood Watch", "Color": "rgba(46, 139, 87, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Frost Advisory": {
+    "Label": "Frost Advisory", "Color": "rgba(100, 149, 237, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Gale Warning": {
+    "Label": "Gale Warning", "Color": "rgba(221, 160, 221, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Gale Watch": {
+    "Label": "Gale Watch", "Color": "rgba(255, 192, 203, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Hazardous Weather Outlook": {
+    "Label": "Hazardous Weather Outlook", "Color": "rgba(238, 232, 170, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Heat Advisory": {
+    "Label": "Heat Advisory", "Color": "rgba(255, 127, 80, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"High Wind Warning": {
+    "Label": "High Wind Warning", "Color": "rgba(218, 165, 32, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"High Wind Watch": {
+    "Label": "High Wind Watch", "Color": "rgba(184, 134, 11, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Hurricane Force Wind Warning": {
+    "Label": "Hurricane Force Wind Warning", "Color": "rgba(205, 92, 92, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Hurricane Force Wind Watch": {
+    "Label": "Hurricane Force Wind Watch", "Color": "rgba(153, 50, 204, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Hurricane Warning": {
+    "Label": "Hurricane Warning", "Color": "rgba(220, 20, 60, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Hurricane Watch": {
+    "Label": "Hurricane Watch", "Color": "rgba(255, 0, 255, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Ice Storm Warning": {
+    "Label": "Ice Storm Warning", "Color": "rgba(139, 0, 139, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lake Effect Snow Warning": {
+    "Label": "Lake Effect Snow Warning", "Color": "rgba(0, 139, 139, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lake Wind Advisory": {
+    "Label": "Lake Wind Advisory", "Color": "rgba(210, 180, 140, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lakeshore Flood Advisory": {
+    "Label": "Lakeshore Flood Advisory", "Color": "rgba(124, 252, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lakeshore Flood Statement": {
+    "Label": "Lakeshore Flood Statement", "Color": "rgba(107, 142, 35, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lakeshore Flood Warning": {
+    "Label": "Lakeshore Flood Warning", "Color": "rgba(34, 139, 34, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Lakeshore Flood Watch": {
+    "Label": "Lakeshore Flood Watch", "Color": "rgba(102, 205, 170, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Marine Weather Statement": {
+    "Label": "Marine Weather Statement", "Color": "rgba(255, 239, 213, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Red Flag Warning": {
+    "Label": "Red Flag Warning", "Color": "rgba(255, 20, 147, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Severe Thunderstorm Warning": {
+    "Label": "Severe Thunderstorm Warning", "Color": "rgba(255, 165, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Severe Thunderstorm Watch": {
+    "Label": "Severe Thunderstorm Watch", "Color": "rgba(219, 112, 147, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Severe Weather Statement": {
+    "Label": "Severe Weather Statement", "Color": "rgba(0, 255, 255, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Snow Squall Warning": {
+    "Label": "Snow Squall Warning", "Color": "rgba(199, 21, 133, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Special Marine Warning": {
+    "Label": "Special Marine Warning", "Color": "rgba(255, 165, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Special Weather Statement": {
+    "Label": "Special Weather Statement", "Color": "rgba(255, 228, 181, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Storm Surge Warning": {
+    "Label": "Storm Surge Warning", "Color": "rgba(181, 36, 247, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Storm Surge Watch": {
+    "Label": "Storm Surge Watch", "Color": "rgba(219, 127, 247, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Storm Warning": {
+    "Label": "Storm Warning", "Color": "rgba(148, 0, 211, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Storm Watch": {
+    "Label": "Storm Watch", "Color": "rgba(255, 228, 181, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tornado Warning": {
+    "Label": "Tornado Warning", "Color": "rgba(255, 0, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tornado Watch": {
+    "Label": "Tornado Watch", "Color": "rgba(255, 255, 0, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tropical Cyclone Local Statement": {
+    "Label": "Tropical Cyclone Local Statement", "Color": "rgba(255, 228, 181, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tropical Storm Warning": {
+    "Label": "Tropical Storm Warning", "Color": "rgba(178, 34, 34, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tropical Storm Watch": {
+    "Label": "Tropical Storm Watch", "Color": "rgba(240, 128, 128, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tsunami Advisory" :{
+    "Label": "Tsunami Advisory", "Color": "rgba(210, 105, 30, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tsunami Warning": {
+    "Label": "Tsunami Warning", "Color": "rgba(253, 99, 71, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Tsunami Watch": {
+    "Label": "Tsunami Watch", "Color": "rgba(255, 0, 255, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Typhoon Warning": { 
+    "Label": "Typhoon Warning", "Color": "rgba(220, 20, 60, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Typhoon Watch": {
+    "Label": "Typhoon Watch", "Color": "rgba(255, 0, 255, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Wind Advisory": {
+    "Label": "Wind Advisory", "Color": "rgba(210, 180, 140, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Winter Storm Warning": {
+    "Label": "Winter Storm Warning", "Color": "rgba(255, 105, 180, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Winter Storm Watch": {
+    "Label": "Winter Storm Watch", "Color": "rgba(70, 130, 180, 255)", "Outline": "rgba(110, 110, 110, 255)"
+},
+"Winter Weather Advisory": {
+    "Label": "Winter Weather Advisory", "Color": "rgba(123, 104, 238, 255)", "Outline": "rgba(110, 110, 110, 255)"
+}}}
